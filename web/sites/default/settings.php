@@ -761,7 +761,7 @@ $port = 3306;
 
 if (empty(getenv('DDEV_PHP_VERSION'))) {
   $host = "127.0.0.1";
-  $port = 32772;
+//  $port = 32772;
 }
 
 $databases['default']['default'] = array(
@@ -770,9 +770,12 @@ $databases['default']['default'] = array(
   'password' => "db",
   'host' => $host,
   'driver' => "mysql",
-  'port' => $port,
   'prefix' => "",
 );
+
+if (!empty(getenv('DDEV_PHP_VERSION'))) {
+  $databases['default']['default']['port'] = $port;
+}
 
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);

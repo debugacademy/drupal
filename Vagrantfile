@@ -10,4 +10,4 @@
 # ENV['DRUPALVM_DIR'] = "vendor/geerlingguy/drupal-vm"
 
 # Load the real Vagrantfile
-load "#{__dir__}/../../academyvm/Vagrantfile"
+load "#{__dir__}/../academyvm/Vagrantfile"
