@@ -237,7 +237,7 @@ $databases = [];
  * directory in the public files path. The setting below allows you to set
  * its location.
  */
-# $settings['config_sync_directory'] = '/directory/outside/webroot';
+$settings['config_sync_directory'] = '../config/sync';
 
 /**
  * Settings:
@@ -799,9 +799,6 @@ $settings['trusted_host_patterns'] = ['.*'];
 // Don't use Symfony's APCLoader. ddev includes APCu; Composer's APCu loader has
 // better performance.
 $settings['class_loader_auto_detect'] = FALSE;
-
-// This specifies the default configuration sync directory.
-$config_directories[CONFIG_SYNC_DIRECTORY] = '../config/sync';
 
 // Automatically generated include for settings managed by ddev.
 #if (file_exists($app_root . '/' . $site_path . '/settings.ddev.php')) {
