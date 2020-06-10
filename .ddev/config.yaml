@@ -2,7 +2,7 @@ APIVersion: v1.12.2
 name: drupal
 type: drupal8
 docroot: web
-php_version: "7.2"
+php_version: "7.3"
 webserver_type: nginx-fpm
 router_http_port: "89"
 router_https_port: "456"
@@ -48,7 +48,7 @@ timezone: ""
 # mariadb_version and mysql_version
 # ddev can use many versions of mariadb and mysql
 # However these directives are mutually exclusive
-# mariadb_version: 10.2
+mariadb_version: 10.4
 # mysql_version: 8.0
 
 # router_http_port: <port>  # Port to be used for http (defaults to port 80)
