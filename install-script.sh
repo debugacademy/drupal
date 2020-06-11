@@ -12,7 +12,7 @@ echo "Match origin's develop branch" && sleep 10 &&
 git reset origin/develop --hard && 
 echo "Retreive committed build artifacts for Drupal 9" && sleep 10 && 
 git checkout origin/master-build && 
-git reset d02b90cfc0970b4de17cc84a6f31d00aa9af01bf &&
+git reset f138947586f76371307f7fa76af8347047a64b99 &&
 echo "Returning to develop branch" && sleep 25 && 
 git branch -D develop;
 git checkout -t origin/develop &&
