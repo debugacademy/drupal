@@ -1,4 +1,5 @@
 <?php
+
 namespace Robo\Task\Composer;
 
 /**
@@ -39,6 +40,19 @@ class RequireDependency extends Base
             );
         }
         $this->args($project);
+        return $this;
+    }
+
+    /**
+     * adds `no-suggest` option to composer
+     *
+     * @param bool $noSuggest
+     *
+     * @return $this
+     */
+    public function noSuggest($noSuggest = true)
+    {
+        $this->option('--no-suggest');
         return $this;
     }
 

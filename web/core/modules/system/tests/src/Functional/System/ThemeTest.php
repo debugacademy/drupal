@@ -31,14 +31,14 @@ class ThemeTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'block', 'file'];
+  protected static $modules = ['node', 'block', 'file'];
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'classy';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
@@ -53,14 +53,16 @@ class ThemeTest extends BrowserTestBase {
    * Test the theme settings form.
    */
   public function testThemeSettings() {
-    // Ensure invalid theme settings form URLs return a proper 404.
+    // Ensure a disabled theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/bartik');
-    $this->assertResponse(404, 'The theme settings form URL for a uninstalled theme could not be found.');
+    $this->assertSession()->statusCodeEquals(404);
+    // Ensure a non existent theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/' . $this->randomMachineName());
-    $this->assertResponse(404, 'The theme settings form URL for a non-existent theme could not be found.');
+    $this->assertSession()->statusCodeEquals(404);
+    // Ensure a hidden theme settings form URL returns 404.
     $this->assertTrue(\Drupal::service('theme_installer')->install(['stable']));
     $this->drupalGet('admin/appearance/settings/stable');
-    $this->assertResponse(404, 'The theme settings form URL for a hidden theme is unavailable.');
+    $this->assertSession()->statusCodeEquals(404);
 
     // Specify a filesystem path to be used for the logo.
     $file = current($this->drupalGetTestFiles('image'));
@@ -211,7 +213,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance/settings');
     $this->assertLink($theme_handler->getName('stable'));
     $this->drupalGet('admin/appearance/settings/stable');
-    $this->assertResponse(200, 'The theme settings form URL for a hidden theme that is the admin theme is available.');
+    $this->assertSession()->statusCodeEquals(200);
 
     // Ensure default logo and favicons are not triggering custom path
     // validation errors if their custom paths are set on the form.
@@ -309,7 +311,7 @@ class ThemeTest extends BrowserTestBase {
     $normal_user = $this->drupalCreateUser(['view the administration theme']);
     $this->drupalLogin($normal_user);
     $this->drupalGet('admin/config');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
     $this->drupalLogin($this->adminUser);
 
@@ -376,7 +378,6 @@ class ThemeTest extends BrowserTestBase {
     // Check for the error text of a theme with the wrong core version
     // using 7.x and ^7.
     $incompatible_core_message = 'This theme is not compatible with Drupal ' . \Drupal::VERSION . ". Check that the .info.yml file contains a compatible 'core' or 'core_version_requirement' value.";
-    $this->assertThemeIncompatibleText('Theme test with invalid core version', $incompatible_core_message);
     $this->assertThemeIncompatibleText('Theme test with invalid semver core version', $incompatible_core_message);
     // Check for the error text of a theme without a content region.
     $this->assertText("This theme is missing a 'content' region.");

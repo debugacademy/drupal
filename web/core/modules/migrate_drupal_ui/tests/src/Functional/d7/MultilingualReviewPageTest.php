@@ -11,15 +11,13 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
  *
  * @group migrate_drupal_7
  * @group migrate_drupal_ui
- *
- * @group legacy
  */
 class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'content_translation',
     'telephone',
@@ -30,19 +28,15 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'syslog',
     'tracker',
     'update',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
     // Test migrations states.
     'migrate_state_finished_test',
     'migrate_state_not_finished_test',
-    // Test missing migrate_drupal.yml.
-    'migrate_state_no_file_test',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal7.php');
   }
@@ -103,6 +97,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'locale',
       'menu',
       'number',
+      'node',
       'openid',
       'options',
       'overlay',
@@ -168,7 +163,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'i18n_translation',
       'i18n_user',
       'i18n_variable',
-      'node',
       'picture',
       'migrate_status_active_test',
       'variable',

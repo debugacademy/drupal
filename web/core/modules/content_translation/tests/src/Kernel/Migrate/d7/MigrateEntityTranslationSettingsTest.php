@@ -15,13 +15,11 @@ class MigrateEntityTranslationSettingsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'content_translation',
     'language',
     'menu_ui',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
     'node',
     'taxonomy',
     'text',
@@ -31,7 +29,7 @@ class MigrateEntityTranslationSettingsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installConfig([

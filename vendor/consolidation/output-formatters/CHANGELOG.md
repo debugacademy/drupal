@@ -1,5 +1,17 @@
 # Change Log
 
+### 4.1.1 - 27 May 2020
+
+- Fix Symfony 5 bugs. (#85)
+
+### 4.1.0 - 6 Feb 2020
+
+- Test with PHP 7.4.
+
+### 4.0.0 - 29 Oct 2019
+
+- Compatible with the 3.x branch, but removes support for old PHP versions and requires Symfony 4.
+
 ### 3.5.0 - 30 May 2019
 
 - Add `@default-table-fields` to specify the fields to use with the table formatter and other "human readable" output formats.

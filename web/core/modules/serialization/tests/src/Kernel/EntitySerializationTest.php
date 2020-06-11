@@ -3,11 +3,10 @@
 namespace Drupal\Tests\serialization\Kernel;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\entity_test\Entity\EntitySerializedField;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 
 /**
  * Tests that entities can be serialized to supported core formats.
@@ -16,14 +15,21 @@ use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
  */
 class EntitySerializationTest extends NormalizerTestBase {
 
-  use BcTimestampNormalizerUnixTestTrait;
-
   /**
    * Modules to install.
    *
    * @var array
    */
-  public static $modules = ['serialization', 'system', 'field', 'entity_test', 'text', 'filter', 'user', 'entity_serialization_test'];
+  protected static $modules = [
+    'serialization',
+    'system',
+    'field',
+    'entity_test',
+    'text',
+    'filter',
+    'user',
+    'entity_serialization_test',
+  ];
 
   /**
    * The test values.
@@ -60,7 +66,7 @@ class EntitySerializationTest extends NormalizerTestBase {
    */
   protected $entityClass = 'Drupal\entity_test\Entity\EntityTest';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // User create needs sequence table.
@@ -134,7 +140,10 @@ class EntitySerializationTest extends NormalizerTestBase {
         ['value' => 'entity_test_mulrev'],
       ],
       'created' => [
-        $this->formatExpectedTimestampItemValues($this->entity->created->value),
+        [
+          'value' => (new \DateTime())->setTimestamp((int) $this->entity->get('created')->value)->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'format' => \DateTime::RFC3339,
+        ],
       ],
       'user_id' => [
         [
@@ -181,8 +190,8 @@ class EntitySerializationTest extends NormalizerTestBase {
     // Test password isn't available.
     $normalized = $this->serializer->normalize($this->user);
 
-    $this->assertFalse(array_key_exists('pass', $normalized), '"pass" key does not exist in normalized user');
-    $this->assertFalse(array_key_exists('mail', $normalized), '"mail" key does not exist in normalized user');
+    $this->assertArrayNotHasKey('pass', $normalized);
+    $this->assertArrayNotHasKey('mail', $normalized);
 
     // Test again using our test user, so that our access control override will
     // allow password viewing.
@@ -215,7 +224,10 @@ class EntitySerializationTest extends NormalizerTestBase {
 
     // Generate the expected xml in a way that allows changes to entity property
     // order.
-    $expected_created = $this->formatExpectedTimestampItemValues($this->entity->created->value);
+    $expected_created = [
+      'value' => DateTimePlus::createFromTimestamp($this->entity->created->value, 'UTC')->format(\DateTime::RFC3339),
+      'format' => \DateTime::RFC3339,
+    ];
 
     $expected = [
       'id' => '<id><value>' . $this->entity->id() . '</value></id>',
@@ -232,7 +244,7 @@ class EntitySerializationTest extends NormalizerTestBase {
       'non_rev_field' => '<non_rev_field/>',
       'field_test_text' => '<field_test_text><value>' . $this->values['field_test_text']['value'] . '</value><format>' . $this->values['field_test_text']['format'] . '</format><processed><![CDATA[<p>' . $this->values['field_test_text']['value'] . '</p>]]></processed></field_test_text>',
     ];
-    // Sort it in the same order as normalised.
+    // Sort it in the same order as normalized.
     $expected = array_merge($normalized, $expected);
     // Add header and footer.
     array_unshift($expected, '<?xml version="1.0"?>' . PHP_EOL . '<response>');
@@ -254,7 +266,7 @@ class EntitySerializationTest extends NormalizerTestBase {
 
     foreach (['json', 'xml'] as $type) {
       $denormalized = $this->serializer->denormalize($normalized, $this->entityClass, $type, ['entity_type' => 'entity_test_mulrev']);
-      $this->assertTrue($denormalized instanceof $this->entityClass, new FormattableMarkup('Denormalized entity is an instance of @class', ['@class' => $this->entityClass]));
+      $this->assertInstanceOf($this->entityClass, $denormalized);
       $this->assertIdentical($denormalized->getEntityTypeId(), $this->entity->getEntityTypeId(), 'Expected entity type found.');
       $this->assertIdentical($denormalized->bundle(), $this->entity->bundle(), 'Expected entity bundle found.');
       $this->assertIdentical($denormalized->uuid(), $this->entity->uuid(), 'Expected entity UUID found.');

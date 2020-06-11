@@ -22,7 +22,7 @@ class LocalePathTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'locale', 'path', 'views'];
+  protected static $modules = ['node', 'locale', 'path', 'views'];
 
   /**
    * {@inheritdoc}
@@ -32,7 +32,7 @@ class LocalePathTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
@@ -69,7 +69,7 @@ class LocalePathTest extends BrowserTestBase {
     // Check that the "xx" front page is readily available because path prefix
     // negotiation is pre-configured.
     $this->drupalGet($prefix);
-    $this->assertText(t('Welcome to Drupal'), 'The "xx" front page is readibly available.');
+    $this->assertText(t('Welcome to Drupal'), 'The "xx" front page is readily available.');
 
     // Create a node.
     $node = $this->drupalCreateNode(['type' => 'page']);

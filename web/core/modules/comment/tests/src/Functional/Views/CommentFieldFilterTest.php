@@ -15,7 +15,7 @@ class CommentFieldFilterTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language'];
+  protected static $modules = ['language'];
 
   /**
    * {@inheritdoc}
@@ -36,7 +36,7 @@ class CommentFieldFilterTest extends CommentTestBase {
    */
   public $commentTitles = [];
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
     $this->drupalLogin($this->drupalCreateUser(['access comments']));
 
@@ -48,7 +48,7 @@ class CommentFieldFilterTest extends CommentTestBase {
     $this->commentTitles = [
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
-      'fr' => 'Nouriture en Paris',
+      'fr' => 'Nourriture en Paris',
     ];
 
     // Create a new comment. Using the one created earlier will not work,

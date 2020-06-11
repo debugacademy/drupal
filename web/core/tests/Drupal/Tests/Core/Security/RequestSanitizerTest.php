@@ -26,7 +26,7 @@ class RequestSanitizerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->errors = [];
     set_error_handler([$this, "errorHandler"]);
@@ -61,7 +61,7 @@ class RequestSanitizerTest extends UnitTestCase {
 
     $request = RequestSanitizer::sanitize($request, $whitelist, is_null($expected_errors) ? FALSE : TRUE);
 
-    // Normalise the expected data.
+    // Normalize the expected data.
     $expected += ['cookies' => [], 'query' => [], 'request' => []];
     $expected_query_string = http_build_query($expected['query']);
 

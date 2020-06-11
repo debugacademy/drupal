@@ -31,7 +31,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Log in.
@@ -241,6 +241,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
    * Tests uninstalling the help_topics module.
    */
   public function testUninstall() {
+    \Drupal::service('module_installer')->uninstall(['help_topics_test']);
     // Ensure we can uninstall help_topics and use the help system without
     // breaking.
     $this->drupalLogin($this->rootUser);
@@ -250,7 +251,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
     $this->drupalGet('admin/help');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**

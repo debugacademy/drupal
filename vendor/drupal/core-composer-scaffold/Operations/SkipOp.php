@@ -8,6 +8,8 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldOptions;
 
 /**
  * Scaffold operation to skip a scaffold file (do nothing).
+ *
+ * @internal
  */
 class SkipOp extends AbstractOperation {
 
@@ -31,6 +33,13 @@ class SkipOp extends AbstractOperation {
    */
   public function __construct($message = "  - Skip <info>[dest-rel-path]</info>: disabled") {
     $this->message = $message;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function generateContents() {
+    return '';
   }
 
   /**

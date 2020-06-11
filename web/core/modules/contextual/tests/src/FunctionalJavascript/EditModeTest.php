@@ -19,7 +19,7 @@ class EditModeTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'block',
     'user',
@@ -37,7 +37,7 @@ class EditModeTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalLogin($this->createUser([
@@ -51,7 +51,7 @@ class EditModeTest extends WebDriverTestBase {
   /**
    * Tests enabling and disabling edit mode.
    */
-  public function testEditModeEnableDisalbe() {
+  public function testEditModeEnableDisable() {
     $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
     // Get the page twice to ensure edit mode remains enabled after a new page

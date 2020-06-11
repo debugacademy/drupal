@@ -10,7 +10,7 @@ abstract class ConfigTestResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['config_test', 'config_test_rest'];
+  protected static $modules = ['config_test', 'config_test_rest'];
 
   /**
    * {@inheritdoc}
@@ -81,6 +81,7 @@ abstract class ConfigTestResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET':
         return "The 'view config_test' permission is required.";
+
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }

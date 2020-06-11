@@ -19,7 +19,7 @@ class IntegrationTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['statistics', 'statistics_test_views', 'node'];
+  protected static $modules = ['statistics', 'statistics_test_views', 'node'];
 
   /**
    * {@inheritdoc}
@@ -47,7 +47,7 @@ class IntegrationTest extends ViewTestBase {
    */
   public static $testViews = ['test_statistics_integration'];
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     ViewTestData::createTestViews(get_class($this), ['statistics_test_views']);
@@ -92,7 +92,7 @@ class IntegrationTest extends ViewTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->deniedUser);
     $this->drupalGet('test_statistics_integration');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->assertSession()->pageTextNotContains('Total views:');
     $this->assertSession()->pageTextNotContains('Views today:');

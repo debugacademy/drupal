@@ -4,7 +4,6 @@ namespace Drupal\Tests\help_topics\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\help_topics\HelpTopicDiscovery;
-use Drupal\Tests\DeprecatedModulesTestTrait;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
@@ -19,8 +18,6 @@ use PHPUnit\Framework\ExpectationFailedException;
  * @group help_topics
  */
 class HelpTopicsSyntaxTest extends BrowserTestBase {
-
-  use DeprecatedModulesTestTrait;
 
   /**
    * {@inheritdoc}
@@ -45,14 +42,13 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // will be defined.
     $module_directories = $this->listDirectories('module');
     $modules_to_install = array_keys($module_directories);
-    $modules_to_install = $this->removeDeprecatedModules($modules_to_install);
     \Drupal::service('module_installer')->install($modules_to_install);
     $theme_directories = $this->listDirectories('theme');
     \Drupal::service('theme_installer')->install(array_keys($theme_directories));
 
     $directories = $module_directories + $theme_directories +
       $this->listDirectories('profile');
-    $directories['core'] = \Drupal::service('app.root') . '/core/help_topics';
+    $directories['core'] = \Drupal::root() . '/core/help_topics';
     $directories['bad_help_topics'] = \Drupal::service('extension.list.module')->getPath('help_topics_test') . '/bad_help_topics/syntax/';
 
     // Filter out directories outside of core. If you want to run this test
@@ -196,31 +192,31 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
       $message = $e->getMessage();
       switch ($bad_topic_type) {
         case 'related':
-          $this->assertContains('only related to topics that exist', $message);
+          $this->assertStringContainsString('only related to topics that exist', $message);
           break;
 
         case 'bad_html':
-          $this->assertContains('Unexpected end tag', $message);
+          $this->assertStringContainsString('Unexpected end tag', $message);
           break;
 
         case 'top_level':
-          $this->assertContains('is either top-level or related to at least one other top-level topic', $message);
+          $this->assertStringContainsString('is either top-level or related to at least one other top-level topic', $message);
           break;
 
         case 'empty':
-          $this->assertContains('contains some text outside of front matter', $message);
+          $this->assertStringContainsString('contains some text outside of front matter', $message);
           break;
 
         case 'translated':
-          $this->assertContains('Twig file has all of its text translated', $message);
+          $this->assertStringContainsString('Twig file has all of its text translated', $message);
           break;
 
         case 'h1':
-          $this->assertContains('has no H1 tag', $message);
+          $this->assertStringContainsString('has no H1 tag', $message);
           break;
 
         case 'hierarchy':
-          $this->assertContains('has the correct H2-H6 heading hierarchy', $message);
+          $this->assertStringContainsString('has the correct H2-H6 heading hierarchy', $message);
           break;
 
         default:

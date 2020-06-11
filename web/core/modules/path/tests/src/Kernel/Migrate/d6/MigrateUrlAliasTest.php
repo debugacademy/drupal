@@ -20,20 +20,18 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'content_translation',
     'path',
     'path_alias',
     'menu_ui',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('node');
     $this->installEntitySchema('path_alias');

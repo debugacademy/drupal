@@ -17,7 +17,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['node_access_test', 'views'];
+  protected static $modules = ['node_access_test', 'views'];
 
   /**
    * {@inheritdoc}
@@ -66,7 +66,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    */
   protected $nidsVisible;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     node_access_test_add_field(NodeType::load('article'));
@@ -145,7 +145,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
           else {
             $should_be_visible = TRUE;
           }
-          $this->assertResponse($should_be_visible ? 200 : 403, strtr('A %private node by user %uid is %visible for user %current_uid.', [
+          $this->assertSession()->statusCodeEquals($should_be_visible ? 200 : 403, strtr('A %private node by user %uid is %visible for user %current_uid.', [
             '%private' => $is_private ? 'private' : 'public',
             '%uid' => $uid,
             '%visible' => $should_be_visible ? 'visible' : 'not visible',
@@ -166,7 +166,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     foreach ($this->nodesByUser as $private_status) {
       foreach ($private_status as $nid => $is_private) {
         $this->drupalGet('node/' . $nid);
-        $this->assertResponse(200);
+        $this->assertSession()->statusCodeEquals(200);
       }
     }
 
@@ -182,7 +182,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     foreach ($this->nodesByUser as $private_status) {
       foreach ($private_status as $nid => $is_private) {
         $this->drupalGet('node/' . $nid);
-        $this->assertResponse(200);
+        $this->assertSession()->statusCodeEquals(200);
       }
     }
 

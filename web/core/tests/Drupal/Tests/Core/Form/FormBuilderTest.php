@@ -42,7 +42,7 @@ class FormBuilderTest extends FormTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->container = new ContainerBuilder();
@@ -483,6 +483,36 @@ class FormBuilderTest extends FormTestBase {
     $form_state = new FormState();
     $form = $this->simulateFormSubmission($form_id, $form_arg, $form_state);
     $this->assertSame('test-form-id--2', $form['#id']);
+  }
+
+  /**
+   * Tests that HTML IDs are unique between 2 forms with the same element names.
+   */
+  public function testUniqueElementHtmlId() {
+    $form_id_1 = 'test_form_id';
+    $form_id_2 = 'test_form_id_2';
+    $expected_form = $form_id_1();
+
+    // Mock 2 form objects that will be built once each.
+    $form_arg_1 = $this->createMock('Drupal\Core\Form\FormInterface');
+    $form_arg_1->expects($this->exactly(1))
+      ->method('getFormId')
+      ->will($this->returnValue($form_id_1));
+    $form_arg_1->expects($this->exactly(1))
+      ->method('buildForm')
+      ->will($this->returnValue($expected_form));
+    $form_arg_2 = $this->createMock('Drupal\Core\Form\FormInterface');
+    $form_arg_2->expects($this->exactly(1))
+      ->method('getFormId')
+      ->will($this->returnValue($form_id_2));
+    $form_arg_2->expects($this->exactly(1))
+      ->method('buildForm')
+      ->will($this->returnValue($expected_form));
+    $form_state = new FormState();
+    $form_1 = $this->simulateFormSubmission($form_id_1, $form_arg_1, $form_state);
+    $form_state = new FormState();
+    $form_2 = $this->simulateFormSubmission($form_id_2, $form_arg_2, $form_state);
+    $this->assertNotSame($form_1['actions']["#id"], $form_2['actions']["#id"]);
   }
 
   /**

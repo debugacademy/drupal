@@ -16,14 +16,12 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'content_translation',
     'language',
     'menu_ui',
     'node',
     'taxonomy',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**
@@ -36,7 +34,7 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('taxonomy_term');
     $this->installConfig(static::$modules);

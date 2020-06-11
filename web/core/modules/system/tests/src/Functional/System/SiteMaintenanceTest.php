@@ -22,7 +22,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * {@inheritdoc}
@@ -31,7 +31,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
 
   protected $adminUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Configure 'node' as front page.
@@ -160,9 +160,9 @@ class SiteMaintenanceTest extends BrowserTestBase {
     foreach ($formats as $format) {
       $this->pass('Testing format ' . $format);
       $this->drupalGet('<front>', ['query' => ['_format' => $format]]);
-      $this->assertResponse(503);
+      $this->assertSession()->statusCodeEquals(503);
       $this->assertRaw('Drupal is currently under maintenance. We should be back shortly. Thank you for your patience.');
-      $this->assertHeader('Content-Type', 'text/plain; charset=UTF-8');
+      $this->assertSession()->responseHeaderEquals('Content-Type', 'text/plain; charset=UTF-8');
     }
   }
 

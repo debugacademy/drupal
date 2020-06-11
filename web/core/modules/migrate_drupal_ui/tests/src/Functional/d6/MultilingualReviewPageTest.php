@@ -11,15 +11,13 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
  *
  * @group migrate_drupal_6
  * @group migrate_drupal_ui
- *
- * @group legacy
  */
 class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'content_translation',
     'config_translation',
@@ -31,13 +29,9 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'syslog',
     'tracker',
     'update',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
     // Test migrations states.
     'migrate_state_finished_test',
     'migrate_state_not_finished_test',
-    // Test missing migrate_drupal.yml.
-    'migrate_state_no_file_test',
     // Test missing migrate_drupal.yml.
     'migrate_state_no_upgrade_path',
   ];
@@ -45,7 +39,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal6.php');
   }
@@ -109,6 +103,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'jquery_ui',
       'link',
       'menu',
+      'node',
       'nodeaccess',
       'nodereference',
       'number',
@@ -158,7 +153,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'i18nviews',
       'locale',
       'migrate_status_active_test',
-      'node',
       'views',
     ];
   }

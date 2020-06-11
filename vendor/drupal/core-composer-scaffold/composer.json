@@ -6,8 +6,8 @@
   "homepage": "https://www.drupal.org/project/drupal",
   "license": "GPL-2.0-or-later",
   "require": {
-    "composer-plugin-api": "^1.0.0",
-    "php": ">=7.0.8"
+    "composer-plugin-api": "^1 || ^2",
+    "php": ">=7.3.0"
   },
   "conflict": {
     "drupal-composer/drupal-scaffold": "*"

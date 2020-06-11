@@ -22,7 +22,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['field', 'field_test', 'text', 'entity_test'];
+  protected static $modules = ['field', 'field_test', 'text', 'entity_test'];
 
   /**
    * The name of the created field.
@@ -71,7 +71,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
    */
   protected $tableMapping;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_rev');
@@ -148,7 +148,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
           $this->assertEqual($entity->{$this->fieldName}[$delta]->value, $value);
         }
         else {
-          $this->assertFalse(array_key_exists($delta, $entity->{$this->fieldName}));
+          $this->assertArrayNotHasKey($delta, $entity->{$this->fieldName});
         }
       }
     }
@@ -160,7 +160,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
         $this->assertEqual($entity->{$this->fieldName}[$delta]->value, $value);
       }
       else {
-        $this->assertFalse(array_key_exists($delta, $entity->{$this->fieldName}));
+        $this->assertArrayNotHasKey($delta, $entity->{$this->fieldName});
       }
     }
 
@@ -171,7 +171,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $connection->insert($this->table)->fields($columns)->values($values)->execute();
     $connection->insert($this->revisionTable)->fields($columns)->values($values)->execute();
     $entity = $storage->load($entity->id());
-    $this->assertFalse(array_key_exists($unavailable_langcode, $entity->{$this->fieldName}));
+    $this->assertArrayNotHasKey($unavailable_langcode, $entity->{$this->fieldName});
   }
 
   /**
@@ -266,7 +266,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $entity->{$this->fieldName} = NULL;
     $entity->save();
     $rows = $connection->select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
-    $this->assertEqual(count($rows), 0);
+    $this->assertCount(0, $rows);
   }
 
   /**
@@ -274,8 +274,8 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
    */
   public function testLongNames() {
     // Use one of the longest entity_type names in core.
-    $entity_type = $bundle = 'entity_test_label_callback';
-    $this->installEntitySchema('entity_test_label_callback');
+    $entity_type = $bundle = 'entity_test_multivalue_basefield';
+    $this->installEntitySchema('entity_test_multivalue_basefield');
     $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
 
     // Create two fields and generate random values.

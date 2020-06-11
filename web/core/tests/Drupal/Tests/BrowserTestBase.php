@@ -16,7 +16,9 @@ use Drupal\FunctionalTests\AssertLegacyTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\Traits\PHPUnit8Warnings;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -62,7 +64,7 @@ abstract class BrowserTestBase extends TestCase {
     createUser as drupalCreateUser;
   }
   use XdebugRequestTrait;
-  use PhpunitCompatibilityTrait;
+  use PHPUnit8Warnings;
 
   /**
    * The database prefix of this test run.
@@ -211,15 +213,6 @@ abstract class BrowserTestBase extends TestCase {
   protected $originalContainer;
 
   /**
-   * {@inheritdoc}
-   */
-  public function __construct($name = NULL, array $data = [], $dataName = '') {
-    parent::__construct($name, $data, $dataName);
-
-    $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
-  }
-
-  /**
    * Initializes Mink sessions.
    */
   protected function initMink() {
@@ -350,11 +343,15 @@ abstract class BrowserTestBase extends TestCase {
               $html_output = 'Called from ' . $caller['function'] . ' line ' . $caller['line'];
               $html_output .= '<hr />' . $request->getMethod() . ' request to: ' . $request->getUri();
 
+              // Get the response body as a string. Any errors are silenced as
+              // tests should not fail if there is a problem. On PHP 7.4
+              // \Drupal\Tests\migrate\Functional\process\DownloadFunctionalTest
+              // fails without the usage of a silence operator.
+              $body = @(string) $response->getBody();
               // On redirect responses (status code starting with '3') we need
               // to remove the meta tag that would do a browser refresh. We
               // don't want to redirect developers away when they look at the
               // debug output file in their browser.
-              $body = $response->getBody();
               $status_code = (string) $response->getStatusCode();
               if ($status_code[0] === '3') {
                 $body = preg_replace('#<meta http-equiv="refresh" content=.+/>#', '', $body, 1);
@@ -391,6 +388,11 @@ abstract class BrowserTestBase extends TestCase {
   protected function setUp() {
     parent::setUp();
 
+    $this->setUpAppRoot();
+
+    // Allow tests to compare MarkupInterface objects via assertEquals().
+    $this->registerComparator(new MarkupInterfaceComparator());
+
     $this->setupBaseUrl();
 
     // Install Drupal test site.
@@ -407,6 +409,15 @@ abstract class BrowserTestBase extends TestCase {
     // PHPUnit 6 tests that only make assertions using $this->assertSession()
     // can be marked as risky.
     $this->addToAssertionCount(1);
+  }
+
+  /**
+   * Sets up the root application path.
+   */
+  protected function setUpAppRoot(): void {
+    if ($this->root === NULL) {
+      $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+    }
   }
 
   /**
@@ -639,22 +650,6 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function config($name) {
     return $this->container->get('config.factory')->getEditable($name);
-  }
-
-  /**
-   * Returns all response headers.
-   *
-   * @return array
-   *   The HTTP headers values.
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
-   *   Use $this->getSession()->getResponseHeaders() instead.
-   *
-   * @see https://www.drupal.org/node/3067207
-   */
-  protected function drupalGetHeaders() {
-    @trigger_error('Drupal\Tests\BrowserTestBase::drupalGetHeaders() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use $this->getSession()->getResponseHeaders() instead. See https://www.drupal.org/node/3067207', E_USER_DEPRECATED);
-    return $this->getSession()->getResponseHeaders();
   }
 
   /**

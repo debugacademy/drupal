@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Tests all ui related settings under admin/structure/views/settings.
  *
@@ -24,7 +26,7 @@ class SettingsTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
     $this->drupalPlaceBlock('local_tasks_block');
   }
@@ -108,7 +110,7 @@ class SettingsTest extends UITestBase {
 
     $this->drupalPostForm(NULL, [], t('Update preview'));
     $xpath = $this->xpath('//div[@class="views-query-info"]/pre');
-    $this->assertEqual(count($xpath), 0, 'The views sql is hidden.');
+    $this->assertCount(0, $xpath, 'The views sql is hidden.');
 
     $edit = [
       'ui_show_sql_query_enabled' => TRUE,
@@ -120,9 +122,9 @@ class SettingsTest extends UITestBase {
 
     $this->drupalPostForm(NULL, [], t('Update preview'));
     $xpath = $this->xpath('//div[@class="views-query-info"]//pre');
-    $this->assertEqual(count($xpath), 1, 'The views sql is shown.');
-    $this->assertFalse(strpos($xpath[0]->getText(), 'db_condition_placeholder') !== FALSE, 'No placeholders are shown in the views sql.');
-    $this->assertTrue(strpos($xpath[0]->getText(), "node_field_data.status = '1'") !== FALSE, 'The placeholders in the views sql is replace by the actual value.');
+    $this->assertCount(1, $xpath, 'The views sql is shown.');
+    $this->assertStringNotContainsString('db_condition_placeholder', $xpath[0]->getText(), 'No placeholders are shown in the views sql.');
+    $this->assertStringContainsString(Database::getConnection()->escapeField("node_field_data.status") . " = '1'", $xpath[0]->getText(), 'The placeholders in the views sql is replace by the actual value.');
 
     // Test the advanced settings form.
 

@@ -6,7 +6,6 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\Tests\DeprecatedModulesTestTrait;
 
 /**
  * Tests the field type manager.
@@ -14,8 +13,6 @@ use Drupal\Tests\DeprecatedModulesTestTrait;
  * @group field
  */
 class FieldTypePluginManagerTest extends FieldKernelTestBase {
-
-  use DeprecatedModulesTestTrait;
 
   /**
    * Tests the default settings convenience methods.
@@ -51,7 +48,7 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
 
       $instance = $field_type_manager->createInstance($type, $configuration);
 
-      $this->assertTrue($instance instanceof $class, new FormattableMarkup('Created a @class instance', ['@class' => $class]));
+      $this->assertInstanceOf($class, $instance);
       $this->assertEqual($field_name, $instance->getName(), new FormattableMarkup('Instance name is @name', ['@name' => $field_name]));
     }
   }
@@ -82,7 +79,7 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
 
     $instance = $field_type_manager->createInstance($type, $configuration);
 
-    $this->assertTrue($instance instanceof $class, new FormattableMarkup('Created a @class instance', ['@class' => $class]));
+    $this->assertInstanceOf($class, $instance);
     $this->assertEqual($field_name, $instance->getName(), new FormattableMarkup('Instance name is @name', ['@name' => $field_name]));
     $this->assertEqual($instance->getFieldDefinition()->getLabel(), 'Jenny', 'Instance label is Jenny');
     $this->assertEqual($instance->getFieldDefinition()->getDefaultValue($entity), [['value' => 8675309]], 'Instance default_value is 8675309');

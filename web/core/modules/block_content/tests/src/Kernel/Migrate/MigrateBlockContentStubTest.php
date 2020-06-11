@@ -19,12 +19,12 @@ class MigrateBlockContentStubTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['block_content'];
+  protected static $modules = ['block_content'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('block_content');
   }
@@ -35,7 +35,7 @@ class MigrateBlockContentStubTest extends MigrateDrupalTestBase {
   public function testStubFailure() {
     $message = 'Expected MigrateException thrown when no bundles exist.';
     try {
-      $this->createStub('block_content');
+      $this->createEntityStub('block_content');
       $this->fail($message);
     }
     catch (MigrateException $e) {

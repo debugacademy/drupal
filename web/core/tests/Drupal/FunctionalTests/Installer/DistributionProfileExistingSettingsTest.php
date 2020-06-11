@@ -5,7 +5,6 @@ namespace Drupal\FunctionalTests\Installer;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -116,13 +115,12 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
    */
   public function testInstalled() {
     $this->assertUrl('user/1');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.
     $this->assertText($this->rootUser->getAccountName());
 
     // Confirm that Drupal recognizes this distribution as the current profile.
     $this->assertEqual(\Drupal::installProfile(), 'mydistro');
-    $this->assertArrayNotHasKey('install_profile', Settings::getAll(), 'The install profile has not been written to settings.php.');
     $this->assertEqual($this->config('core.extension')->get('profile'), 'mydistro', 'The install profile has been written to core.extension configuration.');
 
     $this->rebuildContainer();

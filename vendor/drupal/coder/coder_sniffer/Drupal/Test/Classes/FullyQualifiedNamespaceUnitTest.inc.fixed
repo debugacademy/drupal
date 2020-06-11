@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Example.
+ */
+
+use Test\MultiLineSecond;
+use Test\Foo;
+use Test\NotUsed;
+use Test\Bar;
+use Test\Alias as TestAlias;
+use Test\MultiLine as MultiLineAlias;
+
+/**
+ * Example.
+ */
+class Example {
+
+  /**
+   * Description.
+   */
+  public function test1(TestAlias $alias) {
+
+  }
+
+  /**
+   * Description.
+   */
+  public function test2(NotUsed $notUsed) {
+
+  }
+
+  /**
+   * Description.
+   */
+  public function test3(TestAlias $alias) {
+
+  }
+
+  /**
+   * Description.
+   */
+  public function test4(Foo $foo) {
+
+  }
+
+  /**
+   * Description.
+   */
+  public function test5(Bar $bar) {
+
+  }
+
+  /**
+   * Description.
+   */
+  public function test6(TestDiff\Bar $bar) {
+
+  }
+
+  /**
+   * Description.
+   */
+  public function test7(TestDiff\TestAlias $anotherAlias) {
+
+  }
+
+  /**
+   * Description.
+   */
+  public function test8(MultiLineAlias $multiLine, MultiLineSecond $multiLineSecond) {
+
+  }
+
+}

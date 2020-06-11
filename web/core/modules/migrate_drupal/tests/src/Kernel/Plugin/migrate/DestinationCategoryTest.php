@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate;
 
-use Drupal\ban\Plugin\migrate\destination\BlockedIP;
+use Drupal\ban\Plugin\migrate\destination\BlockedIp;
 use Drupal\color\Plugin\migrate\destination\Color;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\migrate\Plugin\migrate\destination\ComponentEntityDisplayBase;
@@ -13,7 +13,6 @@ use Drupal\path\Plugin\migrate\destination\UrlAlias;
 use Drupal\shortcut\Plugin\migrate\destination\ShortcutSetUsers;
 use Drupal\statistics\Plugin\migrate\destination\NodeCounter;
 use Drupal\system\Plugin\migrate\destination\d7\ThemeSettings;
-use Drupal\Tests\DeprecatedModulesTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use Drupal\Tests\migrate_drupal\Traits\CreateMigrationsTrait;
 use Drupal\user\Plugin\migrate\destination\UserData;
@@ -27,7 +26,6 @@ class DestinationCategoryTest extends MigrateDrupalTestBase {
 
   use FileSystemModuleDiscoveryDataProviderTrait;
   use CreateMigrationsTrait;
-  use DeprecatedModulesTestTrait;
 
   /**
    * The migration plugin manager.
@@ -39,10 +37,9 @@ class DestinationCategoryTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     // Enable all modules.
     self::$modules = array_keys($this->coreModuleListDataProvider());
-    self::$modules = $this->removeDeprecatedModules(self::$modules);
     parent::setUp();
     $this->migrationManager = \Drupal::service('plugin.manager.migration');
   }
@@ -124,7 +121,7 @@ class DestinationCategoryTest extends MigrateDrupalTestBase {
     return [
       EntityContentBase::class,
       UrlAlias::class,
-      BlockedIP::class,
+      BlockedIp::class,
       NodeCounter::class,
       UserData::class,
     ];

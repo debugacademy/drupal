@@ -7,6 +7,7 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
+use Drupal\TestTools\PhpUnitCompatibility\PhpUnit8\ClassWriter;
 use PHPUnit\Util\Test;
 
 /**
@@ -116,6 +117,10 @@ class TestDiscovery {
       $this->classLoader->addPsr4($prefix, $paths);
     }
 
+    $loader = require __DIR__ . '/../../../../../autoload.php';
+    // Ensure we have a valid TestCase class.
+    ClassWriter::mutateTestBase($loader);
+
     return $this->testNamespaces;
   }
 
@@ -128,7 +133,7 @@ class TestDiscovery {
    *   An array of included test types.
    *
    * @return array
-   *   An array of tests keyed by the the group name. If a test is annotated to
+   *   An array of tests keyed by the group name. If a test is annotated to
    *   belong to multiple groups, it will appear under all group keys it belongs
    *   to.
    * @code

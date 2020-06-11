@@ -19,7 +19,7 @@ class NodeTitleTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['comment', 'views', 'block'];
+  protected static $modules = ['comment', 'views', 'block'];
 
   /**
    * {@inheritdoc}
@@ -36,7 +36,7 @@ class NodeTitleTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
     $this->drupalPlaceBlock('page_title_block');
@@ -83,7 +83,7 @@ class NodeTitleTest extends NodeTestBase {
     $node = $this->drupalCreateNode($settings);
     // Test that 0 appears as <title>.
     $this->drupalGet('node/' . $node->id());
-    $this->assertTitle(0 . ' | Drupal', 'Page title is equal to 0.', 'Node');
+    $this->assertTitle('0 | Drupal');
     // Test that 0 appears in the template <h1>.
     $xpath = '//h1';
     $this->assertSame('0', $this->xpath($xpath)[0]->getText(), 'Node title is displayed as 0.');

@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * Provides a container optimized for Drupal's needs.
@@ -41,12 +42,9 @@ use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceExce
  * - The function getServiceIds() was added as it has a use-case in core and
  *   contrib.
  *
- * @todo Implement Symfony\Contracts\Service\ResetInterface once Symfony 4
- *   is being used. See https://www.drupal.org/project/drupal/issues/3032605
- *
  * @ingroup container
  */
-class Container implements ContainerInterface {
+class Container implements ContainerInterface, ResetInterface {
 
   /**
    * The parameters of the container.
@@ -256,60 +254,7 @@ class Container implements ContainerInterface {
     }
     else {
       $class = $this->frozen ? $definition['class'] : current($this->resolveServicesAndParameters([$definition['class']]));
-      $length = isset($definition['arguments_count']) ? $definition['arguments_count'] : count($arguments);
-
-      // Optimize class instantiation for services with up to 10 parameters as
-      // ReflectionClass is noticeably slow.
-      switch ($length) {
-        case 0:
-          $service = new $class();
-          break;
-
-        case 1:
-          $service = new $class($arguments[0]);
-          break;
-
-        case 2:
-          $service = new $class($arguments[0], $arguments[1]);
-          break;
-
-        case 3:
-          $service = new $class($arguments[0], $arguments[1], $arguments[2]);
-          break;
-
-        case 4:
-          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3]);
-          break;
-
-        case 5:
-          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4]);
-          break;
-
-        case 6:
-          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]);
-          break;
-
-        case 7:
-          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6]);
-          break;
-
-        case 8:
-          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7]);
-          break;
-
-        case 9:
-          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7], $arguments[8]);
-          break;
-
-        case 10:
-          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7], $arguments[8], $arguments[9]);
-          break;
-
-        default:
-          $r = new \ReflectionClass($class);
-          $service = $r->newInstanceArgs($arguments);
-          break;
-      }
+      $service = new $class(...$arguments);
     }
 
     if (!isset($definition['shared']) || $definition['shared'] !== FALSE) {

@@ -23,7 +23,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'image_test'];
+  protected static $modules = ['system', 'image_test'];
 
   /**
    * {@inheritdoc}
@@ -33,7 +33,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser([
       'administer site configuration',
@@ -73,7 +73,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
     // Test access without the permission 'administer site configuration'.
     $this->drupalLogin($this->drupalCreateUser(['access administration pages']));
     $this->drupalGet('admin/config/media/image-toolkit');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }

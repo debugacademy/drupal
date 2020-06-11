@@ -57,7 +57,7 @@ use Drupal\node\Entity\NodeType;
  *   hook are of the specific entity class, not the generic Entity class, so in
  *   your implementation, you can make the $entity argument something like $node
  *   and give it a specific type hint (which should normally be to the specific
- *   interface, such as \Drupal\Node\NodeInterface for nodes).
+ *   interface, such as \Drupal\node\NodeInterface for nodes).
  * - $storage in the code examples is assumed to be an entity storage
  *   class. See the @link entity_api Entity API topic @endlink for
  *   information on how to instantiate the correct storage class for an
@@ -67,7 +67,7 @@ use Drupal\node\Entity\NodeType;
  *   information on how to instantiate the correct view builder class for
  *   an entity type.
  * - During many operations, static methods are called on the entity class,
- *   which implements \Drupal\Entity\EntityInterface.
+ *   which implements \Drupal\Core\Entity\EntityInterface.
  *
  * @section entities_revisions_translations Entities, revisions and translations
  * A content entity can have multiple stored variants: based on its definition,
@@ -498,7 +498,7 @@ use Drupal\node\Entity\NodeType;
  * - \Drupal\Core\Entity\Routing\AdminHtmlRouteProvider provides the same
  *   routes, set up to use the administrative theme for edit and delete pages.
  * - You can also create your own class, extending one of these two classes if
- *   you only want to modify their behaviour slightly.
+ *   you only want to modify their behavior slightly.
  *
  * To register any route provider class, add lines like the following to your
  * entity class annotation:
@@ -1828,6 +1828,11 @@ function hook_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDi
 /**
  * Provides custom base field definitions for a content entity type.
  *
+ * Field (storage) definitions returned by this hook must run through the
+ * regular field storage life-cycle operations: they need to be properly
+ * installed, updated, and uninstalled. This would typically be done through the
+ * Entity Update API provided by the entity definition update manager.
+ *
  * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
  *   The entity type definition.
  *
@@ -1839,6 +1844,8 @@ function hook_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDi
  * @see hook_entity_bundle_field_info_alter()
  * @see \Drupal\Core\Field\FieldDefinitionInterface
  * @see \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldDefinitions()
+ * @see \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+ * @see https://www.drupal.org/node/3034742
  */
 function hook_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'node') {
@@ -1943,6 +1950,11 @@ function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\Entit
 /**
  * Provides field storage definitions for a content entity type.
  *
+ * Field storage definitions returned by this hook must run through the regular
+ * field storage life-cycle operations: they need to be properly installed,
+ * updated, and uninstalled. This would typically be done through the Entity
+ * Update API provided by the entity definition update manager.
+ *
  * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
  *   The entity type definition.
  *
@@ -1952,6 +1964,8 @@ function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\Entit
  * @see hook_entity_field_storage_info_alter()
  * @see \Drupal\Core\Field\FieldStorageDefinitionInterface
  * @see \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldStorageDefinitions()
+ * @see \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+ * @see https://www.drupal.org/node/3034742
  */
 function hook_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   if (\Drupal::entityTypeManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {

@@ -29,12 +29,9 @@ build:
         testgroups: '--all'
         suppress-deprecations: false
         halt-on-fail: false
-      run_tests.simpletest:
-         types: 'Simpletest'
-         testgroups: '--all'
-         suppress-deprecations: false
-         halt-on-fail: false
       run_tests.build:
+        # Limit concurrency due to disk space concerns.
+        concurrency: 15
         types: 'PHPUnit-Build'
         testgroups: '--all'
         suppress-deprecations: false
@@ -53,7 +50,9 @@ build:
       # Run nightwatch testing.
       # @see https://www.drupal.org/project/drupal/issues/2869825
       nightwatchjs:
-#      container_command.drupal_project_templates:
-#        commands:
-#          - "sudo -u www-data ${SOURCE_DIR}/core/tests/scripts/test_composer_project_templates.sh"
-#        halt-on-fail: true
+      # Re-run Composer plugin tests after installing Composer 2
+      container_command.composer-upgrade:
+        commands:
+          - "sudo composer self-update --snapshot"
+          - "./vendor/bin/phpunit -c core --group VendorHardening,ProjectMessage,Scaffold"
+        halt-on-fail: true

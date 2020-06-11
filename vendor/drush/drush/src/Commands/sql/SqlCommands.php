@@ -25,7 +25,6 @@ class SqlCommands extends DrushCommands implements StdinAwareInterface
      * @command sql:conf
      * @aliases sql-conf
      * @option all Show all database connections, instead of just one.
-     * @option show-passwords Show database password.
      * @optionset_sql
      * @bootstrap max configuration
      * @hidden
@@ -123,7 +122,7 @@ class SqlCommands extends DrushCommands implements StdinAwareInterface
         }
         $tables = $sql->listTables();
         if (!$sql->drop($tables)) {
-            throw new \Exception('Unable to drop database. Rerun with --debug to see any error message.');
+            throw new \Exception('Unable to drop all tables. Rerun with --debug to see any error message.');
         }
     }
 
@@ -176,6 +175,8 @@ class SqlCommands extends DrushCommands implements StdinAwareInterface
      *   Import sql statements from a file into the current database.
      * @usage drush sql:query --file=example.sql
      *   Alternate way to import sql statements from a file.
+     * @usage drush @d8 ev "return db_query('SELECT * FROM users')->fetchAll()" --format=json
+     *   Get data back in JSON format. See https://github.com/drush-ops/drush/issues/3071#issuecomment-347929777.
      * @bootstrap max configuration
      *
      */

@@ -24,9 +24,9 @@ class LinkItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['link'];
+  protected static $modules = ['link'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a generic, external, and internal link fields for validation.
@@ -92,8 +92,8 @@ class LinkItemTest extends FieldKernelTestBase {
     // Verify that the field value is changed.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertTrue($entity->field_test instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->field_test[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_test);
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_test[0]);
     $this->assertEqual($entity->field_test->uri, $parsed_url['path']);
     $this->assertEqual($entity->field_test[0]->uri, $parsed_url['path']);
     $this->assertEqual($entity->field_test->title, $title);
@@ -172,25 +172,6 @@ class LinkItemTest extends FieldKernelTestBase {
     $entity->field_test_external->generateSampleItems();
     $entity->field_test_internal->generateSampleItems();
     $this->entityValidateAndSave($entity);
-  }
-
-  /**
-   * Tests the deprecated behavior of LinkItem::setValue().
-   *
-   * @group legacy
-   * @expectedDeprecation Support for passing options as a serialized string is deprecated in 8.7.0 and will be removed before Drupal 9.0.0. Pass them as an array instead. See https://www.drupal.org/node/2961643.
-   */
-  public function testSerializedOptions() {
-    // Check that if we set uri and options then the default values are
-    // properly initialized.
-    $entity = EntityTest::create();
-    $entity->set('field_test', [
-      'uri' => 'internal:/node/add',
-      'options' => serialize(['query' => NULL]),
-    ]);
-    $this->assertEquals('internal:/node/add', $entity->get('field_test')->uri);
-    $this->assertNull($entity->get('field_test')->title);
-    $this->assertNull($entity->get('field_test')->options['query']);
   }
 
 }

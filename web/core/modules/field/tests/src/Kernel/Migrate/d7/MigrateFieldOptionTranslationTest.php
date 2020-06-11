@@ -14,7 +14,7 @@ class MigrateFieldOptionTranslationTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'config_translation',
     'datetime',
@@ -34,7 +34,7 @@ class MigrateFieldOptionTranslationTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->executeMigrations([
       'language',
@@ -105,6 +105,9 @@ class MigrateFieldOptionTranslationTest extends MigrateDrupal7TestBase {
       ],
     ];
     $this->assertSame($allowed_values, $config_translation->get('settings.allowed_values'));
+
+    // Ensure that the count query works as expected.
+    $this->assertCount(16, $this->getMigration('d7_field_option_translation')->getSourcePlugin());
   }
 
 }

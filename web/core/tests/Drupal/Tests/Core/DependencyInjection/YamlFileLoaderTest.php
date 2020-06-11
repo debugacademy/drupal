@@ -17,7 +17,7 @@ class YamlFileLoaderTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     FileCacheFactory::setPrefix('example');
@@ -34,7 +34,11 @@ services:
 YAML;
 
     vfsStream::setup('drupal', NULL, [
-      'modules/example/example.yml' => $yml,
+      'modules' => [
+        'example' => [
+          'example.yml' => $yml,
+        ],
+      ],
     ]);
 
     $builder = new ContainerBuilder();

@@ -5,7 +5,6 @@ namespace Drupal\views\Plugin\views\display;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -23,8 +22,6 @@ use Symfony\Component\Routing\RouteCollection;
  * @see \Drupal\views\EventSubscriber\RouteSubscriber
  */
 abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouterInterface, DisplayMenuInterface {
-
-  use UrlGeneratorTrait;
 
   /**
    * The route provider.
@@ -101,7 +98,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   protected function isDefaultTabPath() {
     $menu = $this->getOption('menu');
     $tab_options = $this->getOption('tab_options');
-    return $menu['type'] == 'default tab' && !empty($tab_options['type']) && $tab_options['type'] != 'none';
+    return $menu && $menu['type'] == 'default tab' && !empty($tab_options['type']) && $tab_options['type'] != 'none';
   }
 
   /**

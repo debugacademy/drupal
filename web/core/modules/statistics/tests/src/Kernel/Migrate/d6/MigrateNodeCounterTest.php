@@ -14,12 +14,10 @@ class MigrateNodeCounterTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'content_translation',
     'language',
     'menu_ui',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
     'node',
     'statistics',
     'text',
@@ -28,7 +26,7 @@ class MigrateNodeCounterTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('node');

@@ -2,6 +2,16 @@
 
 namespace Drupal\Core\Database;
 
+use Drupal\Component\Assertion\Inspector;
+use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\Query\Delete;
+use Drupal\Core\Database\Query\Insert;
+use Drupal\Core\Database\Query\Merge;
+use Drupal\Core\Database\Query\Select;
+use Drupal\Core\Database\Query\Truncate;
+use Drupal\Core\Database\Query\Update;
+use Drupal\Core\Database\Query\Upsert;
+
 /**
  * Base Database API class.
  *
@@ -144,8 +154,31 @@ abstract class Connection {
    * List of escaped database, table, and field names, keyed by unescaped names.
    *
    * @var array
+   *
+   * @deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. This is no
+   *   longer used. Use \Drupal\Core\Database\Connection::$escapedTables or
+   *   \Drupal\Core\Database\Connection::$escapedFields instead.
+   *
+   * @see https://www.drupal.org/node/2986894
    */
   protected $escapedNames = [];
+
+  /**
+   * List of escaped table names, keyed by unescaped names.
+   *
+   * @var array
+   */
+  protected $escapedTables = [];
+
+  /**
+   * List of escaped field names, keyed by unescaped names.
+   *
+   * There are cases in which escapeField() is called on an empty string. In
+   * this case it should always return an empty string.
+   *
+   * @var array
+   */
+  protected $escapedFields = ["" => ""];
 
   /**
    * List of escaped aliases names, keyed by unescaped aliases.
@@ -162,6 +195,17 @@ abstract class Connection {
   protected $rootTransactionEndCallbacks = [];
 
   /**
+   * The identifier quote characters for the database type.
+   *
+   * An array containing the start and end identifier quote characters for the
+   * database type. The ANSI SQL standard identifier quote character is a double
+   * quotation mark.
+   *
+   * @var string[]
+   */
+  protected $identifierQuotes;
+
+  /**
    * Constructs a Connection object.
    *
    * @param \PDO $connection
@@ -173,6 +217,19 @@ abstract class Connection {
    *   - Other driver-specific options.
    */
   public function __construct(\PDO $connection, array $connection_options) {
+    if ($this->identifierQuotes === NULL) {
+      @trigger_error('In drupal:10.0.0 not setting the $identifierQuotes property in the concrete Connection class will result in an RuntimeException. See https://www.drupal.org/node/2986894', E_USER_DEPRECATED);
+      $this->identifierQuotes = ['', ''];
+    }
+    assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), '\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
+
+    // Work out the database driver namespace if none is provided. This normally
+    // written to setting.php by installer or set by
+    // \Drupal\Core\Database\Database::parseConnectionInfo().
+    if (empty($connection_options['namespace'])) {
+      $connection_options['namespace'] = (new \ReflectionObject($this))->getNamespaceName();
+    }
+
     // Initialize and prepare the connection prefix.
     $this->setPrefix(isset($connection_options['prefix']) ? $connection_options['prefix'] : '');
 
@@ -255,6 +312,11 @@ abstract class Connection {
    *   additional queries (such as inserting new user accounts). In rare cases,
    *   such as creating an SQL function, a ; is needed and can be allowed by
    *   changing this option to TRUE.
+   * - allow_square_brackets: By default, queries which contain square brackets
+   *   will have them replaced with the identifier quote character for the
+   *   database type. In rare cases, such as creating an SQL function, []
+   *   characters might be needed and can be allowed by changing this option to
+   *   TRUE.
    *
    * @return array
    *   An array of default query options.
@@ -265,6 +327,7 @@ abstract class Connection {
       'return' => Database::RETURN_STATEMENT,
       'throw_exception' => TRUE,
       'allow_delimiter_in_query' => FALSE,
+      'allow_square_brackets' => FALSE,
     ];
   }
 
@@ -299,6 +362,7 @@ abstract class Connection {
       $this->prefixes = ['default' => $prefix];
     }
 
+    [$start_quote, $end_quote] = $this->identifierQuotes;
     // Set up variables for use in prefixTables(). Replace table-specific
     // prefixes first.
     $this->prefixSearch = [];
@@ -306,14 +370,20 @@ abstract class Connection {
     foreach ($this->prefixes as $key => $val) {
       if ($key != 'default') {
         $this->prefixSearch[] = '{' . $key . '}';
-        $this->prefixReplace[] = $val . $key;
+        // $val can point to another database like 'database.users'. In this
+        // instance we need to quote the identifiers correctly.
+        $val = str_replace('.', $end_quote . '.' . $start_quote, $val);
+        $this->prefixReplace[] = $start_quote . $val . $key . $end_quote;
       }
     }
     // Then replace remaining tables with the default prefix.
     $this->prefixSearch[] = '{';
-    $this->prefixReplace[] = $this->prefixes['default'];
+    // $this->prefixes['default'] can point to another database like
+    // 'other_db.'. In this instance we need to quote the identifiers correctly.
+    // For example, "other_db"."PREFIX_table_name".
+    $this->prefixReplace[] = $start_quote . str_replace('.', $end_quote . '.' . $start_quote, $this->prefixes['default']);
     $this->prefixSearch[] = '}';
-    $this->prefixReplace[] = '';
+    $this->prefixReplace[] = $end_quote;
 
     // Set up a map of prefixed => un-prefixed tables.
     foreach ($this->prefixes as $table_name => $prefix) {
@@ -339,6 +409,30 @@ abstract class Connection {
    */
   public function prefixTables($sql) {
     return str_replace($this->prefixSearch, $this->prefixReplace, $sql);
+  }
+
+  /**
+   * Quotes all identifiers in a query.
+   *
+   * Queries sent to Drupal should wrap all unquoted identifiers in square
+   * brackets. This function searches for this syntax and replaces them with the
+   * database specific identifier. In ANSI SQL this a double quote.
+   *
+   * Note that :variable[] is used to denote array arguments but
+   * Connection::expandArguments() is always called first.
+   *
+   * @param string $sql
+   *   A string containing a partial or entire SQL query.
+   *
+   * @return string
+   *   The string containing a partial or entire SQL query with all identifiers
+   *   quoted.
+   *
+   * @internal
+   *   This method should only be called by database API code.
+   */
+  public function quoteIdentifiers($sql) {
+    return str_replace(['[', ']'], $this->identifierQuotes, $sql);
   }
 
   /**
@@ -387,18 +481,25 @@ abstract class Connection {
   /**
    * Prepares a query string and returns the prepared statement.
    *
-   * This method caches prepared statements, reusing them when
-   * possible. It also prefixes tables names enclosed in curly-braces.
+   * This method caches prepared statements, reusing them when possible. It also
+   * prefixes tables names enclosed in curly-braces and, optionally, quotes
+   * identifiers enclosed in square brackets.
    *
    * @param $query
    *   The query string as SQL, with curly-braces surrounding the
    *   table names.
+   * @param bool $quote_identifiers
+   *   (optional) Quote any identifiers enclosed in square brackets. Defaults to
+   *   TRUE.
    *
    * @return \Drupal\Core\Database\StatementInterface
    *   A PDO prepared statement ready for its execute() method.
    */
-  public function prepareQuery($query) {
+  public function prepareQuery($query, $quote_identifiers = TRUE) {
     $query = $this->prefixTables($query);
+    if ($quote_identifiers) {
+      $query = $this->quoteIdentifiers($query);
+    }
 
     return $this->connection->prepare($query);
   }
@@ -494,7 +595,10 @@ abstract class Connection {
    *   A table prefix-parsed string for the sequence name.
    */
   public function makeSequenceName($table, $field) {
-    return $this->prefixTables('{' . $table . '}_' . $field . '_seq');
+    $sequence_name = $this->prefixTables('{' . $table . '}_' . $field . '_seq');
+    // Remove identifier quotes as we are constructing a new name from a
+    // prefixed and quoted table name.
+    return str_replace($this->identifierQuotes, '', $sequence_name);
   }
 
   /**
@@ -542,7 +646,7 @@ abstract class Connection {
    * "/ * Exploit * / DROP TABLE node. -- * / UPDATE example SET field2=..."
    * @endcode
    *
-   * Unless the comment is sanitised first, the SQL server would drop the
+   * Unless the comment is sanitized first, the SQL server would drop the
    * node table and ignore the rest of the SQL statement.
    *
    * @param string $comment
@@ -583,7 +687,7 @@ abstract class Connection {
    *   Typically, $options['return'] will be set by a default or by a query
    *   builder, and should not be set by a user.
    *
-   * @return \Drupal\Core\Database\StatementInterface|int|null
+   * @return \Drupal\Core\Database\StatementInterface|int|string|null
    *   This method will return one of the following:
    *   - If either $options['return'] === self::RETURN_STATEMENT, or
    *     $options['return'] is not set (due to self::defaultOptions()),
@@ -592,7 +696,7 @@ abstract class Connection {
    *     returns the number of rows affected by the query
    *     (not the number matched).
    *   - If $options['return'] === self::RETURN_INSERT_ID,
-   *     returns the generated insert ID of the last query.
+   *     returns the generated insert ID of the last query as a string.
    *   - If either $options['return'] === self::RETURN_NULL, or
    *     an exception occurs and $options['throw_exception'] evaluates to FALSE,
    *     returns NULL.
@@ -606,9 +710,7 @@ abstract class Connection {
   public function query($query, array $args = [], $options = []) {
     // Use default values if not already set.
     $options += $this->defaultOptions();
-    if (isset($options['target'])) {
-      @trigger_error('Passing a \'target\' key to \\Drupal\\Core\\Database\\Connection::query $options argument is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, use \\Drupal\\Core\\Database\\Database::getConnection($target)->query(). See https://www.drupal.org/node/2993033.', E_USER_DEPRECATED);
-    }
+    assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
 
     try {
       // We allow either a pre-bound statement object or a literal string.
@@ -625,12 +727,16 @@ abstract class Connection {
         // semicolon) is not allowed unless the option is set.  Allowing
         // semicolons should only be needed for special cases like defining a
         // function or stored procedure in SQL. Trim any trailing delimiter to
-        // minimize false positives.
-        $query = rtrim($query, ";  \t\n\r\0\x0B");
+        // minimize false positives unless delimiter is allowed.
+        $trim_chars = "  \t\n\r\0\x0B";
+        if (empty($options['allow_delimiter_in_query'])) {
+          $trim_chars .= ';';
+        }
+        $query = rtrim($query, $trim_chars);
         if (strpos($query, ';') !== FALSE && empty($options['allow_delimiter_in_query'])) {
           throw new \InvalidArgumentException('; is not supported in SQL strings. Use only one statement at a time.');
         }
-        $stmt = $this->prepareQuery($query);
+        $stmt = $this->prepareQuery($query, !$options['allow_square_brackets']);
         $stmt->execute($args, $options);
       }
 
@@ -640,14 +746,18 @@ abstract class Connection {
       switch ($options['return']) {
         case Database::RETURN_STATEMENT:
           return $stmt;
+
         case Database::RETURN_AFFECTED:
           $stmt->allowRowCount = TRUE;
           return $stmt->rowCount();
+
         case Database::RETURN_INSERT_ID:
           $sequence_name = isset($options['sequence_name']) ? $options['sequence_name'] : NULL;
           return $this->connection->lastInsertId($sequence_name);
+
         case Database::RETURN_NULL:
           return NULL;
+
         default:
           throw new \PDOException('Invalid return directive: ' . $options['return']);
       }
@@ -772,17 +882,62 @@ abstract class Connection {
    *
    * @param string $class
    *   The class for which we want the potentially driver-specific class.
+   *
    * @return string
    *   The name of the class that should be used for this driver.
    */
   public function getDriverClass($class) {
     if (empty($this->driverClasses[$class])) {
-      if (empty($this->connectionOptions['namespace'])) {
-        // Fallback for Drupal 7 settings.php and the test runner script.
-        $this->connectionOptions['namespace'] = (new \ReflectionObject($this))->getNamespaceName();
-      }
       $driver_class = $this->connectionOptions['namespace'] . '\\' . $class;
-      $this->driverClasses[$class] = class_exists($driver_class) ? $driver_class : $class;
+      if (class_exists($driver_class)) {
+        $this->driverClasses[$class] = $driver_class;
+      }
+      else {
+        switch ($class) {
+          case 'Condition':
+            $this->driverClasses[$class] = Condition::class;
+            break;
+
+          case 'Delete':
+            $this->driverClasses[$class] = Delete::class;
+            break;
+
+          case 'Insert':
+            $this->driverClasses[$class] = Insert::class;
+            break;
+
+          case 'Merge':
+            $this->driverClasses[$class] = Merge::class;
+            break;
+
+          case 'Schema':
+            $this->driverClasses[$class] = Schema::class;
+            break;
+
+          case 'Select':
+            $this->driverClasses[$class] = Select::class;
+            break;
+
+          case 'Transaction':
+            $this->driverClasses[$class] = Transaction::class;
+            break;
+
+          case 'Truncate':
+            $this->driverClasses[$class] = Truncate::class;
+            break;
+
+          case 'Update':
+            $this->driverClasses[$class] = Update::class;
+            break;
+
+          case 'Upsert':
+            $this->driverClasses[$class] = Upsert::class;
+            break;
+
+          default:
+            $this->driverClasses[$class] = $class;
+        }
+      }
     }
     return $this->driverClasses[$class];
   }
@@ -808,7 +963,7 @@ abstract class Connection {
    */
   public function select($table, $alias = NULL, array $options = []) {
     $class = $this->getDriverClass('Select');
-    return new $class($table, $alias, $this, $options);
+    return new $class($this, $table, $alias, $options);
   }
 
   /**
@@ -945,6 +1100,22 @@ abstract class Connection {
   }
 
   /**
+   * Prepares and returns a CONDITION query object.
+   *
+   * @param string $conjunction
+   *   The operator to use to combine conditions: 'AND' or 'OR'.
+   *
+   * @return \Drupal\Core\Database\Query\Condition
+   *   A new Condition query object.
+   *
+   * @see \Drupal\Core\Database\Query\Condition
+   */
+  public function condition($conjunction) {
+    $class = $this->getDriverClass('Condition');
+    return new $class($conjunction);
+  }
+
+  /**
    * Escapes a database name string.
    *
    * Force all database names to be strictly alphanumeric-plus-underscore.
@@ -958,30 +1129,33 @@ abstract class Connection {
    *   The sanitized database name.
    */
   public function escapeDatabase($database) {
-    if (!isset($this->escapedNames[$database])) {
-      $this->escapedNames[$database] = preg_replace('/[^A-Za-z0-9_.]+/', '', $database);
-    }
-    return $this->escapedNames[$database];
+    $database = preg_replace('/[^A-Za-z0-9_]+/', '', $database);
+    [$start_quote, $end_quote] = $this->identifierQuotes;
+    return $start_quote . $database . $end_quote;
   }
 
   /**
    * Escapes a table name string.
    *
    * Force all table names to be strictly alphanumeric-plus-underscore.
-   * For some database drivers, it may also wrap the table name in
-   * database-specific escape characters.
+   * Database drivers should never wrap the table name in database-specific
+   * escape characters. This is done in Connection::prefixTables(). The
+   * database-specific escape characters are added in Connection::setPrefix().
    *
    * @param string $table
    *   An unsanitized table name.
    *
    * @return string
    *   The sanitized table name.
+   *
+   * @see \Drupal\Core\Database\Connection::prefixTables()
+   * @see \Drupal\Core\Database\Connection::setPrefix()
    */
   public function escapeTable($table) {
-    if (!isset($this->escapedNames[$table])) {
-      $this->escapedNames[$table] = preg_replace('/[^A-Za-z0-9_.]+/', '', $table);
+    if (!isset($this->escapedTables[$table])) {
+      $this->escapedTables[$table] = preg_replace('/[^A-Za-z0-9_.]+/', '', $table);
     }
-    return $this->escapedNames[$table];
+    return $this->escapedTables[$table];
   }
 
   /**
@@ -998,10 +1172,14 @@ abstract class Connection {
    *   The sanitized field name.
    */
   public function escapeField($field) {
-    if (!isset($this->escapedNames[$field])) {
-      $this->escapedNames[$field] = preg_replace('/[^A-Za-z0-9_.]+/', '', $field);
+    if (!isset($this->escapedFields[$field])) {
+      $escaped = preg_replace('/[^A-Za-z0-9_.]+/', '', $field);
+      [$start_quote, $end_quote] = $this->identifierQuotes;
+      // Sometimes fields have the format table_alias.field. In such cases
+      // both identifiers should be quoted, for example, "table_alias"."field".
+      $this->escapedFields[$field] = $start_quote . str_replace('.', $end_quote . '.' . $start_quote, $escaped) . $end_quote;
     }
-    return $this->escapedNames[$field];
+    return $this->escapedFields[$field];
   }
 
   /**
@@ -1020,7 +1198,8 @@ abstract class Connection {
    */
   public function escapeAlias($field) {
     if (!isset($this->escapedAliases[$field])) {
-      $this->escapedAliases[$field] = preg_replace('/[^A-Za-z0-9_]+/', '', $field);
+      [$start_quote, $end_quote] = $this->identifierQuotes;
+      $this->escapedAliases[$field] = $start_quote . preg_replace('/[^A-Za-z0-9_]+/', '', $field) . $end_quote;
     }
     return $this->escapedAliases[$field];
   }
@@ -1355,7 +1534,7 @@ abstract class Connection {
    * Returns the type of database driver.
    *
    * This is not necessarily the same as the type of the database itself. For
-   * instance, there could be two MySQL drivers, mysql and mysql_mock. This
+   * instance, there could be two MySQL drivers, mysql and mysqlMock. This
    * function would return different values for each, but both would return
    * "mysql" for databaseType().
    *
@@ -1549,10 +1728,6 @@ abstract class Connection {
   /**
    * Creates an array of database connection options from a URL.
    *
-   * @internal
-   *   This method should not be called. Use
-   *   \Drupal\Core\Database\Database::convertDbUrlToConnectionInfo() instead.
-   *
    * @param string $url
    *   The URL.
    * @param string $root
@@ -1565,6 +1740,10 @@ abstract class Connection {
    * @throws \InvalidArgumentException
    *   Exception thrown when the provided URL does not meet the minimum
    *   requirements.
+   *
+   * @internal
+   *   This method should only be called from
+   *   \Drupal\Core\Database\Database::convertDbUrlToConnectionInfo().
    *
    * @see \Drupal\Core\Database\Database::convertDbUrlToConnectionInfo()
    */
@@ -1611,12 +1790,10 @@ abstract class Connection {
   /**
    * Creates a URL from an array of database connection options.
    *
-   * @internal
-   *   This method should not be called. Use
-   *   \Drupal\Core\Database\Database::getConnectionInfoAsUrl() instead.
-   *
    * @param array $connection_options
-   *   The array of connection options for a database connection.
+   *   The array of connection options for a database connection. An additional
+   *   key of 'module' is added by Database::getConnectionInfoAsUrl() for
+   *   drivers provided my contributed or custom modules for convenience.
    *
    * @return string
    *   The connection info as a URL.
@@ -1624,6 +1801,10 @@ abstract class Connection {
    * @throws \InvalidArgumentException
    *   Exception thrown when the provided array of connection options does not
    *   meet the minimum requirements.
+   *
+   * @internal
+   *   This method should only be called from
+   *   \Drupal\Core\Database\Database::getConnectionInfoAsUrl().
    *
    * @see \Drupal\Core\Database\Database::getConnectionInfoAsUrl()
    */
@@ -1650,6 +1831,11 @@ abstract class Connection {
     }
 
     $db_url .= '/' . $connection_options['database'];
+
+    // Add the module when the driver is provided by a module.
+    if (isset($connection_options['module'])) {
+      $db_url .= '?module=' . $connection_options['module'];
+    }
 
     if (isset($connection_options['prefix']['default']) && $connection_options['prefix']['default'] !== '') {
       $db_url .= '#' . $connection_options['prefix']['default'];

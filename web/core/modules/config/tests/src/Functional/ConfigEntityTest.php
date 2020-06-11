@@ -28,7 +28,7 @@ class ConfigEntityTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_test'];
+  protected static $modules = ['config_test'];
 
   /**
    * {@inheritdoc}
@@ -48,7 +48,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertIdentical($empty->language()->getId(), $default_langcode);
 
     // Verify ConfigEntity properties/methods on the newly created empty entity.
-    $this->assertIdentical($empty->isNew(), TRUE);
+    $this->assertTrue($empty->isNew());
     $this->assertIdentical($empty->getOriginalId(), NULL);
     $this->assertIdentical($empty->bundle(), 'config_test');
     $this->assertIdentical($empty->id(), NULL);
@@ -85,7 +85,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $empty_id = $storage->create([
       'id' => '',
     ]);
-    $this->assertIdentical($empty_id->isNew(), TRUE);
+    $this->assertTrue($empty_id->isNew());
     try {
       $empty_id->save();
       $this->fail('EntityMalformedException was thrown.');
@@ -106,7 +106,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertIdentical($config_test->language()->getId(), $default_langcode);
 
     // Verify methods on the newly created entity.
-    $this->assertIdentical($config_test->isNew(), TRUE);
+    $this->assertTrue($config_test->isNew());
     $this->assertIdentical($config_test->getOriginalId(), $expected['id']);
     $this->assertIdentical($config_test->id(), $expected['id']);
     $this->assertTrue(Uuid::isValid($config_test->uuid()));
@@ -130,7 +130,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertIdentical($config_test->id(), $expected['id']);
     $this->assertIdentical($config_test->uuid(), $expected['uuid']);
     $this->assertIdentical($config_test->label(), $expected['label']);
-    $this->assertIdentical($config_test->isNew(), FALSE);
+    $this->assertFalse($config_test->isNew());
     $this->assertIdentical($config_test->getOriginalId(), $expected['id']);
 
     // Save again, and verify correct status and properties again.
@@ -139,7 +139,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertIdentical($config_test->id(), $expected['id']);
     $this->assertIdentical($config_test->uuid(), $expected['uuid']);
     $this->assertIdentical($config_test->label(), $expected['label']);
-    $this->assertIdentical($config_test->isNew(), FALSE);
+    $this->assertFalse($config_test->isNew());
     $this->assertIdentical($config_test->getOriginalId(), $expected['id']);
 
     // Verify that a configuration entity can be saved with an ID of the
@@ -196,7 +196,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $same_id = $storage->create([
       'id' => $config_test->id(),
     ]);
-    $this->assertIdentical($same_id->isNew(), TRUE);
+    $this->assertTrue($same_id->isNew());
     try {
       $same_id->save();
       $this->fail('Not possible to overwrite an entity entity.');
@@ -219,7 +219,7 @@ class ConfigEntityTest extends BrowserTestBase {
       $this->assertIdentical($config_test->id(), $new_id);
       $status = $config_test->save();
       $this->assertIdentical($status, SAVED_UPDATED);
-      $this->assertIdentical($config_test->isNew(), FALSE);
+      $this->assertFalse($config_test->isNew());
 
       // Verify that originalID points to new ID directly after renaming.
       $this->assertIdentical($config_test->id(), $new_id);
@@ -253,7 +253,7 @@ class ConfigEntityTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/structure/config_test/add', $edit, 'Save');
     $this->assertUrl('admin/structure/config_test');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw($message_insert);
     $this->assertNoRaw($message_update);
     $this->assertLinkByHref("admin/structure/config_test/manage/$id");
@@ -264,7 +264,7 @@ class ConfigEntityTest extends BrowserTestBase {
     ];
     $this->drupalPostForm("admin/structure/config_test/manage/$id", $edit, 'Save');
     $this->assertUrl('admin/structure/config_test');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoRaw($message_insert);
     $this->assertRaw($message_update);
     $this->assertLinkByHref("admin/structure/config_test/manage/$id");
@@ -276,7 +276,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertUrl("admin/structure/config_test/manage/$id/delete");
     $this->drupalPostForm(NULL, [], 'Delete');
     $this->assertUrl('admin/structure/config_test');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoRaw($message_update);
     $this->assertRaw($message_delete);
     $this->assertNoText($label1);
@@ -289,7 +289,7 @@ class ConfigEntityTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/structure/config_test/add', $edit, 'Save');
     $this->assertUrl('admin/structure/config_test');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText($label1);
     $this->assertLinkByHref("admin/structure/config_test/manage/$id");
 
@@ -300,7 +300,7 @@ class ConfigEntityTest extends BrowserTestBase {
     ];
     $this->drupalPostForm("admin/structure/config_test/manage/$id", $edit, 'Save');
     $this->assertUrl('admin/structure/config_test');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoText($label1);
     $this->assertNoText($label2);
     $this->assertText($label3);
@@ -314,7 +314,7 @@ class ConfigEntityTest extends BrowserTestBase {
       'label' => '0',
     ];
     $this->drupalPostForm('admin/structure/config_test/add', $edit, 'Save');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $message_insert = new FormattableMarkup('%label configuration has been created.', ['%label' => $edit['label']]);
     $this->assertRaw($message_insert);
     $this->assertLinkByHref('admin/structure/config_test/manage/0');

@@ -4,7 +4,6 @@ namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
 /**
@@ -34,11 +33,8 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
   /**
    * Sets the test up.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
-
-    /** @var \Drupal\user\Entity\UserInterface $user */
-    $user = User::load(1);
 
     // Create initial block.
     $block = $this->createBlockContent('initial');
@@ -84,9 +80,9 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
         '@revision' => $loaded->getRevisionId(),
       ]));
       if ($delta > 0) {
-        $this->assertTrue($loaded->getRevisionUser() instanceof UserInterface, 'Revision User found.');
-        $this->assertTrue(is_numeric($loaded->getRevisionUserId()), 'Revision User ID found.');
-        $this->assertTrue(is_numeric($loaded->getRevisionCreationTime()), 'Revision time found.');
+        $this->assertInstanceOf(UserInterface::class, $loaded->getRevisionUser());
+        $this->assertIsNumeric($loaded->getRevisionUserId());
+        $this->assertIsNumeric($loaded->getRevisionCreationTime());
       }
     }
 

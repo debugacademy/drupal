@@ -17,7 +17,10 @@ class ConfigTranslationUiThemeTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_translation', 'config_translation_test'];
+  protected static $modules = [
+    'config_translation',
+    'config_translation_test',
+  ];
 
   /**
    * {@inheritdoc}
@@ -38,7 +41,7 @@ class ConfigTranslationUiThemeTest extends BrowserTestBase {
    */
   protected $adminUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $admin_permissions = [
@@ -74,7 +77,7 @@ class ConfigTranslationUiThemeTest extends BrowserTestBase {
 
     $translation_base_url = 'admin/config/development/performance/translate';
     $this->drupalGet($translation_base_url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertLinkByHref("$translation_base_url/fr/add");
   }
 

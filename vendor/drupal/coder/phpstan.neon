@@ -1,0 +1,85 @@
+parameters:
+    level: 6
+    paths:
+        - coder_sniffer
+    excludes_analyse:
+        # Copied legacy code that we don't care much about.
+        - 'coder_sniffer/DrupalPractice/Sniffs/CodeAnalysis/VariableAnalysisSniff.php'
+        # Test files that should not be checked.
+        - 'coder_sniffer/*/Test/*.tpl.php'
+        - 'coder_sniffer/*/Test/*.api.php'
+        - 'coder_sniffer/*/Test/*/good.php'
+        - 'coder_sniffer/*/Test/*/bad.php'
+        - 'coder_sniffer/*/Test/*/drupal[678]/*.php'
+    autoload_files:
+        - coder_sniffer/Drupal/Test/phpunit-bootstrap.php
+    ignoreErrors:
+        # PHPStan does not support variable variables, see https://github.com/phpstan/phpstan/issues/2810
+        -
+            count: 3
+            message: '~^Undefined variable: \$value[123]$~'
+            path: coder_sniffer/Drupal/Sniffs/InfoFiles/ClassFilesSniff.php
+        -
+            count: 3
+            message: '~^Undefined variable: \$value[123]$~'
+            path: coder_sniffer/Drupal/Sniffs/InfoFiles/DuplicateEntrySniff.php
+        -
+            count: 1
+            message: '~^Variable \$key might not be defined.$~'
+            path: coder_sniffer/Drupal/Sniffs/InfoFiles/ClassFilesSniff.php
+        -
+            count: 1
+            message: '~^Variable \$key might not be defined.$~'
+            path: coder_sniffer/Drupal/Sniffs/InfoFiles/DuplicateEntrySniff.php
+        -
+            message: "#^Result of \\|\\| is always true\\.$#"
+            count: 1
+            path: coder_sniffer/Drupal/Sniffs/InfoFiles/ClassFilesSniff.php
+        -
+            message: "#^Result of \\|\\| is always true\\.$#"
+            count: 1
+            path: coder_sniffer/Drupal/Sniffs/InfoFiles/DuplicateEntrySniff.php
+        -
+            message: "#^Call to function array_key_exists\\(\\) with 0\\|string\\|null and array\\(\\) will always evaluate to false\\.$#"
+            count: 1
+            path: coder_sniffer/Drupal/Sniffs/InfoFiles/DuplicateEntrySniff.php
+        -
+            message: "#^Strict comparison using \\=\\=\\= between false and true will always evaluate to false\\.$#"
+            count: 1
+            path: coder_sniffer/Drupal/Sniffs/InfoFiles/DuplicateEntrySniff.php
+        # We don't want to introduce abstract methods for the 2 calls because
+        # the class is used in different ways where those methods are not
+        # always necessary for implementors.
+        -
+            count: 2
+            message: '~^Call to an undefined method Drupal\\Sniffs\\Semantics\\FunctionCall::(registerFunctionNames|processFunctionCall)\(\).$~'
+            path: coder_sniffer/Drupal/Sniffs/Semantics/FunctionCall.php
+        # False positive: Variable $a in isset() always exists and is not
+        # nullable. https://github.com/phpstan/phpstan/issues/2816
+        -
+            count: 2
+            message: '~^Variable \$fileShort in isset\(\) always exists and is not nullable.$~'
+            path: coder_sniffer/Drupal/Sniffs/Commenting/DocCommentSniff.php
+        -
+            message: "#^Result of && is always false\\.$#"
+            count: 2
+            path: coder_sniffer/Drupal/Sniffs/Commenting/DocCommentSniff.php
+        -
+            message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+            count: 1
+            path: coder_sniffer/Drupal/Sniffs/Commenting/FunctionCommentSniff.php
+        -
+            message: "#^Strict comparison using \\=\\=\\= between true and false will always evaluate to false\\.$#"
+            count: 1
+            path: coder_sniffer/Drupal/Sniffs/Commenting/DocCommentSniff.php
+        # Wrong return type in PHPCS https://github.com/squizlabs/PHP_CodeSniffer/pull/2816
+        -
+            message: "#^Method Drupal\\\\Sniffs\\\\Files\\\\LineLengthSniff\\:\\:checkLineLength\\(\\) should return false\\|null but empty return statement found\\.$#"
+            count: 4
+            path: coder_sniffer/Drupal/Sniffs/Files/LineLengthSniff.php
+        -
+            message: "#^Method Drupal\\\\Sniffs\\\\Files\\\\LineLengthSniff\\:\\:checkLineLength\\(\\) should return false\\|null but return statement is missing\\.$#"
+            count: 1
+            path: coder_sniffer/Drupal/Sniffs/Files/LineLengthSniff.php
+        # We support PHP 7.0 which does not have the "void" return type hint.
+        - '#^Method .+ has no return typehint specified\.$#'

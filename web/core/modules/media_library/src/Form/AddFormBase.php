@@ -72,14 +72,10 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
    *   The opener resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, OpenerResolverInterface $opener_resolver = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, OpenerResolverInterface $opener_resolver) {
     $this->entityTypeManager = $entity_type_manager;
     $this->libraryUiBuilder = $library_ui_builder;
     $this->viewBuilder = $this->entityTypeManager->getViewBuilder('media');
-    if (!$opener_resolver) {
-      @trigger_error('The media_library.opener_resolver service must be passed to AddFormBase::__construct(), it is required before Drupal 9.0.0.', E_USER_DEPRECATED);
-      $opener_resolver = \Drupal::service('media_library.opener_resolver');
-    }
     $this->openerResolver = $opener_resolver;
   }
 
@@ -343,7 +339,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
   }
 
   /**
-   * {@inheritdodc}
+   * {@inheritdoc}
    */
   public static function trustedCallbacks() {
     return ['preRenderAddedMedia'];
@@ -476,13 +472,11 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
     if ($this->isAdvancedUi()) {
       $actions['save_select']['#value'] = $this->t('Save and select');
       $actions['save_insert'] = [
-        'save_insert' => [
-          '#type' => 'submit',
-          '#value' => $this->t('Save and insert'),
-          '#ajax' => [
-            'callback' => '::updateWidget',
-            'wrapper' => 'media-library-add-form-wrapper',
-          ],
+        '#type' => 'submit',
+        '#value' => $this->t('Save and insert'),
+        '#ajax' => [
+          'callback' => '::updateWidget',
+          'wrapper' => 'media-library-add-form-wrapper',
         ],
       ];
     }

@@ -2,7 +2,6 @@
 
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
@@ -28,12 +27,6 @@ use Symfony\Component\Routing\Route;
  * )
  */
 class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase implements OutboundPathProcessorInterface, LanguageSwitcherInterface, ContainerFactoryPluginInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The language negotiation method ID.
@@ -170,8 +163,8 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
    * \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity::processOutbound().
    *
    * @return bool
-   *   TRUE if the the content entity language negotiator has higher priority
-   *   than the url language negotiator, FALSE otherwise.
+   *   TRUE if the content entity language negotiator has higher priority than
+   *   the url language negotiator, FALSE otherwise.
    */
   protected function hasLowerLanguageNegotiationWeight() {
     if (!isset($this->hasLowerLanguageNegotiationWeightResult)) {

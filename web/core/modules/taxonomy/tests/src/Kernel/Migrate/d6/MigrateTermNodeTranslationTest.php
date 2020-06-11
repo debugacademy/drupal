@@ -15,19 +15,18 @@ class MigrateTermNodeTranslationTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'config_translation',
     'content_translation',
     'language',
     'menu_ui',
-    'migrate_drupal_multilingual',
     'taxonomy',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('node');

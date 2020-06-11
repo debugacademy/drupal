@@ -16,7 +16,7 @@ class NodeHelpTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'node', 'help'];
+  protected static $modules = ['block', 'node', 'help'];
 
   /**
    * {@inheritdoc}
@@ -40,7 +40,7 @@ class NodeHelpTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create user.
@@ -69,13 +69,13 @@ class NodeHelpTest extends BrowserTestBase {
   public function testNodeShowHelpText() {
     // Check the node add form.
     $this->drupalGet('node/add/' . $this->testType);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText($this->testText);
 
     // Create node and check the node edit form.
     $node = $this->drupalCreateNode(['type' => $this->testType]);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText($this->testText);
   }
 

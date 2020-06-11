@@ -14,17 +14,15 @@ class MigrateSystemSiteTranslationTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'config_translation',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->executeMigration('d7_system_site_translation');
   }

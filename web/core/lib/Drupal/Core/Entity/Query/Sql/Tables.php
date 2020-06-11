@@ -3,7 +3,6 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
@@ -16,13 +15,6 @@ use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
  * Adds tables and fields to the SQL entity query.
  */
 class Tables implements TablesInterface {
-
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * @var \Drupal\Core\Database\Query\SelectInterface
@@ -117,13 +109,14 @@ class Tables implements TablesInterface {
         $column = NULL;
       }
 
-      // If there is revision support, only the current revisions are being
-      // queried, and the field is revisionable then use the revision id.
-      // Otherwise, the entity id will do.
-      if (($revision_key = $entity_type->getKey('revision')) && $all_revisions && $field_storage && $field_storage->isRevisionable()) {
+      // If there is revision support, all the revisions are being queried, and
+      // the field is revisionable or the revision ID field itself, then use the
+      // revision ID. Otherwise, the entity ID will do.
+      $query_revisions = $all_revisions && $field_storage && ($field_storage->isRevisionable() || $field_storage->getName() === $entity_type->getKey('revision'));
+      if ($query_revisions) {
         // This contains the relevant SQL field to be used when joining entity
         // tables.
-        $entity_id_field = $revision_key;
+        $entity_id_field = $entity_type->getKey('revision');
         // This contains the relevant SQL field to be used when joining field
         // tables.
         $field_id_field = 'revision_id';
@@ -201,7 +194,7 @@ class Tables implements TablesInterface {
         // it gets added before the base table.
         $entity_tables = [];
         $revision_table = NULL;
-        if ($all_revisions && $field_storage && $field_storage->isRevisionable()) {
+        if ($query_revisions) {
           $data_table = $entity_type->getRevisionDataTable();
           $entity_base_table = $entity_type->getRevisionTable();
         }
@@ -359,7 +352,7 @@ class Tables implements TablesInterface {
         // each join gets a separate alias.
         $key = $index_prefix . ($base_table === 'base_table' ? $table : $base_table);
         if (!isset($this->entityTables[$key])) {
-          $this->entityTables[$key] = $this->addJoin($type, $table, "%alias.$id_field = $base_table.$id_field", $langcode);
+          $this->entityTables[$key] = $this->addJoin($type, $table, "[%alias].[$id_field] = [$base_table].[$id_field]", $langcode);
         }
         return $this->entityTables[$key];
       }
@@ -372,7 +365,9 @@ class Tables implements TablesInterface {
    *
    * @param $field_name
    *   Name of the field.
+   *
    * @return string
+   *
    * @throws \Drupal\Core\Entity\Query\QueryException
    */
   protected function ensureFieldTable($index_prefix, &$field, $type, $langcode, $base_table, $entity_id_field, $field_id_field, $delta) {
@@ -385,7 +380,7 @@ class Tables implements TablesInterface {
       if ($field->getCardinality() != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }
-      $this->fieldTables[$index_prefix . $field_name] = $this->addJoin($type, $table, "%alias.$field_id_field = $base_table.$entity_id_field", $langcode, $delta);
+      $this->fieldTables[$index_prefix . $field_name] = $this->addJoin($type, $table, "[%alias].[$field_id_field] = [$base_table].[$entity_id_field]", $langcode, $delta);
     }
     return $this->fieldTables[$index_prefix . $field_name];
   }
@@ -416,12 +411,12 @@ class Tables implements TablesInterface {
       // tables have an hard-coded 'langcode' column.
       $langcode_key = $entity_type->getDataTable() == $table ? $entity_type->getKey('langcode') : 'langcode';
       $placeholder = ':langcode' . $this->sqlQuery->nextPlaceholder();
-      $join_condition .= ' AND %alias.' . $langcode_key . ' = ' . $placeholder;
+      $join_condition .= ' AND [%alias].[' . $langcode_key . '] = ' . $placeholder;
       $arguments[$placeholder] = $langcode;
     }
     if (isset($delta)) {
       $placeholder = ':delta' . $this->sqlQuery->nextPlaceholder();
-      $join_condition .= ' AND %alias.delta = ' . $placeholder;
+      $join_condition .= ' AND [%alias].[delta] = ' . $placeholder;
       $arguments[$placeholder] = $delta;
     }
     return $this->sqlQuery->addJoin($type, $table, NULL, $join_condition, $arguments);

@@ -58,7 +58,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     // file directly, because the install profile default system.cron.yml
     // configuration file was used to create the active configuration.
     $config_dir = drupal_get_path('module', 'system') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
-    $this->assertTrue(is_dir($config_dir));
+    $this->assertDirectoryExists($config_dir);
     $source_storage = new FileStorage($config_dir);
     $data = $source_storage->read($config_name);
     $this->assertIdentical($data, $expected_original_data);
@@ -90,6 +90,10 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     $this->assertCount(1, $tour->getTips(), 'Optional configuration can be overridden. The language tour only has one tip');
     $tour = Tour::load('language-add');
     $this->assertCount(3, $tour->getTips(), 'Optional configuration that is not overridden is not affected.');
+
+    // Ensure the optional configuration is installed. Note that the overridden
+    // language tour has a dependency on this tour so it has to exist.
+    $this->assertInstanceOf(Tour::class, Tour::load('testing_config_overrides_module'));
 
     // Ensure that optional configuration from a profile is created if
     // dependencies are met.

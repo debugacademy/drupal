@@ -55,7 +55,7 @@ class ManageGitIgnoreTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->fileSystem = new Filesystem();
     $this->fixtures = new Fixtures();
     $this->fixtures->createIsolatedComposerCacheDir();
@@ -65,7 +65,7 @@ class ManageGitIgnoreTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     // Remove any temporary directories et. al. that were created.
     $this->fixtures->tearDown();
   }
@@ -112,18 +112,18 @@ class ManageGitIgnoreTest extends TestCase {
     $this->assertFileExists($sut . '/docroot/autoload.php');
     $this->assertFileExists($sut . '/docroot/index.php');
     $expected = <<<EOT
-build
-.csslintrc
-.editorconfig
-.eslintignore
-.eslintrc.json
-.gitattributes
-.ht.router.php
-autoload.php
-index.php
-robots.txt
-update.php
-web.config
+/build
+/.csslintrc
+/.editorconfig
+/.eslintignore
+/.eslintrc.json
+/.gitattributes
+/.ht.router.php
+/autoload.php
+/index.php
+/robots.txt
+/update.php
+/web.config
 EOT;
     // At this point we should have a .gitignore file, because although we did
     // not explicitly ask for .gitignore tracking, the vendor directory is not

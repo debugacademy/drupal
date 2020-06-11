@@ -21,7 +21,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'content_moderation',
     'user',
@@ -38,7 +38,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installSchema('node', 'node_access');
@@ -337,9 +337,9 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Test customising the default moderation state.
+   * Test customizing the default moderation state.
    */
-  public function testWorkflowCustomisedInitialState() {
+  public function testWorkflowCustomizedInitialState() {
     $workflow = Workflow::load('editorial');
     $configuration = $workflow->getTypePlugin()->getConfiguration();
 

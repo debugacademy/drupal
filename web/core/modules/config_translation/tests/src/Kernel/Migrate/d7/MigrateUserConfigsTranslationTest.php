@@ -17,18 +17,16 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'locale',
     'config_translation',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installSchema('locale', [
       'locales_source',

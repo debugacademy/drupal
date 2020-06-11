@@ -14,7 +14,7 @@ class NodeFieldFilterTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language'];
+  protected static $modules = ['language'];
 
   /**
    * {@inheritdoc}
@@ -38,7 +38,7 @@ class NodeFieldFilterTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     // Create Page content type.
@@ -54,7 +54,7 @@ class NodeFieldFilterTest extends NodeTestBase {
     $this->nodeTitles = [
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
-      'fr' => 'Nouriture en Paris',
+      'fr' => 'Nourriture en Paris',
     ];
 
     // Create node with translations.

@@ -39,4 +39,4 @@ Symfony Console provides the ConsoleLogger to fill this need; however, ConsoleLo
 
 Consolidation\Log provides the benefits of both classes, allowing for code that both behaved technically correctly (redirecting to stderr) without sacrificing on style.
 
-Monlog also provides a full-featured Console logger that might be applicable for some use cases.
+Monolog also provides a full-featured Console logger that might be applicable for some use cases.

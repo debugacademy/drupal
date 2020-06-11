@@ -20,8 +20,8 @@ use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Template\AttributeHelper;
 use Drupal\Core\Theme\ThemeSettings;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Utility\TableSort;
@@ -552,6 +552,7 @@ function template_preprocess_datetime_form(&$variables) {
   $element = $variables['element'];
 
   $variables['attributes'] = [];
+
   if (isset($element['#id'])) {
     $variables['attributes']['id'] = $element['#id'];
   }
@@ -560,6 +561,27 @@ function template_preprocess_datetime_form(&$variables) {
   }
 
   $variables['content'] = $element;
+
+  // Add instructional text describing the required date and time formats.
+  // This will be hidden on JavaScript-enabled browsers that have a native
+  // datepicker.
+  if (!empty($element['#date_date_format'])) {
+    $placeholder_date = 'YYYY-MM-DD';
+    $variables['attributes']['data-drupal-field-elements'] = 'date' . ($element['#date_time_element'] === 'none' ? '' : '-time');
+    $date_format = is_array($element['#date_date_format']) ? $element['#date_date_format'][0] : date($element['#date_date_format']);
+    $variables['content']['date']['#attributes']['placeholder'] = $placeholder_date;
+    $help_date = t('Enter the date using the format @placeholder_date (e.g., @date_format).', ['@date_format' => $date_format, '@placeholder_date' => $placeholder_date]);
+    $variables['content']['date']['#attributes']['data-help'] = $help_date;
+
+    // Include time formatting instructions when a time input is present.
+    if (!empty($element['#date_time_format'])) {
+      $placeholder_time = 'hh:mm:ss';
+      $time_format = is_array($element['#date_time_format']) ? $element['#date_time_format'][0] : date($element['#date_time_format']);
+      $variables['content']['time']['#attributes']['placeholder'] = $placeholder_time;
+      $help_time = t('Enter the time using the format @placeholder_time (e.g., @time_format).', ['@time_format' => $time_format, '@placeholder_time' => $placeholder_time]);
+      $variables['content']['time']['#attributes']['data-help'] = $help_time;
+    }
+  }
 }
 
 /**
@@ -593,6 +615,7 @@ function template_preprocess_datetime_wrapper(&$variables) {
     if (!empty($element['#id'])) {
       $description_attributes['id'] = $element['#id'] . '--description';
     }
+    $description_attributes['data-drupal-field-elements'] = 'description';
     $variables['description'] = $element['#description'];
     $variables['description_attributes'] = new Attribute($description_attributes);
   }
@@ -622,20 +645,22 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - links: An array of links to be themed. Each link should be itself an
- *     array, with the following elements:
+ *   - links: An array of links to be themed. Each link itself is an array, with
+ *     the following elements:
  *     - title: The link text.
- *     - url: (optional) The \Drupal\Core\Url object to link to. If omitted, no
- *       anchor tag is printed out.
+ *     - url: (optional) The \Drupal\Core\Url object to link to. If the 'url'
+ *       element is supplied, the 'title' and 'url' are used to generate a link
+ *       through \Drupal::linkGenerator()->generate(). All data from the link
+ *       array other than 'title' and 'url' are added as #options on
+ *       the URL object. See \Drupal\Core\Url::fromUri() for details on the
+ *       options. If no 'url' is supplied, the 'title' is printed as plain text.
  *     - attributes: (optional) Attributes for the anchor, or for the <span>
- *       tag used in its place if no 'href' is supplied. If element 'class' is
+ *       tag used in its place if no 'url' is supplied. If element 'class' is
  *       included, it must be an array of one or more class names.
- *     If the 'href' element is supplied, the entire link array is passed to
- *     l() as its $options parameter.
  *   - attributes: A keyed array of attributes for the <ul> containing the list
  *     of links.
  *   - set_active_class: (optional) Whether each link should compare the
- *     route_name + route_parameters or href (path), language and query options
+ *     route_name + route_parameters or url (path), language, and query options
  *     to the current URL, to determine whether the link is "active". If so,
  *     attributes will be added to the HTML elements for both the link and the
  *     list item that contains it, which will result in an "is-active" class
@@ -819,7 +844,7 @@ function template_preprocess_image(&$variables) {
     if (isset($variables[$key])) {
       // If the property has already been defined in the attributes,
       // do not override, including NULL.
-      if (array_key_exists($key, $variables['attributes'])) {
+      if (AttributeHelper::attributeExists($key, $variables['attributes'])) {
         continue;
       }
       $variables['attributes'][$key] = $variables[$key];
@@ -1128,7 +1153,7 @@ function template_preprocess_item_list(&$variables) {
             // \Drupal\Core\Render\Element::children(), which cannot be used
             // here, since it triggers an error on string values.
             foreach ($child as $child_key => $child_value) {
-              if ($child_key[0] !== '#') {
+              if (is_int($child_key) || $child_key === '' || $child_key[0] !== '#') {
                 $child['#items'][$child_key] = $child_value;
                 unset($child[$child_key]);
               }
@@ -1241,7 +1266,7 @@ function template_preprocess(&$variables, $hook, $info) {
   if (isset($info['render element'])) {
     $key = $info['render element'];
     if (isset($variables[$key]['#attributes'])) {
-      $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], $variables[$key]['#attributes']);
+      $variables['attributes'] = AttributeHelper::mergeCollections($variables['attributes'], $variables[$key]['#attributes']);
     }
   }
 }
@@ -1347,8 +1372,6 @@ function template_preprocess_html(&$variables) {
   }
 
   $variables['head_title'] = $head_title;
-  // @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
-  $variables['head_title_array'] = $head_title;
 
   // Create placeholder strings for these keys.
   // @see \Drupal\Core\Render\HtmlResponseSubscriber
@@ -1576,7 +1599,7 @@ function template_preprocess_field(&$variables, $hook) {
 
   // Merge attributes when a single-value field has a hidden label.
   if ($element['#label_display'] == 'hidden' && !$variables['multiple'] && !empty($element['#items'][0]->_attributes)) {
-    $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], (array) $element['#items'][0]->_attributes);
+    $variables['attributes'] = AttributeHelper::mergeCollections($variables['attributes'], (array) $element['#items'][0]->_attributes);
   }
 
   // We want other preprocess functions and the theme implementation to have
@@ -1727,6 +1750,155 @@ function template_preprocess_breadcrumb(&$variables) {
 }
 
 /**
+ * Prepares variables for pager templates.
+ *
+ * Default template: pager.html.twig.
+ *
+ * Menu callbacks that display paged query results should use #type => pager
+ * to retrieve a pager control so that users can view other results. Format a
+ * list of nearby pages with additional query results.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - pager: A render element containing:
+ *     - #tags: An array of labels for the controls in the pager.
+ *     - #element: An optional integer to distinguish between multiple pagers on
+ *       one page.
+ *     - #parameters: An associative array of query string parameters to append
+ *       to the pager links.
+ *     - #route_parameters: An associative array of the route parameters.
+ *     - #quantity: The number of pages in the list.
+ */
+function template_preprocess_pager(&$variables) {
+  $element = $variables['pager']['#element'];
+  $parameters = $variables['pager']['#parameters'];
+  $quantity = empty($variables['pager']['#quantity']) ? 0 : $variables['pager']['#quantity'];
+  $route_name = $variables['pager']['#route_name'];
+  $route_parameters = isset($variables['pager']['#route_parameters']) ? $variables['pager']['#route_parameters'] : [];
+
+  /* @var $pager_manager \Drupal\Core\Pager\PagerManagerInterface */
+  $pager_manager = \Drupal::service('pager.manager');
+
+  $pager = $pager_manager->getPager($element);
+
+  // Nothing to do if there is no pager.
+  if (!isset($pager)) {
+    return;
+  }
+
+  $pager_max = $pager->getTotalPages();
+
+  // Nothing to do if there is only one page.
+  if ($pager_max <= 1) {
+    return;
+  }
+
+  $tags = $variables['pager']['#tags'];
+
+  // Calculate various markers within this pager piece:
+  // Middle is used to "center" pages around the current page.
+  $pager_middle = ceil($quantity / 2);
+  $current_page = $pager->getCurrentPage();
+  // The current pager is the page we are currently paged to.
+  $pager_current = $current_page + 1;
+  // The first pager is the first page listed by this pager piece (re quantity).
+  $pager_first = $pager_current - $pager_middle + 1;
+  // The last is the last page listed by this pager piece (re quantity).
+  $pager_last = $pager_current + $quantity - $pager_middle;
+  // End of marker calculations.
+
+  // Prepare for generation loop.
+  $i = $pager_first;
+  if ($pager_last > $pager_max) {
+    // Adjust "center" if at end of query.
+    $i = $i + ($pager_max - $pager_last);
+    $pager_last = $pager_max;
+  }
+  if ($i <= 0) {
+    // Adjust "center" if at start of query.
+    $pager_last = $pager_last + (1 - $i);
+    $i = 1;
+  }
+  // End of generation loop preparation.
+
+  // Create the "first" and "previous" links if we are not on the first page.
+  if ($current_page > 0) {
+    $items['first'] = [];
+    $items['first']['attributes'] = new Attribute();
+    $options = [
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, 0),
+    ];
+    $items['first']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
+    if (isset($tags[0])) {
+      $items['first']['text'] = $tags[0];
+    }
+
+    $items['previous'] = [];
+    $items['previous']['attributes'] = new Attribute();
+    $options = [
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $current_page - 1),
+    ];
+    $items['previous']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
+    if (isset($tags[1])) {
+      $items['previous']['text'] = $tags[1];
+    }
+  }
+
+  if ($i != $pager_max) {
+    // Add an ellipsis if there are further previous pages.
+    if ($i > 1) {
+      $variables['ellipses']['previous'] = TRUE;
+    }
+    // Now generate the actual pager piece.
+    for (; $i <= $pager_last && $i <= $pager_max; $i++) {
+      $options = [
+        'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
+      ];
+      $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
+      $items['pages'][$i]['attributes'] = new Attribute();
+      if ($i == $pager_current) {
+        $variables['current'] = $i;
+      }
+    }
+    // Add an ellipsis if there are further next pages.
+    if ($i < $pager_max + 1) {
+      $variables['ellipses']['next'] = TRUE;
+    }
+  }
+
+  // Create the "next" and "last" links if we are not on the last page.
+  if ($current_page < ($pager_max - 1)) {
+    $items['next'] = [];
+    $items['next']['attributes'] = new Attribute();
+    $options = [
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $current_page + 1),
+    ];
+    $items['next']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
+    if (isset($tags[3])) {
+      $items['next']['text'] = $tags[3];
+    }
+
+    $items['last'] = [];
+    $items['last']['attributes'] = new Attribute();
+    $options = [
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $pager_max - 1),
+    ];
+    $items['last']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
+    if (isset($tags[4])) {
+      $items['last']['text'] = $tags[4];
+    }
+  }
+
+  $variables['items'] = $items;
+  $variables['heading_id'] = Html::getUniqueId('pagination-heading');
+
+  // The rendered link needs to play well with any other query parameter used
+  // on the page, like exposed filters, so for the cacheability all query
+  // parameters matter.
+  $variables['#cache']['contexts'][] = 'url.query_args';
+}
+
+/**
  * Callback for usort() within template_preprocess_field_multiple_value_form().
  *
  * Sorts using ['_weight']['#value']
@@ -1828,7 +2000,6 @@ function drupal_common_theme() {
       'includes' => ['core/includes/theme.maintenance.inc'],
       'template' => 'authorize-report',
     ],
-    // From pager.inc.
     'pager' => [
       'render element' => 'pager',
     ],

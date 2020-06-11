@@ -29,7 +29,7 @@ class CacheWebTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy'];
+  protected static $modules = ['taxonomy'];
 
   /**
    * {@inheritdoc}
@@ -39,7 +39,7 @@ class CacheWebTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     $this->enableViewsTestModule();
@@ -69,7 +69,7 @@ class CacheWebTest extends ViewTestBase {
     $this->assertFalse($render_cache->get($cache_element));
 
     $this->drupalGet('test-display');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNotEmpty($render_cache->get($cache_element));
     $cache_tags = [
       'config:user.role.anonymous',
@@ -80,7 +80,7 @@ class CacheWebTest extends ViewTestBase {
     $this->assertCacheTags($cache_tags);
 
     $this->drupalGet('test-display');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNotEmpty($render_cache->get($cache_element));
     $this->assertCacheTags($cache_tags);
   }

@@ -21,7 +21,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'content_translation',
     'comment',
     'datetime',
@@ -29,8 +29,6 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     'language',
     'link',
     'menu_ui',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
     'node',
     'taxonomy',
     'telephone',
@@ -40,7 +38,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fileMigrationSetup();
@@ -149,6 +147,12 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
    * Test node migration from Drupal 7 to 8.
    */
   public function testNode() {
+    // Confirm there are only classic node migration map tables. This shows
+    // that only the classic migration ran.
+    $results = $this->nodeMigrateMapTableCount('7');
+    $this->assertSame(8, $results['node']);
+    $this->assertSame(0, $results['node_complete']);
+
     $this->assertEntity(1, 'test_content_type', 'en', 'An English Node', '2', TRUE, '1421727515', '1441032132', TRUE, FALSE);
     $this->assertRevision(1, 'An English Node', '1', NULL, '1441032132');
 

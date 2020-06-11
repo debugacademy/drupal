@@ -108,7 +108,7 @@ trait UiHelperTrait {
       $this->metaRefreshCount = 0;
     }
 
-    // Log only for JavascriptTestBase tests because for Goutte we log with
+    // Log only for WebDriverTestBase tests because for Goutte we log with
     // ::getResponseLogHandler.
     if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
       $out = $this->getSession()->getPage()->getContent();
@@ -267,7 +267,8 @@ trait UiHelperTrait {
     // idea being if you were properly logged out you should be seeing a login
     // screen.
     $assert_session = $this->assertSession();
-    $this->drupalGet(Url::fromRoute('user.logout', [], ['query' => ['destination' => 'user']]));
+    $destination = Url::fromRoute('user.page')->toString();
+    $this->drupalGet(Url::fromRoute('user.logout', [], ['query' => ['destination' => $destination]]));
     $assert_session->fieldExists('name');
     $assert_session->fieldExists('pass');
 
@@ -336,7 +337,7 @@ trait UiHelperTrait {
       $this->metaRefreshCount = 0;
     }
 
-    // Log only for JavascriptTestBase tests because for Goutte we log with
+    // Log only for WebDriverTestBase tests because for Goutte we log with
     // ::getResponseLogHandler.
     if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
       $html_output = 'GET request to: ' . $url .
@@ -462,7 +463,7 @@ trait UiHelperTrait {
   protected function click($css_selector) {
     $starting_url = $this->getSession()->getCurrentUrl();
     $this->getSession()->getDriver()->click($this->cssSelectToXpath($css_selector));
-    // Log only for JavascriptTestBase tests because for Goutte we log with
+    // Log only for WebDriverTestBase tests because for Goutte we log with
     // ::getResponseLogHandler.
     if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
       $out = $this->getSession()->getPage()->getContent();
@@ -527,7 +528,7 @@ trait UiHelperTrait {
     if (!empty($refresh) && (!isset($this->maximumMetaRefreshCount) || $this->metaRefreshCount < $this->maximumMetaRefreshCount)) {
       // Parse the content attribute of the meta tag for the format:
       // "[delay]: URL=[page_to_redirect_to]".
-      if (preg_match('/\d+;\s*URL=(?<url>.*)/i', $refresh[0]->getAttribute('content'), $match)) {
+      if (preg_match('/\d+;\s*URL=\'?(?<url>[^\']*)/i', $refresh[0]->getAttribute('content'), $match)) {
         $this->metaRefreshCount++;
         return $this->drupalGet($this->getAbsoluteUrl(Html::decodeEntities($match['url'])));
       }

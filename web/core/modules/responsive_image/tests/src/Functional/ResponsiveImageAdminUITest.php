@@ -17,7 +17,10 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['responsive_image', 'responsive_image_test_module'];
+  protected static $modules = [
+    'responsive_image',
+    'responsive_image_test_module',
+  ];
 
   /**
    * {@inheritdoc}
@@ -27,7 +30,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
   /**
    * Drupal\simpletest\WebTestBase\setUp().
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalLogin($this->drupalCreateUser([
@@ -58,11 +61,10 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/media/responsive-image-style/add', $edit, t('Save'));
 
     // Check if the new group is created.
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/config/media/responsive-image-style');
     $this->assertNoText('There are no responsive image styles yet.');
     $this->assertText('Style One');
-    $this->assertText('style_one');
 
     // Edit the group.
     $this->drupalGet('admin/config/media/responsive-image-style/style_one');

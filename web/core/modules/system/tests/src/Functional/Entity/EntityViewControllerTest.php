@@ -17,7 +17,7 @@ class EntityViewControllerTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test'];
+  protected static $modules = ['entity_test'];
 
   /**
    * {@inheritdoc}
@@ -31,7 +31,7 @@ class EntityViewControllerTest extends BrowserTestBase {
    */
   protected $entities = [];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Create some dummy entity_test entities.
     for ($i = 0; $i < 2; $i++) {
@@ -82,7 +82,7 @@ class EntityViewControllerTest extends BrowserTestBase {
     // As entity_test IDs must be integers, make sure requests for non-integer
     // IDs return a page not found error.
     $this->drupalGet('entity_test/invalid');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**

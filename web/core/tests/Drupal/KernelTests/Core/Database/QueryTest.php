@@ -14,10 +14,10 @@ class QueryTest extends DatabaseTestBase {
    */
   public function testArraySubstitution() {
     $names = $this->connection->query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => [25, 26, 27]])->fetchAll();
-    $this->assertEqual(count($names), 3, 'Correct number of names returned');
+    $this->assertCount(3, $names, 'Correct number of names returned');
 
     $names = $this->connection->query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => [25]])->fetchAll();
-    $this->assertEqual(count($names), 1, 'Correct number of names returned');
+    $this->assertCount(1, $names, 'Correct number of names returned');
   }
 
   /**
@@ -142,13 +142,22 @@ class QueryTest extends DatabaseTestBase {
    * @see http://bugs.php.net/bug.php?id=45259
    */
   public function testNumericExpressionSubstitution() {
-    $count = $this->connection->query('SELECT COUNT(*) >= 3 FROM {test}')->fetchField();
-    $this->assertEqual((bool) $count, TRUE);
+    $count_expected = $this->connection->query('SELECT COUNT(*) + 3 FROM {test}')->fetchField();
 
-    $count = $this->connection->query('SELECT COUNT(*) >= :count FROM {test}', [
+    $count = $this->connection->query('SELECT COUNT(*) + :count FROM {test}', [
       ':count' => 3,
     ])->fetchField();
-    $this->assertEqual((bool) $count, TRUE);
+    $this->assertEqual($count, $count_expected);
+  }
+
+  /**
+   * Tests quoting identifiers in queries.
+   */
+  public function testQuotingIdentifiers() {
+    // Use the table named an ANSI SQL reserved word with a column that is as
+    // well.
+    $result = $this->connection->query('SELECT [update] FROM {select}')->fetchObject();
+    $this->assertEquals('Update value 1', $result->update);
   }
 
 }

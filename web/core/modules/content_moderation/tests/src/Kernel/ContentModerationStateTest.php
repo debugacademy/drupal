@@ -65,7 +65,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installSchema('node', 'node_access');
@@ -602,7 +602,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $node_type->delete();
     $workflow = Workflow::load('editorial');
     $entity_types = $workflow->getTypePlugin()->getEntityTypes();
-    $this->assertFalse(in_array('node', $entity_types));
+    $this->assertNotContains('node', $entity_types);
 
     // Uninstall entity test and ensure it's removed from the workflow.
     $this->container->get('config.manager')->uninstall('module', 'entity_test');
@@ -675,16 +675,6 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity->save();
     $cms_entity = ContentModerationState::loadFromModeratedEntity($entity);
     $this->assertEquals($entity->isDefaultRevision(), $cms_entity->isDefaultRevision());
-  }
-
-  /**
-   * Tests the legacy method used as the default entity owner.
-   *
-   * @group legacy
-   * @expectedDeprecation The ::getCurrentUserId method is deprecated in 8.6.x and will be removed before 9.0.0.
-   */
-  public function testGetCurrentUserId() {
-    $this->assertEquals(['0'], ContentModerationState::getCurrentUserId());
   }
 
   /**
