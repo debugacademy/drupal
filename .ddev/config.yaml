@@ -159,6 +159,9 @@ hooks:
  post-start:
    - exec: sudo npm install -g sass
    - exec: sudo npm install --global gulp-cli
+   - exec: sudo chmod -R 777 /usr/local/bin/composer
+   - exec: composer self-update > /dev/null
+   - exec: composer self-update --2
 # post-import-db:
 #
 #   - exec: drush updb
