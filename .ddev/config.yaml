@@ -155,7 +155,10 @@ mariadb_version: 10.4
 # See https://ddev.readthedocs.io/en/stable/users/extending-commands/ for more
 # information on the commands that can be extended and the tasks you can define
 # for them. Example:
-#hooks:
+hooks:
+ post-start:
+   - exec: sudo npm install -g sass
+   - exec: sudo npm install --global gulp-cli
 # post-import-db:
-#   - exec: drush cr
+#
 #   - exec: drush updb
