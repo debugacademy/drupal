@@ -28,3 +28,5 @@
 .DS_Store
 .ddev/.gitignore
 /web/sites/default/.gitignore
+*.css.map*
+/web/sites/*/services.yml
