@@ -1,0 +1,25 @@
+FROM gitpod/workspace-mysql
+
+RUN composer self-update
+
+ports:
+  - port: 8000
+    onOpen: open-preview
+  # xdebug port
+  - port: 9000
+    onOpen: ignore
+
+# Commenting out. We'll run these manually in class.
+tasks:
+  - init: composer install
+#    command: php -S 0.0.0.0:8000 -t project/
+
+vscode:
+  extensions:
+    # PHP extensions.
+    - felixfbecker.php-debug
+    - wongjn.php-sniffer
+    - neilbrayfield.php-docblocker
+    - bmewburn.vscode-intelephense-client
+    # Twig extensions.
+    - mblode.twig-language-2
