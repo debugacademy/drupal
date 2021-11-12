@@ -13,6 +13,8 @@ tasks:
   - init: |
       composer install
       mysql -u root -e "create database db"
+      alias drush=/workspace/drupal/vendor/drush/drush/drush
+      drush si demo_umami
 
 vscode:
   extensions:
