@@ -2,5 +2,5 @@ FROM mitchazj/workspace-mysql
 
 USER gitpod
 
-RUN composer self-update
+RUN sudo composer self-update
 
