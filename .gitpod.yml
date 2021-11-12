@@ -12,7 +12,9 @@ ports:
 tasks:
   - init: |
       composer install
-      mysql -u root -e "create database db"
+      mysql -uroot -e "CREATE USER 'db'@'localhost' IDENTIFIED BY 'db';"
+      mysql -uroot -e "GRANT ALL PRIVILEGES ON * . * TO 'db'@'localhost';"
+      mysql -udb -pdb -e "create database db"
       alias drush=/workspace/drupal/vendor/drush/drush/drush
       drush si demo_umami
 
