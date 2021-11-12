@@ -1,6 +1,5 @@
-FROM gitpod/workspace-mysql
-
-RUN composer self-update
+image:
+  file: .gitpod.Dockerfile
 
 ports:
   - port: 8000
@@ -11,8 +10,9 @@ ports:
 
 # Commenting out. We'll run these manually in class.
 tasks:
-  - init: composer install
-#    command: php -S 0.0.0.0:8000 -t project/
+  - init: |
+      composer install
+      mysql -u root -e "create database db"
 
 vscode:
   extensions:
