@@ -10,7 +10,7 @@ ports:
 
 # Commenting out. We'll run these manually in class.
 tasks:
-  - init: mysql -uroot -e "CREATE USER 'db'@'localhost' IDENTIFIED BY 'db';" && mysql -udb -pdb -e "CREATE DATABASE 'db'" && mysql -uroot -e "GRANT ALL PRIVILEGES ON * . * TO 'db'@'localhost';" && composer install && alias drush=/workspace/drupal/vendor/drush/drush/drush && /workspace/drupal/vendor/drush/drush/drush sqlc < /workspace/drupal/umami_db.sql
+  - init: mysql -uroot -e "CREATE USER 'db'@'localhost' IDENTIFIED BY 'db';" && mysql -uroot -e "CREATE DATABASE 'db'" && mysql -uroot -e "GRANT ALL PRIVILEGES ON * . * TO 'db'@'localhost';" && composer install && alias drush=/workspace/drupal/vendor/drush/drush/drush && /workspace/drupal/vendor/drush/drush/drush sqlc < /workspace/drupal/umami_db.sql
 
 vscode:
   extensions:
