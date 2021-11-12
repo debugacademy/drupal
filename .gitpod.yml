@@ -10,10 +10,7 @@ ports:
 
 # Commenting out. We'll run these manually in class.
 tasks:
-  - init: |
-      composer install
-      alias drush=/workspace/drupal/vendor/drush/drush/drush
-      drush si demo_umami
+  - init: composer install && alias drush=/workspace/drupal/vendor/drush/drush/drush && drush si demo_umami -y
 
 vscode:
   extensions:
