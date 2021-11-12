@@ -1,4 +1,4 @@
-FROM gitpod/workspace-mysql
+FROM https://hub.docker.com/r/mitchazj/workspace-mysql
 
 USER gitpod
 
