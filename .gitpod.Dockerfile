@@ -6,7 +6,7 @@ RUN sudo apt-get -q update && \
     sudo apt-get install -y tig && \
     sudo rm -rf /var/lib/apt/lists/*
 
-RUN sudo apt-get purge composer -y
+RUN sudo apt-get purge composer -y; exit 0
 
 RUN mkdir ~/bin
 RUN echo "export PATH=$PATH:'~/bin'" >> ~/.bashrc
