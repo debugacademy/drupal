@@ -1,16 +1,21 @@
-image: drupalpod/drupalpod-gitpod-base:20211116-ready-made-envs
+image:
+  file: .gitpod.Dockerfile
 
+# List the ports you want to expose and what to do when they are served. See https://www.gitpod.io/docs/config-ports/
 ports:
-  - port: 8000
-    onOpen: open-preview
-  # xdebug port
-  - port: 9000
-    onOpen: ignore
+- port: 8888
+  onOpen: open-preview
+- port: 3306
+  onOpen: ignore
 
-# Commenting out. We'll run these manually in class.
+# List the start up tasks. You can start them in parallel in multiple terminals.
+# See https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - init: gp await-port 3306 && mysql -uroot -e "CREATE USER 'db'@'localhost' IDENTIFIED BY 'db';" && mysql -uroot -e "CREATE DATABASE db" && mysql -uroot -e "GRANT ALL PRIVILEGES ON * . * TO 'db'@'localhost';" && composer install && alias drush=/workspace/drupal/vendor/drush/drush/drush && /workspace/drupal/vendor/drush/drush/drush sqlc < /workspace/drupal/umami_db.sql && /workspace/drupal/vendor/drush/drush/drush user:pass admin pass && php -S 0.0.0.0:8000 -t web/
-  - command: echo "When Drupal window opens & loads, you can use this command line window.\n" && alias drush=/workspace/drupal/vendor/drush/drush/drush
+- init: composer install && ln -s ~/bin/adminer.php web/adminer.php
+  command: mysql -e "CREATE USER 'user'@'localhost' IDENTIFIED by 'pass';" ; mysql -e "GRANT ALL PRIVILEGES ON *.* to 'user'@'localhost';" ; mysql -e "CREATE DATABASE db;" ; mysql -e "FLUSH PRIVILEGES;" ; drush si -y --db-url=mysql://user:pass@localhost:3306/db ; drush rs 0.0.0.0:8888
+  name: Server
+- command: echo "Welcome, please allow Server terminal to finish composer and drupal install. It takes a while!" && gp await-port 8888 && drush uli --uri=$(gp url 8888)
+  name: Terminal
 
 vscode:
   extensions:
