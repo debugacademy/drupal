@@ -12,8 +12,8 @@ dependencies:
     - responsive_image
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: false
+    allow_custom: false
 _core:
   default_config_hash: R-8EREsKqchtoXj8eLoFKm-XFiRqgtgDw8JxNzd4Xec
 id: media.image.square
@@ -22,12 +22,12 @@ bundle: image
 mode: square
 content:
   field_media_image:
+    type: responsive_image
     label: visually_hidden
     settings:
       responsive_image_style: square
       image_link: ''
     third_party_settings: {  }
-    type: responsive_image
     weight: 1
     region: content
 hidden:

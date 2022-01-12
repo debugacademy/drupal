@@ -1,7 +1,24 @@
 uuid: 9113bf6d-b566-4a1b-bdf9-049b091f559d
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - node.type.article
+    - node.type.page
+    - node.type.recipe
+    - taxonomy.vocabulary.recipe_category
+    - taxonomy.vocabulary.tags
+    - workflows.workflow.editorial
+  module:
+    - content_moderation
+    - contextual
+    - file
+    - node
+    - path
+    - quickedit
+    - system
+    - taxonomy
+    - toolbar
 _core:
   default_config_hash: oRaTkAuF5YGWwunXlxxCdL64yYev2xsqiIvH5fCwXEI
 id: author
