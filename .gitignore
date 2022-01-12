@@ -30,3 +30,4 @@
 /web/sites/default/.gitignore
 *.css.map*
 /web/sites/*/services.yml
+/web/adminer.php
