@@ -12,6 +12,7 @@ RUN mkdir ~/bin
 RUN echo "export PATH=$PATH:'~/bin'" >> ~/.bashrc
 RUN echo "alias ulipreview='gp preview $(drush uli --uri=$(gp url 8888))'" >> ~/.bashrc
 RUN echo "alias uli='drush uli --uri=$(gp url 8888)'" >> ~/.bashrc
+RUN echo "alias composer=~/bin/composer" >> ~/.bashrc
 
 RUN curl -OL https://github.com/drush-ops/drush-launcher/releases/latest/download/drush.phar && \
     chmod +x drush.phar && \
