@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * Implements hook_ENTITY_TYPE_access.
+ */
+function demo_core_node_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+    if ($account->hasPermission('bypass recipe password access')) {
+        return \Drupal\Core\Access\AccessResult::neutral();
+    }
+
+    if ($entity->bundle() === 'recipe') {
+        if (!empty($_GET['privateToken'])) {
+        $password = \Drupal::config('demo_core.settings')->get('token');
+            if ($_GET['privateToken'] === $password) {
+                return \Drupal\Core\Access\AccessResult::neutral();
+            }
+        }
+        return \Drupal\Core\Access\AccessResult::forbidden();
+    }
+}
+
+
