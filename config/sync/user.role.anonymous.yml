@@ -6,6 +6,7 @@ dependencies:
     - filter.format.restricted_html
   module:
     - contact
+    - demo_core
     - filter
     - media
     - search
@@ -19,6 +20,7 @@ is_admin: false
 permissions:
   - 'access content'
   - 'access site-wide contact form'
+  - 'bypass recipe password access'
   - 'search content'
   - 'use text format restricted_html'
   - 'view media'
