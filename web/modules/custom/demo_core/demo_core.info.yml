@@ -1,0 +1,7 @@
+name: "Demo Core"
+description: "Practice & PWD protect a page"
+core: 8.x
+core_version_requirement: ^8 || ^9
+type: module
+package: "custom"
+configure: demo_core.settings

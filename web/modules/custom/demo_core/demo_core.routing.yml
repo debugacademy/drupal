@@ -1,0 +1,7 @@
+demo_core.settings:
+  path: '/demoSettings'
+  defaults:
+    _title: 'Demo Settings'
+    _form: '\Drupal\demo_core\Form\demoSettingsForm'
+  requirements:
+    _permission: 'access content'
