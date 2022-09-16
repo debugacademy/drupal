@@ -1,17 +1,18 @@
-uuid: 67e159b9-d82e-4876-b7a3-5d0abbc35c43
+uuid: 3f78eccb-6cfc-402d-8b54-59730d440b18
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_mode.node.rss
     - field.field.node.article.body
-    - field.field.node.article.field_media_image
+    - field.field.node.article.comment
+    - field.field.node.article.field_image
     - field.field.node.article.field_tags
     - node.type.article
   module:
     - user
 _core:
-  default_config_hash: p2BQs6vDIVHWZIoxoZPyngdMaL29dux4lfj-iA4PSq4
+  default_config_hash: 2rIr6K5Q0UQ9khg0zE_CK-PtJH76UL-BDDZcZnZzwCc
 id: node.article.rss
 targetEntityType: node
 bundle: article
@@ -22,7 +23,6 @@ content:
     region: content
 hidden:
   body: true
-  content_moderation_control: true
-  field_media_image: true
+  comment: true
+  field_image: true
   field_tags: true
-  langcode: true

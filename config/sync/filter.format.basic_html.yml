@@ -1,14 +1,11 @@
-uuid: 18a137b5-52d5-4c41-ac30-5d69b5d645d1
+uuid: fa9c4d76-6d81-4e16-a156-105d046c76e8
 langcode: en
 status: true
 dependencies:
-  config:
-    - core.entity_view_mode.media.responsive_3x2
   module:
     - editor
-    - media
 _core:
-  default_config_hash: ZXpzv2RkjgnvhpZNSs-jvYSlMbRTnpODJCxaMHx_Wog
+  default_config_hash: P8ddpAIKtawJDi5SzOwCzVnnNYqONewSTJ6Xn0dW_aQ
 name: 'Basic HTML'
 format: basic_html
 weight: 0
@@ -19,7 +16,7 @@ filters:
     status: true
     weight: -10
     settings:
-      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <p> <br> <span> <img src alt height width data-entity-type data-entity-uuid data-align data-caption> <drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title>'
+      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <p> <br> <span> <img src alt height width data-entity-type data-entity-uuid data-align data-caption>'
       filter_html_help: false
       filter_html_nofollow: false
   filter_align:
@@ -46,21 +43,3 @@ filters:
     status: true
     weight: 11
     settings: {  }
-  filter_autop:
-    id: filter_autop
-    provider: filter
-    status: true
-    weight: 0
-    settings: {  }
-  media_embed:
-    id: media_embed
-    provider: media
-    status: true
-    weight: 100
-    settings:
-      default_view_mode: responsive_3x2
-      allowed_view_modes:
-        responsive_3x2: responsive_3x2
-      allowed_media_types:
-        image: image
-        remote_video: remote_video
