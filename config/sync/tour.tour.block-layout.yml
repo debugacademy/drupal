@@ -1,11 +1,11 @@
-uuid: 37ddaf0b-5bd0-4edc-a51e-aaba4da2dc68
+uuid: 2711e88f-5ce3-4bd2-886c-fb8d8bc38502
 langcode: en
 status: true
 dependencies:
   module:
     - block
 _core:
-  default_config_hash: DI2aQ7IbaYrwUfiwSn-3g-ANh_t7LzQ1JkRqd1ujgFs
+  default_config_hash: ructO0IOsghR3CIbNd-0QfLTDiUo8gIJ7mB_nxSil4o
 id: block-layout
 label: 'Block Layout Page'
 module: block
@@ -32,7 +32,7 @@ tips:
     label: 'Block Region'
     weight: 3
     selector: .block-region-select
-    body: 'Assign or change the region of a block by clicking here. A dropdown list with all the regions will appear.You can place one block in multiple regions.'
+    body: 'Assign or change the region of a block by clicking here. A dropdown list with all the regions will appear. You can place one block in multiple regions.'
   configure-block:
     id: configure-block
     plugin: text

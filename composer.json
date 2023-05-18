@@ -15,12 +15,12 @@
         }
     ],
     "require": {
-        "composer/installers": "^1.9",
-        "drupal/core-composer-scaffold": "~9.3.0",
-        "drupal/core-dev": "~9.3.0",
-        "drupal/core-project-message": "~9.3.0",
-        "drupal/core-recommended": "~9.3.0",
-        "drush/drush": "^10.0"
+        "composer/installers": "^2",
+        "drupal/core-composer-scaffold": "^10",
+        "drupal/core-dev": "^10",
+        "drupal/core-project-message": "^10",
+        "drupal/core-recommended": "^10",
+        "drush/drush": "^11.0"
     },
     "require-dev": {
     },
@@ -35,7 +35,8 @@
             "composer/installers": true,
             "drupal/core-composer-scaffold": true,
             "drupal/core-project-message": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
         }
     },
     "extra": {

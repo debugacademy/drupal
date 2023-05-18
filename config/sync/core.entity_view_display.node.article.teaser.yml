@@ -1,4 +1,4 @@
-uuid: 6deca2b9-dbe5-462c-8c7c-0665aae7e885
+uuid: e6ebce41-f74c-48e6-8c85-e29766754874
 langcode: en
 status: true
 dependencies:
@@ -15,7 +15,7 @@ dependencies:
     - text
     - user
 _core:
-  default_config_hash: 0ur5-yZyR8pJ3lugC_Micbr6V_tpMWz-yHFhtuLcZo8
+  default_config_hash: 83jX5ChAGdMzOxiDA_B1NjgebVMuD8lNVDgClg_QVP8
 id: node.article.teaser
 targetEntityType: node
 bundle: article
@@ -33,8 +33,10 @@ content:
     type: image
     label: hidden
     settings:
-      image_link: content
       image_style: medium
+      image_link: content
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: -1
     region: content
