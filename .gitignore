@@ -12,8 +12,7 @@
 # /web/sites/*/settings.local.php
 
 # Ignore Drupal's file directory
-# Not ignoring so I can push files to gitpod
-# /web/sites/*/files/
+/web/sites/*/files/
 
 # Ignore SimpleTest multi-site environment.
 /web/sites/simpletest
