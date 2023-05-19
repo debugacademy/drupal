@@ -10,7 +10,7 @@ git remote add origin https://github.com/debugacademy/drupal.git &&
 git fetch origin && 
 echo "Match origin's develop branch" && sleep 10 && 
 git reset origin/develop --hard && 
-echo "Retreive committed build artifacts for Drupal 9" && sleep 10 && 
+echo "Retrieve committed build artifacts for Drupal 9" && sleep 10 && 
 git checkout origin/master-build && 
 git reset f138947586f76371307f7fa76af8347047a64b99 &&
 echo "Returning to develop branch" && sleep 25 && 

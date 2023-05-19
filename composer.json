@@ -16,6 +16,7 @@
     ],
     "require": {
         "composer/installers": "^2",
+        "drupal/admin_toolbar": "^3.4",
         "drupal/core-composer-scaffold": "^10",
         "drupal/core-dev": "^10",
         "drupal/core-project-message": "^10",
@@ -23,6 +24,7 @@
         "drupal/maillog": "^1.0",
         "drupal/mailsystem": "^4.4",
         "drupal/smtp": "^1.2",
+        "drupal/upgrade_status": "^4.0",
         "drush/drush": "^11.0"
     },
     "conflict": {

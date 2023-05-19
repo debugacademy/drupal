@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "865cbf25af144856ba2f2cb72d4f015a",
+    "content-hash": "5267b6390bad6f4bbfaee323fb664640",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -258,6 +258,55 @@
                 "source": "https://github.com/minkphp/MinkSelenium2Driver/tree/v1.6.0"
             },
             "time": "2022-03-28T14:55:17+00:00"
+        },
+        {
+            "name": "brick/varexporter",
+            "version": "0.3.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/brick/varexporter.git",
+                "reference": "b5853edea6204ff8fa10633c3a4cccc4058410ed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/brick/varexporter/zipball/b5853edea6204ff8fa10633c3a4cccc4058410ed",
+                "reference": "b5853edea6204ff8fa10633c3a4cccc4058410ed",
+                "shasum": ""
+            },
+            "require": {
+                "nikic/php-parser": "^4.0",
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^2.2",
+                "phpunit/phpunit": "^8.5 || ^9.0",
+                "vimeo/psalm": "4.23.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Brick\\VarExporter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A powerful alternative to var_export(), which can export closures and objects without __set_state()",
+            "keywords": [
+                "var_export"
+            ],
+            "support": {
+                "issues": "https://github.com/brick/varexporter/issues",
+                "source": "https://github.com/brick/varexporter/tree/0.3.8"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/BenMorel",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-01-21T23:05:38+00:00"
         },
         {
             "name": "chi-teck/drupal-code-generator",
@@ -2026,6 +2075,87 @@
             "time": "2022-02-28T11:07:21+00:00"
         },
         {
+            "name": "drupal/admin_toolbar",
+            "version": "3.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/admin_toolbar.git",
+                "reference": "3.4.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/admin_toolbar-3.4.0.zip",
+                "reference": "3.4.0",
+                "shasum": "2dc9bf50350693827b446180c9d61feebacc4b7a"
+            },
+            "require": {
+                "drupal/core": "^9.2 || ^10"
+            },
+            "require-dev": {
+                "drupal/admin_toolbar_tools": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "3.4.0",
+                    "datestamp": "1683730547",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Wilfrid Roze (eme)",
+                    "homepage": "https://www.drupal.org/u/eme",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Romain Jarraud (romainj)",
+                    "homepage": "https://www.drupal.org/u/romainj",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Adrian Cid Almaguer (adriancid)",
+                    "homepage": "https://www.drupal.org/u/adriancid",
+                    "email": "adriancid@gmail.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Mohamed Anis Taktak (matio89)",
+                    "homepage": "https://www.drupal.org/u/matio89",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "matio89",
+                    "homepage": "https://www.drupal.org/user/2320090"
+                },
+                {
+                    "name": "Musa.thomas",
+                    "homepage": "https://www.drupal.org/user/1213824"
+                },
+                {
+                    "name": "romainj",
+                    "homepage": "https://www.drupal.org/user/370706"
+                }
+            ],
+            "description": "Provides a drop-down menu interface to the core Drupal Toolbar.",
+            "homepage": "http://drupal.org/project/admin_toolbar",
+            "keywords": [
+                "Drupal",
+                "Toolbar"
+            ],
+            "support": {
+                "source": "https://git.drupalcode.org/project/admin_toolbar",
+                "issues": "https://www.drupal.org/project/issues/admin_toolbar"
+            }
+        },
+        {
             "name": "drupal/coder",
             "version": "8.3.18",
             "source": {
@@ -2654,6 +2784,81 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/smtp",
                 "issues": "https://www.drupal.org/project/issues/smtp"
+            }
+        },
+        {
+            "name": "drupal/upgrade_status",
+            "version": "4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/upgrade_status.git",
+                "reference": "4.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/upgrade_status-4.0.0.zip",
+                "reference": "4.0.0",
+                "shasum": "013afdb46a03c9db0119cb1ce60ca49631d64368"
+            },
+            "require": {
+                "drupal/core": "^9 || ^10",
+                "mathieuviossat/arraytotexttable": "~1.0.0",
+                "mglaman/phpstan-drupal": "^1.0.0",
+                "nikic/php-parser": "^4.0.0",
+                "phpstan/phpstan-deprecation-rules": "^1.0.0",
+                "symfony/process": "^3.4|^4.0|^5.0|^6.0",
+                "webflo/drupal-finder": "^1.2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "4.0.0",
+                    "datestamp": "1678815090",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^9 || ^10"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "colan",
+                    "homepage": "https://www.drupal.org/user/58704"
+                },
+                {
+                    "name": "Gábor Hojtsy",
+                    "homepage": "https://www.drupal.org/user/4166"
+                },
+                {
+                    "name": "herczogzoltan",
+                    "homepage": "https://www.drupal.org/user/3528391"
+                },
+                {
+                    "name": "sun",
+                    "homepage": "https://www.drupal.org/user/54136"
+                },
+                {
+                    "name": "webchick",
+                    "homepage": "https://www.drupal.org/user/24967"
+                },
+                {
+                    "name": "xjm",
+                    "homepage": "https://www.drupal.org/user/65776"
+                }
+            ],
+            "description": "Review Drupal major upgrade readiness of the environment and components of the site.",
+            "homepage": "http://drupal.org/project/upgrade_status",
+            "support": {
+                "source": "https://git.drupalcode.org/project/upgrade_status"
             }
         },
         {
@@ -3445,6 +3650,212 @@
             "time": "2022-04-13T08:02:27+00:00"
         },
         {
+            "name": "laminas/laminas-servicemanager",
+            "version": "3.21.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-servicemanager.git",
+                "reference": "14785875de5cad42197f433ddee0f1e4c35efe9e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-servicemanager/zipball/14785875de5cad42197f433ddee0f1e4c35efe9e",
+                "reference": "14785875de5cad42197f433ddee0f1e4c35efe9e",
+                "shasum": ""
+            },
+            "require": {
+                "brick/varexporter": "^0.3.8",
+                "laminas/laminas-stdlib": "^3.17",
+                "php": "~8.1.0 || ~8.2.0",
+                "psr/container": "^1.1 || ^2.0"
+            },
+            "conflict": {
+                "laminas/laminas-code": "<4.10.0",
+                "zendframework/zend-code": "<3.3.1"
+            },
+            "provide": {
+                "psr/container-implementation": "^1.0 || ^2.0"
+            },
+            "require-dev": {
+                "boesing/psalm-plugin-stringf": "^1.4",
+                "composer/package-versions-deprecated": "^1.11.99.5",
+                "friendsofphp/proxy-manager-lts": "^1",
+                "laminas/laminas-cli": "^1.8",
+                "laminas/laminas-coding-standard": "~2.5.0",
+                "laminas/laminas-container-config-test": "dev-qa/service-manager-v4",
+                "lctrs/psalm-psr-container-plugin": "^1.9",
+                "mikey179/vfsstream": "^1.6.11@alpha",
+                "phpbench/phpbench": "^1.2.7",
+                "phpunit/phpunit": "^10.1",
+                "psalm/plugin-phpunit": "^0.18.4",
+                "symfony/console": "^6.0",
+                "vimeo/psalm": "^5.10"
+            },
+            "suggest": {
+                "friendsofphp/proxy-manager-lts": "To handle lazy initialization of services",
+                "laminas/laminas-cli": "To consume CLI commands provided by this component"
+            },
+            "type": "library",
+            "extra": {
+                "laminas": {
+                    "config-provider": "Laminas\\ServiceManager\\ConfigProvider",
+                    "module": "Laminas\\ServiceManager"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laminas\\ServiceManager\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Factory-Driven Dependency Injection Container",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "PSR-11",
+                "dependency-injection",
+                "di",
+                "dic",
+                "laminas",
+                "service-manager",
+                "servicemanager"
+            ],
+            "support": {
+                "chat": "https://laminas.dev/chat",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-servicemanager/issues",
+                "source": "https://github.com/laminas/laminas-servicemanager/tree/3.21.x"
+            },
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2023-05-14T16:05:00+00:00"
+        },
+        {
+            "name": "laminas/laminas-stdlib",
+            "version": "3.17.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-stdlib.git",
+                "reference": "dd35c868075bad80b6718959740913e178eb4274"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-stdlib/zipball/dd35c868075bad80b6718959740913e178eb4274",
+                "reference": "dd35c868075bad80b6718959740913e178eb4274",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.1.0 || ~8.2.0"
+            },
+            "conflict": {
+                "zendframework/zend-stdlib": "*"
+            },
+            "require-dev": {
+                "laminas/laminas-coding-standard": "^2.5",
+                "phpbench/phpbench": "^1.2.9",
+                "phpunit/phpunit": "^10.0.16",
+                "psalm/plugin-phpunit": "^0.18.4",
+                "vimeo/psalm": "^5.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Laminas\\Stdlib\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "SPL extensions, array utilities, error handlers, and more",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "laminas",
+                "stdlib"
+            ],
+            "support": {
+                "chat": "https://laminas.dev/chat",
+                "docs": "https://docs.laminas.dev/laminas-stdlib/",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-stdlib/issues",
+                "rss": "https://github.com/laminas/laminas-stdlib/releases.atom",
+                "source": "https://github.com/laminas/laminas-stdlib"
+            },
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2023-03-20T13:51:37+00:00"
+        },
+        {
+            "name": "laminas/laminas-text",
+            "version": "2.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-text.git",
+                "reference": "40f7acdb284d41553d32db811e704d6e15e415b4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-text/zipball/40f7acdb284d41553d32db811e704d6e15e415b4",
+                "reference": "40f7acdb284d41553d32db811e704d6e15e415b4",
+                "shasum": ""
+            },
+            "require": {
+                "laminas/laminas-servicemanager": "^3.19.0",
+                "laminas/laminas-stdlib": "^3.7.1",
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0"
+            },
+            "conflict": {
+                "zendframework/zend-text": "*"
+            },
+            "require-dev": {
+                "laminas/laminas-coding-standard": "~2.4.0",
+                "phpunit/phpunit": "^9.5",
+                "psalm/plugin-phpunit": "^0.18.4",
+                "vimeo/psalm": "^5.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Laminas\\Text\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Create FIGlets and text-based tables",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "laminas",
+                "text"
+            ],
+            "support": {
+                "chat": "https://laminas.dev/chat",
+                "docs": "https://docs.laminas.dev/laminas-text/",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-text/issues",
+                "rss": "https://github.com/laminas/laminas-text/releases.atom",
+                "source": "https://github.com/laminas/laminas-text"
+            },
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2022-12-11T15:36:27+00:00"
+        },
+        {
             "name": "league/container",
             "version": "4.2.0",
             "source": {
@@ -3594,6 +4005,57 @@
                 "source": "https://github.com/Masterminds/html5-php/tree/2.7.6"
             },
             "time": "2022-08-18T16:18:26+00:00"
+        },
+        {
+            "name": "mathieuviossat/arraytotexttable",
+            "version": "v1.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/viossat/arraytotexttable.git",
+                "reference": "518ec338fe62e92c064a9d3d3bc8c64fb6e77d1c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/viossat/arraytotexttable/zipball/518ec338fe62e92c064a9d3d3bc8c64fb6e77d1c",
+                "reference": "518ec338fe62e92c064a9d3d3bc8c64fb6e77d1c",
+                "shasum": ""
+            },
+            "require": {
+                "laminas/laminas-text": "^2.9",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MathieuViossat\\Util\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathieu Viossat",
+                    "email": "mathieu@viossat.fr",
+                    "homepage": "https://viossat.fr"
+                }
+            ],
+            "description": "Display arrays in terminal",
+            "homepage": "https://github.com/viossat/arraytotexttable",
+            "keywords": [
+                "array",
+                "ascii",
+                "table",
+                "terminal",
+                "text",
+                "unicode"
+            ],
+            "support": {
+                "issues": "https://github.com/viossat/arraytotexttable/issues",
+                "source": "https://github.com/viossat/arraytotexttable/tree/v1.0.9"
+            },
+            "time": "2022-08-30T15:33:10+00:00"
         },
         {
             "name": "mglaman/phpstan-drupal",
@@ -4893,6 +5355,54 @@
                 }
             ],
             "time": "2023-05-09T15:28:01+00:00"
+        },
+        {
+            "name": "phpstan/phpstan-deprecation-rules",
+            "version": "1.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan-deprecation-rules.git",
+                "reference": "a22b36b955a2e9a3d39fe533b6c1bb5359f9c319"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan-deprecation-rules/zipball/a22b36b955a2e9a3d39fe533b6c1bb5359f9c319",
+                "reference": "a22b36b955a2e9a3d39fe533b6c1bb5359f9c319",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0",
+                "phpstan/phpstan": "^1.10"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/phpstan-php-parser": "^1.1",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "rules.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan rules for detecting usage of deprecated classes, methods, properties, constants and traits.",
+            "support": {
+                "issues": "https://github.com/phpstan/phpstan-deprecation-rules/issues",
+                "source": "https://github.com/phpstan/phpstan-deprecation-rules/tree/1.1.3"
+            },
+            "time": "2023-03-17T07:50:08+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
