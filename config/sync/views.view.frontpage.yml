@@ -1,15 +1,16 @@
-uuid: b3fc712d-d300-4e86-8582-3241884ee695
+uuid: 68926e63-e1d2-4a0d-bd37-51f22cc241f7
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.card_common
     - core.entity_view_mode.node.rss
-    - core.entity_view_mode.node.teaser
+    - node.type.recipe
   module:
     - node
     - user
 _core:
-  default_config_hash: 6eeliKIydPjqyv5V__QqTfahvJMWkHjOVUUuUIdB1ik
+  default_config_hash: _od5qwg6RJLMfULo1hSHoK9b4-FYDXDfcYBTuqdd-74
 id: frontpage
 label: Frontpage
 module: node
@@ -24,29 +25,13 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: ''
+      title: Home
       fields: {  }
       pager:
-        type: full
+        type: some
         options:
           offset: 0
-          items_per_page: 10
-          total_pages: 0
-          id: 0
-          tags:
-            next: 'Next ›'
-            previous: '‹ Previous'
-            first: '« First'
-            last: 'Last »'
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          quantity: 9
+          items_per_page: 4
       exposed_form:
         type: basic
         options:
@@ -75,7 +60,7 @@ display:
           plugin_id: text_custom
           label: ''
           empty: true
-          content: 'No front page content has been created yet.<br/>Follow the <a target="_blank" href="https://www.drupal.org/docs/user_guide/en/index.html">User Guide</a> to start building your site.'
+          content: 'No front page content has been created yet.'
           tokenize: false
         node_listing_empty:
           id: node_listing_empty
@@ -98,7 +83,7 @@ display:
           plugin_id: title
           label: ''
           empty: true
-          title: Welcome!
+          title: 'Welcome to [site:name]'
       sorts:
         sticky:
           id: sticky
@@ -131,6 +116,21 @@ display:
             field_identifier: created
           exposed: false
           granularity: second
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: nid
+          plugin_id: standard
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: nid
+          exposed: false
       arguments: {  }
       filters:
         promote:
@@ -186,19 +186,19 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-        langcode:
-          id: langcode
+        type:
+          id: type
           table: node_field_data
-          field: langcode
+          field: type
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: node
-          entity_field: langcode
-          plugin_id: language
+          entity_field: type
+          plugin_id: bundle
           operator: in
           value:
-            '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
+            recipe: recipe
           group: 1
           exposed: false
           expose:
@@ -228,6 +228,50 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        default_langcode:
+          id: default_langcode
+          table: node_field_data
+          field: default_langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: default_langcode
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       style:
         type: default
         options:
@@ -238,7 +282,8 @@ display:
       row:
         type: 'entity:node'
         options:
-          view_mode: teaser
+          relationship: none
+          view_mode: card_common
       query:
         type: views_query
         options:
@@ -248,14 +293,26 @@ display:
           replica: false
           query_tags: {  }
       relationships: {  }
-      header: {  }
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: '<p class="text-align-center">Explore recipes across every type of occasion, ingredient, and skill level.</p>'
+            format: full_html
+          tokenize: false
       footer: {  }
       display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_interface'
-        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }
@@ -265,6 +322,7 @@ display:
     display_plugin: feed
     position: 2
     display_options:
+      enabled: false
       pager:
         type: some
         options:
@@ -281,6 +339,7 @@ display:
         options:
           relationship: none
           view_mode: rss
+      rendering_language: '***LANGUAGE_language_interface***'
       display_extenders: {  }
       path: rss.xml
       sitename_title: true
@@ -300,13 +359,31 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      defaults:
+        css_class: false
+        header: false
+      css_class: grid--2
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: '<p class="text-align-center">Explore recipes across every type of occasion, ingredient, and skill level</p>'
+            format: full_html
+          tokenize: false
+      rendering_language: '***LANGUAGE_language_interface***'
       display_extenders: {  }
       path: node
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_interface'
-        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }

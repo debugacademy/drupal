@@ -1,11 +1,14 @@
-uuid: 5a8d0896-a81b-4ebe-8ef4-ce031c63f433
+uuid: 403b8302-a731-4aa7-81f7-a8c4fd6c6afd
 langcode: en
 status: true
 dependencies:
+  config:
+    - core.entity_view_mode.media.responsive_3x2
   module:
     - editor
+    - media
 _core:
-  default_config_hash: WNeK5FbcY8pXgEpbD_KgRzlF1-5PL3BJXwqaBctPTqw
+  default_config_hash: FlJ0Gmd21ZlGrou4dSu-EemZdQ7lApDvT33I9hbBCQc
 name: 'Full HTML'
 format: full_html
 weight: 2
@@ -34,3 +37,24 @@ filters:
     status: true
     weight: 11
     settings: {  }
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: false
+    weight: -10
+    settings:
+      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <s> <sup> <sub> <table> <caption> <tbody> <thead> <tfoot> <th> <td> <tr> <hr> <p> <h1> <pre> <drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title>'
+      filter_html_help: true
+      filter_html_nofollow: false
+  media_embed:
+    id: media_embed
+    provider: media
+    status: true
+    weight: 100
+    settings:
+      default_view_mode: responsive_3x2
+      allowed_view_modes:
+        responsive_3x2: responsive_3x2
+      allowed_media_types:
+        image: image
+        remote_video: remote_video

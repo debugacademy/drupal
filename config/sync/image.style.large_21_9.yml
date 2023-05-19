@@ -1,0 +1,17 @@
+uuid: 98aa4192-0723-4def-8901-03b71a56c7d3
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: OZ_xf-3lAZ4jwNXjT6E8wcCCYbpLM-Pv1HB90f001ac
+name: large_21_9
+label: 'Large 21:9 (1440x620)'
+effects:
+  90b69780-6eb1-4cc8-a500-88235ad52f5c:
+    uuid: 90b69780-6eb1-4cc8-a500-88235ad52f5c
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 1440
+      height: 620
+      anchor: center-center
