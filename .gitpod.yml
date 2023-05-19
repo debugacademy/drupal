@@ -18,10 +18,8 @@ tasks:
 - before: composer install && ln -sf ~/bin/adminer.php web/adminer.php
   command: ((mysql -e "CREATE USER 'db'@'localhost' IDENTIFIED by 'db';" && mysql -e "GRANT ALL PRIVILEGES ON *.* to 'db'@'localhost';" && mysql -e "CREATE DATABASE db;" && mysql -e "FLUSH PRIVILEGES;") && drush sqlc < ./umami_db.sql); drush cr && drush user:pass admin pass ; drush rs 0.0.0.0:8888
   name: Server
-
-- install mailhog
-docker run --restart always -d --name=mailhog -p 1025:1025 -p 8025:8025 mailhog/mailhog
-
+- command: docker run --restart always -d --name=mailhog -p 1025:1025 -p 8025:8025 mailhog/mailhog
+  name: "Install mailhog"
 - command: echo "Welcome, please allow Server terminal to finish composer and drupal install. It takes a while!" && gp ports await 8888 && drush uli --uri=$(gp url 8888)
   name: "Drush & Bash"
 
