@@ -23,3 +23,4 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
     mv composer.phar ~/bin/composer
 RUN curl -OL https://github.com/vrana/adminer/releases/download/v4.7.8/adminer-4.7.8.php && \
     mv adminer-4.7.8.php ~/bin/adminer.php
+RUN sudo update-alternatives --set php $(which php8.1)
