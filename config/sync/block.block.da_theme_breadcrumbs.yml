@@ -1,0 +1,27 @@
+uuid: 8f40cf59-63d9-4e65-b9f3-a5467abed564
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - da_theme
+_core:
+  default_config_hash: 5prrlTxk8gDlnDH_jhnc0dNihAw8WT-RVZ3nrec_wiE
+id: da_theme_breadcrumbs
+theme: da_theme
+region: breadcrumbs
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  label_display: '0'
+  provider: system
+visibility:
+  request_path:
+    id: request_path
+    negate: true
+    context_mapping: {  }
+    pages: '<front>'

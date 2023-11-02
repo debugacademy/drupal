@@ -1,0 +1,32 @@
+uuid: 39e4aab7-e6d0-4bb6-9bdf-086f392c78a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.promoted_items
+  module:
+    - system
+    - views
+  theme:
+    - da_theme
+_core:
+  default_config_hash: JQiEYLzNTj4IyGi0wooMJIWcdgA4NV_jqJzCOtt9EAI
+id: da_theme_views_block__promoted_items_block_1
+theme: da_theme
+region: banner_top
+weight: -6
+provider: null
+plugin: 'views_block:promoted_items-block_1'
+settings:
+  id: 'views_block:promoted_items-block_1'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    context_mapping: {  }
+    pages: '<front>'

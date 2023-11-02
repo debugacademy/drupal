@@ -12,6 +12,7 @@ module:
   contact: 0
   content_moderation: 0
   contextual: 0
+  da_module: 0
   datetime: 0
   dblog: 0
   demo_umami_content: 0
@@ -40,8 +41,11 @@ module:
   page_cache: 0
   path: 0
   path_alias: 0
+  phpass: 0
   responsive_image: 0
+  sdc: 0
   search: 0
+  serialization: 0
   shortcut: 0
   smtp: 0
   system: 0
@@ -59,4 +63,5 @@ module:
 theme:
   claro: 0
   umami: 0
+  da_theme: 0
 profile: demo_umami

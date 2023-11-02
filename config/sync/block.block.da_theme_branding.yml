@@ -1,0 +1,25 @@
+uuid: 3062176e-83cd-486b-b9e0-46b0d21e35f1
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - da_theme
+_core:
+  default_config_hash: KpzA0z4GVAQdiudD8S4qJXkxUCkTDFtsMkS9ZAG9-Xo
+id: da_theme_branding
+theme: da_theme
+region: header
+weight: -7
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site branding'
+  label_display: '0'
+  provider: system
+  use_site_logo: true
+  use_site_name: false
+  use_site_slogan: true
+visibility: {  }

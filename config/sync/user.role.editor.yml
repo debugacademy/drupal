@@ -54,6 +54,7 @@ permissions:
   - 'delete any recipe content'
   - 'delete article revisions'
   - 'delete content translations'
+  - 'delete own files'
   - 'delete page revisions'
   - 'delete recipe revisions'
   - 'delete terms in recipe_category'

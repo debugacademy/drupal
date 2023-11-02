@@ -1,0 +1,22 @@
+uuid: d3a7e41a-6d34-43e9-9586-fdb1f6d4b0ba
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - da_theme
+_core:
+  default_config_hash: BiuNZYyLVSO0k0X_MWkay_4soJksK4EaVtQOmBZxtgI
+id: da_theme_messages
+theme: da_theme
+region: highlighted
+weight: -8
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  label_display: '0'
+  provider: system
+visibility: {  }
