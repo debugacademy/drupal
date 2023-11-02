@@ -10,7 +10,6 @@ RUN sudo apt-get purge composer -y; exit 0
 
 RUN mkdir ~/bin
 RUN echo "export PATH=$PATH:'~/bin'" >> ~/.bashrc
-RUN sudo update-alternatives --set php $(which php8.1)
 RUN echo "alias ulipreview='gp preview $(drush uli --uri=$(gp url 8888))'" >> ~/.bashrc
 RUN echo "alias uli='drush uli --uri=$(gp url 8888)'" >> ~/.bashrc
 RUN echo "alias composer=~/bin/composer" >> ~/.bashrc
