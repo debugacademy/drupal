@@ -10,6 +10,7 @@ RUN sudo apt-get purge composer -y; exit 0
 
 RUN mkdir ~/bin
 RUN echo "export PATH=$PATH:'~/bin'" >> ~/.bashrc
+RUN sudo update-alternatives --set php $(which php8.1)
 RUN echo "alias ulipreview='gp preview $(drush uli --uri=$(gp url 8888))'" >> ~/.bashrc
 RUN echo "alias uli='drush uli --uri=$(gp url 8888)'" >> ~/.bashrc
 RUN echo "alias composer=~/bin/composer" >> ~/.bashrc
@@ -23,4 +24,3 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
     mv composer.phar ~/bin/composer
 RUN curl -OL https://github.com/vrana/adminer/releases/download/v4.7.8/adminer-4.7.8.php && \
     mv adminer-4.7.8.php ~/bin/adminer.php
-RUN sudo update-alternatives --set php $(which php8.1)
