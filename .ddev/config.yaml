@@ -1,5 +1,5 @@
 APIVersion: v1.12.2
-name: drupal
+name: drupals23
 type: drupal8
 docroot: web
 php_version: "8.1"
@@ -8,8 +8,7 @@ router_http_port: "89"
 router_https_port: "456"
 xdebug_enabled: false
 additional_hostnames: []
-additional_fqdns:
-- drupal.debugacademy.test
+additional_fqdns: []
 nfs_mount_enabled: false
 provider: default
 use_dns_when_possible: true
