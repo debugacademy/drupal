@@ -267,7 +267,6 @@ class FilterTest extends JsonapiKernelTestBase {
    * Sets up the schemas.
    */
   protected function setUpSchemas() {
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
 
@@ -283,6 +282,7 @@ class FilterTest extends JsonapiKernelTestBase {
   protected function savePaintingType() {
     NodeType::create([
       'type' => 'painting',
+      'name' => 'Painting',
     ])->save();
     $this->createTextField(
       'node', 'painting',

@@ -213,7 +213,7 @@ final class ProxyHelper
             EOPHP;
     }
 
-    public static function exportSignature(\ReflectionFunctionAbstract $function, bool $withParameterTypes = true, string &$args = null): string
+    public static function exportSignature(\ReflectionFunctionAbstract $function, bool $withParameterTypes = true, ?string &$args = null): string
     {
         $byRefIndex = 0;
         $args = '';
@@ -270,7 +270,7 @@ final class ProxyHelper
         return $signature;
     }
 
-    public static function exportType(\ReflectionFunctionAbstract|\ReflectionProperty|\ReflectionParameter $owner, bool $noBuiltin = false, \ReflectionType $type = null): ?string
+    public static function exportType(\ReflectionFunctionAbstract|\ReflectionProperty|\ReflectionParameter $owner, bool $noBuiltin = false, ?\ReflectionType $type = null): ?string
     {
         if (!$type ??= $owner instanceof \ReflectionFunctionAbstract ? $owner->getReturnType() : $owner->getType()) {
             return null;
@@ -322,6 +322,9 @@ final class ProxyHelper
     {
         $propertyScopes = Hydrator::$propertyScopes[$parent] ??= Hydrator::getPropertyScopes($parent);
         uksort($propertyScopes, 'strnatcmp');
+        foreach ($propertyScopes as $k => $v) {
+            unset($propertyScopes[$k][3]);
+        }
         $propertyScopes = VarExporter::export($propertyScopes);
         $propertyScopes = str_replace(VarExporter::export($parent), 'parent::class', $propertyScopes);
         $propertyScopes = preg_replace("/(?|(,)\n( )       |\n        |,\n    (\]))/", '$1$2', $propertyScopes);

@@ -119,7 +119,7 @@ abstract class Constraint
      *                                       array, but getDefaultOption() returns
      *                                       null
      */
-    public function __construct(mixed $options = null, array $groups = null, mixed $payload = null)
+    public function __construct(mixed $options = null, ?array $groups = null, mixed $payload = null)
     {
         unset($this->groups); // enable lazy initialization
 
@@ -193,6 +193,8 @@ abstract class Constraint
      * Corresponding properties are added to the object on first access. Hence
      * this method will be called at most once per constraint instance and
      * option name.
+     *
+     * @return void
      *
      * @throws InvalidOptionsException If an invalid option name is given
      */

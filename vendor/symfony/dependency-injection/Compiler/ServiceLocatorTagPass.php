@@ -30,6 +30,8 @@ final class ServiceLocatorTagPass extends AbstractRecursivePass
 {
     use PriorityTaggedServiceTrait;
 
+    protected bool $skipScalars = true;
+
     protected function processValue(mixed $value, bool $isRoot = false): mixed
     {
         if ($value instanceof ServiceLocatorArgument) {
@@ -100,7 +102,7 @@ final class ServiceLocatorTagPass extends AbstractRecursivePass
         return new Reference($id);
     }
 
-    public static function register(ContainerBuilder $container, array $map, string $callerId = null): Reference
+    public static function register(ContainerBuilder $container, array $map, ?string $callerId = null): Reference
     {
         foreach ($map as $k => $v) {
             $map[$k] = new ServiceClosureArgument($v);

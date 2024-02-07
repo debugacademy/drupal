@@ -698,6 +698,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // See https://www.drupal.org/node/2562341.
       // The placeholder uses a unique string that is returned by
       // Crypt::hashBase64('Drupal\Core\Form\FormBuilder::prepareForm').
+      // cspell:disable-next-line
       $placeholder = 'form_action_p_pvdeGsVG5zNF_XLGPTvYSKCf43t8qZYSwcfZl2uzM';
 
       $form['#attached']['placeholders'][$placeholder] = [
@@ -1231,10 +1232,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // Set the element's #value property.
     if (!isset($element['#value']) && !array_key_exists('#value', $element)) {
-      // @todo Once all elements are converted to plugins in
-      //   https://www.drupal.org/node/2311393, rely on
-      //   $element['#value_callback'] directly.
-      $value_callable = !empty($element['#value_callback']) ? $element['#value_callback'] : 'form_type_' . $element['#type'] . '_value';
+      $value_callable = $element['#value_callback'] ?? NULL;
       if (!is_callable($value_callable)) {
         $value_callable = '\Drupal\Core\Render\Element\FormElement::valueCallback';
       }
@@ -1399,11 +1397,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * Wraps file_upload_max_size().
    *
-   * @return string
-   *   A translated string representation of the size of the file size limit
-   *   based on the PHP upload_max_filesize and post_max_size.
+   * @return int
+   *   The file size limit in bytes based on the PHP upload_max_filesize and
+   *   post_max_size.
    */
-  protected function getFileUploadMaxSize() {
+  protected function getFileUploadMaxSize(): int {
     return Environment::getUploadMaxSize();
   }
 

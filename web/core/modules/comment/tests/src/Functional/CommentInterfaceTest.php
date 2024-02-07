@@ -28,7 +28,6 @@ class CommentInterfaceTest extends CommentTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->drupalLogin($this->adminUser);
     // Make sure that comment field title is not displayed when there's no
     // comments posted.
     $this->drupalGet($this->node->toUrl());
@@ -39,7 +38,6 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(FALSE);
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
-    $this->drupalLogout();
   }
 
   /**
@@ -63,10 +61,8 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Set comments to have subject and preview to required.
     $this->drupalLogout();
-    $this->drupalLogin($this->adminUser);
     $this->setCommentSubject(TRUE);
     $this->setCommentPreview(DRUPAL_REQUIRED);
-    $this->drupalLogout();
 
     // Create comment #2 that allows subject and requires preview.
     $this->drupalLogin($this->webUser);
@@ -208,9 +204,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertFalse($this->commentExists($reply, TRUE), 'Reply not found.');
 
     // Enabled comment form on node page.
-    $this->drupalLogin($this->adminUser);
     $this->setCommentForm(TRUE);
-    $this->drupalLogout();
 
     // Submit comment through node form.
     $this->drupalLogin($this->webUser);
@@ -220,7 +214,6 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Disable comment form on node page.
     $this->drupalLogout();
-    $this->drupalLogin($this->adminUser);
     $this->setCommentForm(FALSE);
   }
 
@@ -316,10 +309,11 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertSession()->responseContains('<p>' . $comment_text . '</p>');
 
     // Create a new comment entity view mode.
-    $mode = mb_strtolower($this->randomMachineName());
+    $mode = $this->randomMachineName();
     EntityViewMode::create([
       'targetEntityType' => 'comment',
       'id' => "comment.$mode",
+      'label' => 'Comment test',
     ])->save();
     // Create the corresponding entity view display for article node-type. Note
     // that this new view display mode doesn't contain the comment body.

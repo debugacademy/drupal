@@ -16,7 +16,6 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 /**
  * @Annotation
- *
  * @Target({"PROPERTY", "METHOD", "ANNOTATION"})
  *
  * @author Florent Morselli <florent.morselli@spomky-labs.com>
@@ -40,7 +39,7 @@ final class PasswordStrength extends Constraint
 
     public int $minScore;
 
-    public function __construct(array $options = null, int $minScore = null, array $groups = null, mixed $payload = null, string $message = null)
+    public function __construct(?array $options = null, ?int $minScore = null, ?array $groups = null, mixed $payload = null, ?string $message = null)
     {
         $options['minScore'] ??= self::STRENGTH_MEDIUM;
 

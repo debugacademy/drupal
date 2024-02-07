@@ -83,6 +83,16 @@ class CKEditor5PluginManagerTest extends KernelTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function enableModules(array $modules) {
+    parent::enableModules($modules);
+    // Ensure the CKEditor 5 plugin manager instance on the test reflects the
+    // status after the module is installed.
+    $this->manager = $this->container->get('plugin.manager.ckeditor5.plugin');
+  }
+
+  /**
    * Mocks a module providing a CKEditor 5 plugin in VFS.
    *
    * @param string $module_name
@@ -1256,6 +1266,11 @@ PHP,
       $text_editor->getConfigDependencyName(),
       $text_editor->toArray()
     );
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3361534, which moves this into ::assertConfigSchema()
+    $this->assertSame([], array_map(
+      fn ($v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
+      iterator_to_array($this->typedConfig->createFromNameAndData($text_editor->getConfigDependencyName(), $text_editor->toArray())->validate())
+    ));
 
     $provided_elements = $this->manager->getProvidedElements($plugins, $text_editor);
     $this->assertSame($expected_elements, $provided_elements);
@@ -1374,6 +1389,10 @@ PHP,
         ],
         'text_editor_settings' => [
           'plugins' => [],
+          // Deviate from the default toolbar items because that would cause
+          // the `ckeditor5_heading` plugin to be enabled.
+          // @see \Drupal\ckeditor5\Plugin\Editor\CKEditor5::getDefaultSettings()
+          'toolbar' => ['items' => ['bold', 'italic']],
         ],
         'expected_elements' => [
           'p' => [

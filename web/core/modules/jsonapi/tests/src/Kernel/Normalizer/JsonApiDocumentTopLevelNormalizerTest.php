@@ -135,12 +135,12 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('file');
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
     $this->installSchema('file', ['file_usage']);
     $type = NodeType::create([
       'type' => 'article',
+      'name' => 'Article',
     ]);
     $type->save();
     $this->createEntityReferenceField(
@@ -196,7 +196,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       'uid' => $this->user,
       'body' => [
         'format' => 'plain_text',
-        'value' => $this->randomStringValidate(42),
+        'value' => $this->randomString(),
       ],
       'field_tags' => [
         ['target_id' => $this->term1->id()],

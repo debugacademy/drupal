@@ -42,9 +42,9 @@ class DocumentElement extends TraversableElement
      *
      * @param string $content
      *
-     * @return boolean
+     * @return bool
      */
-    public function hasContent($content)
+    public function hasContent(string $content)
     {
         return $this->has('named', array('content', $content));
     }

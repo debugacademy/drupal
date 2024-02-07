@@ -26,7 +26,7 @@ abstract class TraversableElement extends Element
      *
      * @return NodeElement|null
      */
-    public function findById($id)
+    public function findById(string $id)
     {
         return $this->find('named', array('id', $id));
     }
@@ -36,9 +36,9 @@ abstract class TraversableElement extends Element
      *
      * @param string $locator link id, title, text or image alt
      *
-     * @return boolean
+     * @return bool
      */
-    public function hasLink($locator)
+    public function hasLink(string $locator)
     {
         return null !== $this->findLink($locator);
     }
@@ -50,7 +50,7 @@ abstract class TraversableElement extends Element
      *
      * @return NodeElement|null
      */
-    public function findLink($locator)
+    public function findLink(string $locator)
     {
         return $this->find('named', array('link', $locator));
     }
@@ -60,9 +60,11 @@ abstract class TraversableElement extends Element
      *
      * @param string $locator link id, title, text or image alt
      *
+     * @return void
+     *
      * @throws ElementNotFoundException
      */
-    public function clickLink($locator)
+    public function clickLink(string $locator)
     {
         $link = $this->findLink($locator);
 
@@ -78,9 +80,9 @@ abstract class TraversableElement extends Element
      *
      * @param string $locator button id, value or alt
      *
-     * @return boolean
+     * @return bool
      */
-    public function hasButton($locator)
+    public function hasButton(string $locator)
     {
         return null !== $this->findButton($locator);
     }
@@ -92,7 +94,7 @@ abstract class TraversableElement extends Element
      *
      * @return NodeElement|null
      */
-    public function findButton($locator)
+    public function findButton(string $locator)
     {
         return $this->find('named', array('button', $locator));
     }
@@ -102,9 +104,11 @@ abstract class TraversableElement extends Element
      *
      * @param string $locator button id, value or alt
      *
+     * @return void
+     *
      * @throws ElementNotFoundException
      */
-    public function pressButton($locator)
+    public function pressButton(string $locator)
     {
         $button = $this->findButton($locator);
 
@@ -120,9 +124,9 @@ abstract class TraversableElement extends Element
      *
      * @param string $locator input id, name or label
      *
-     * @return boolean
+     * @return bool
      */
-    public function hasField($locator)
+    public function hasField(string $locator)
     {
         return null !== $this->findField($locator);
     }
@@ -134,7 +138,7 @@ abstract class TraversableElement extends Element
      *
      * @return NodeElement|null
      */
-    public function findField($locator)
+    public function findField(string $locator)
     {
         return $this->find('named', array('field', $locator));
     }
@@ -142,14 +146,16 @@ abstract class TraversableElement extends Element
     /**
      * Fills in field (input, textarea, select) with specified locator.
      *
-     * @param string $locator input id, name or label
-     * @param string $value   value
+     * @param string            $locator input id, name or label
+     * @param string|bool|array $value   value
+     *
+     * @return void
      *
      * @throws ElementNotFoundException
      *
      * @see NodeElement::setValue
      */
-    public function fillField($locator, $value)
+    public function fillField(string $locator, $value)
     {
         $field = $this->findField($locator);
 
@@ -165,11 +171,11 @@ abstract class TraversableElement extends Element
      *
      * @param string $locator input id, name or label
      *
-     * @return boolean
+     * @return bool
      *
      * @see NodeElement::isChecked
      */
-    public function hasCheckedField($locator)
+    public function hasCheckedField(string $locator)
     {
         $field = $this->findField($locator);
 
@@ -181,11 +187,11 @@ abstract class TraversableElement extends Element
      *
      * @param string $locator input id, name or label
      *
-     * @return boolean
+     * @return bool
      *
      * @see NodeElement::isChecked
      */
-    public function hasUncheckedField($locator)
+    public function hasUncheckedField(string $locator)
     {
         $field = $this->findField($locator);
 
@@ -197,9 +203,11 @@ abstract class TraversableElement extends Element
      *
      * @param string $locator input id, name or label
      *
+     * @return void
+     *
      * @throws ElementNotFoundException
      */
-    public function checkField($locator)
+    public function checkField(string $locator)
     {
         $field = $this->findField($locator);
 
@@ -215,9 +223,11 @@ abstract class TraversableElement extends Element
      *
      * @param string $locator input id, name or label
      *
+     * @return void
+     *
      * @throws ElementNotFoundException
      */
-    public function uncheckField($locator)
+    public function uncheckField(string $locator)
     {
         $field = $this->findField($locator);
 
@@ -233,9 +243,9 @@ abstract class TraversableElement extends Element
      *
      * @param string $locator select id, name or label
      *
-     * @return boolean
+     * @return bool
      */
-    public function hasSelect($locator)
+    public function hasSelect(string $locator)
     {
         return $this->has('named', array('select', $locator));
     }
@@ -243,15 +253,17 @@ abstract class TraversableElement extends Element
     /**
      * Selects option from select field with specified locator.
      *
-     * @param string  $locator  input id, name or label
-     * @param string  $value    option value
-     * @param boolean $multiple select multiple options
+     * @param string $locator  input id, name or label
+     * @param string $value    option value
+     * @param bool   $multiple select multiple options
+     *
+     * @return void
      *
      * @throws ElementNotFoundException
      *
      * @see NodeElement::selectOption
      */
-    public function selectFieldOption($locator, $value, $multiple = false)
+    public function selectFieldOption(string $locator, string $value, bool $multiple = false)
     {
         $field = $this->findField($locator);
 
@@ -267,9 +279,9 @@ abstract class TraversableElement extends Element
      *
      * @param string $locator table id or caption
      *
-     * @return boolean
+     * @return bool
      */
-    public function hasTable($locator)
+    public function hasTable(string $locator)
     {
         return $this->has('named', array('table', $locator));
     }
@@ -280,11 +292,13 @@ abstract class TraversableElement extends Element
      * @param string $locator input id, name or label
      * @param string $path    path to file
      *
+     * @return void
+     *
      * @throws ElementNotFoundException
      *
      * @see NodeElement::attachFile
      */
-    public function attachFileToField($locator, $path)
+    public function attachFileToField(string $locator, string $path)
     {
         $field = $this->findField($locator);
 

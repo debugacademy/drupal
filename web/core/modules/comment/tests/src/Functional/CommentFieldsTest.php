@@ -117,7 +117,7 @@ class CommentFieldsTest extends CommentTestBase {
       'type' => 'test_node_type',
     ]);
 
-    // Go to the node first so that webuser2 see new comments.
+    // Go to the node first so that web_user2 see new comments.
     $this->drupalLogin($web_user2);
     $this->drupalGet($node->toUrl());
     $this->drupalLogout();
@@ -158,12 +158,11 @@ class CommentFieldsTest extends CommentTestBase {
       'field_name' => 'user_comment',
     ];
     $this->drupalGet('admin/config/people/accounts/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
+    $this->submitForm($edit, 'Continue');
 
     // Try to save the comment field without selecting a comment type.
     $edit = [];
-    $this->drupalGet('admin/config/people/accounts/fields/user.user.field_user_comment/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Update settings');
     // We should get an error message.
     $this->assertSession()->pageTextContains('The submitted value in the Comment type element is not allowed.');
 
@@ -178,10 +177,10 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Select a comment type and try to save again.
     $edit = [
-      'settings[comment_type]' => 'user_comment_type',
+      'field_storage[subform][settings][comment_type]' => 'user_comment_type',
     ];
-    $this->drupalGet('admin/config/people/accounts/fields/user.user.field_user_comment/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalGet('admin/config/people/accounts/add-field/user/field_user_comment');
+    $this->submitForm($edit, 'Update settings');
     // We shouldn't get an error message.
     $this->assertSession()->pageTextNotContains('The submitted value in the Comment type element is not allowed.');
 
@@ -190,7 +189,7 @@ class CommentFieldsTest extends CommentTestBase {
     $edit = [
       'settings[per_page]' => 0,
     ];
-    $this->drupalGet('admin/config/people/accounts/fields/user.user.field_user_comment');
+    $this->drupalGet('admin/config/people/accounts/add-field/user/field_user_comment');
     $this->submitForm($edit, 'Save settings');
     $this->assertSession()->statusMessageContains('Saved User comment configuration.', 'status');
   }

@@ -7,11 +7,15 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\SubformState;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Entity\EntityFormModeInterface;
 use Drupal\Core\Url;
+use Drupal\field\FieldConfigInterface;
 use Drupal\field_ui\FieldUI;
+use Drupal\field_ui\Form\FieldConfigEditForm;
+use Drupal\field_ui\Form\FieldStorageConfigEditForm;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
 
 /**
@@ -63,6 +67,13 @@ function field_ui_theme() {
         'empty' => '',
       ],
     ],
+    // Provide a dedicated template for new storage options as their styling
+    // is quite different from a typical form element, so it works best to not
+    // include default form element classes.
+    'form_element__new_storage_type' => [
+      'base hook' => 'form_element',
+      'render element' => 'element',
+    ],
   ];
 }
 
@@ -72,10 +83,12 @@ function field_ui_theme() {
 function field_ui_entity_type_build(array &$entity_types) {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['field_config']->setFormClass('edit', 'Drupal\field_ui\Form\FieldConfigEditForm');
+  $entity_types['field_config']->setFormClass('default', FieldConfigEditForm::class);
   $entity_types['field_config']->setFormClass('delete', 'Drupal\field_ui\Form\FieldConfigDeleteForm');
   $entity_types['field_config']->setListBuilderClass('Drupal\field_ui\FieldConfigListBuilder');
 
   $entity_types['field_storage_config']->setFormClass('edit', 'Drupal\field_ui\Form\FieldStorageConfigEditForm');
+  $entity_types['field_storage_config']->setFormClass('default', FieldStorageConfigEditForm::class);
   $entity_types['field_storage_config']->setListBuilderClass('Drupal\field_ui\FieldStorageConfigListBuilder');
   $entity_types['field_storage_config']->setLinkTemplate('collection', '/admin/reports/fields');
 
@@ -115,26 +128,6 @@ function field_ui_entity_bundle_create($entity_type, $bundle) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
- *
- * Adds a button 'Save and manage fields' to the 'Create content type' form.
- *
- * @see \Drupal\node\NodeTypeForm
- * @see field_ui_form_node_type_form_submit()
- */
-function field_ui_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
-  // We want to display the button only on add page.
-  if ($form_state->getFormObject()->getEntity()->isNew()) {
-    $form['actions']['save_continue'] = $form['actions']['submit'];
-    $form['actions']['save_continue']['#value'] = t('Save and manage fields');
-    $form['actions']['save_continue']['#weight'] = $form['actions']['save_continue']['#weight'] + 5;
-    $form['actions']['save_continue']['#submit'][] = 'field_ui_form_node_type_form_submit';
-    // Hide the 'Save content type' button.
-    $form['actions']['submit']['#access'] = FALSE;
-  }
-}
-
-/**
  * Implements hook_entity_operation().
  */
 function field_ui_entity_operation(EntityInterface $entity) {
@@ -166,7 +159,7 @@ function field_ui_entity_operation(EntityInterface $entity) {
       $operations['manage-display'] = [
         'title' => t('Manage display'),
         'weight' => 25,
-        'url' => Url::fromRoute("entity.entity_view_display.{$bundle_of}.default", [
+        'url' => Url::fromRoute("entity.entity_view_display.$bundle_of.default", [
           $entity->getEntityTypeId() => $entity->id(),
         ]),
       ];
@@ -174,17 +167,6 @@ function field_ui_entity_operation(EntityInterface $entity) {
   }
 
   return $operations;
-}
-
-/**
- * Form submission handler for the 'Save and manage fields' button.
- *
- * @see field_ui_form_node_type_form_alter()
- */
-function field_ui_form_node_type_form_submit($form, FormStateInterface $form_state) {
-  if ($form_state->getTriggeringElement()['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo('node', $form_state->getValue('type'))) {
-    $form_state->setRedirectUrl($route_info);
-  }
 }
 
 /**
@@ -247,4 +229,75 @@ function field_ui_form_field_ui_field_storage_add_form_alter(array &$form) {
   // "Other".
   unset($form['add']['new_storage_type']['#options'][$optgroup]['entity_reference']);
   $form['add']['new_storage_type']['#options'][$optgroup]['entity_reference'] = t('Other…');
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function field_ui_preprocess_form_element__new_storage_type(&$variables) {
+  // Add support for a variant string so radios in the add field form can be
+  // programmatically distinguished.
+  $variables['variant'] = $variables['element']['#variant'] ?? NULL;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Adds a button 'Save and manage fields' to forms.
+ *
+ * @see \Drupal\node\NodeTypeForm
+ * @see \Drupal\comment\CommentTypeForm
+ * @see \Drupal\media\MediaTypeForm
+ * @see \Drupal\block_content\BlockContentTypeForm
+ * @see field_ui_form_manage_field_form_submit()
+ */
+function field_ui_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $forms = [
+    'node_type_add_form',
+    'comment_type_add_form',
+    'media_type_add_form',
+    'block_content_type_add_form',
+  ];
+
+  if (!in_array($form_id, $forms)) {
+    return;
+  }
+  if ($form_state->getFormObject()->getEntity()->isNew()) {
+    $form['actions']['save_continue'] = $form['actions']['submit'];
+    unset($form['actions']['submit']['#button_type']);
+    $form['actions']['save_continue']['#value'] = t('Save and manage fields');
+    $form['actions']['save_continue']['#weight'] = $form['actions']['save_continue']['#weight'] - 5;
+    $form['actions']['save_continue']['#submit'][] = 'field_ui_form_manage_field_form_submit';
+  }
+}
+
+/**
+ * Form submission handler for the 'Save and manage fields' button.
+ *
+ * @see field_ui_form_alter()
+ */
+function field_ui_form_manage_field_form_submit($form, FormStateInterface $form_state) {
+  $provider = $form_state->getFormObject()->getEntity()->getEntityType()->getProvider();
+  $id = $form_state->getFormObject()->getEntity()->id();
+  if ($form_state->getTriggeringElement()['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo($provider, $id)) {
+    $form_state->setRedirectUrl($route_info);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for field_config_edit_form.
+ */
+function field_ui_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state) {
+  $field_config = $form_state->getFormObject()->getEntity();
+  assert($field_config instanceof FieldConfigInterface);
+
+  $form_id = 'field_storage_config_edit_form';
+  $hook = 'form_' . $form_id;
+
+  $field_storage_form = \Drupal::entityTypeManager()->getFormObject('field_storage_config', $form_state->getFormObject()->getOperation());
+  $field_storage_form->setEntity($field_config->getFieldStorageDefinition());
+  $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state, $field_storage_form);
+
+  \Drupal::moduleHandler()->alterDeprecated('Use hook_form_field_config_edit_form_alter() instead. See https://www.drupal.org/node/3386675.', $hook, $form['field_storage']['subform'], $subform_state, $form_id);
+  \Drupal::theme()->alter($hook, $form['field_storage']['subform'], $subform_state, $form_id);
 }

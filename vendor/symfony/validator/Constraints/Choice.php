@@ -38,6 +38,7 @@ class Choice extends Constraint
     protected static $errorNames = self::ERROR_NAMES;
 
     public $choices;
+    /** @var callable|string|null */
     public $callback;
     public $multiple = false;
     public $strict = true;
@@ -56,19 +57,19 @@ class Choice extends Constraint
 
     public function __construct(
         string|array $options = [],
-        array $choices = null,
-        callable|string $callback = null,
-        bool $multiple = null,
-        bool $strict = null,
-        int $min = null,
-        int $max = null,
-        string $message = null,
-        string $multipleMessage = null,
-        string $minMessage = null,
-        string $maxMessage = null,
-        array $groups = null,
+        ?array $choices = null,
+        callable|string|null $callback = null,
+        ?bool $multiple = null,
+        ?bool $strict = null,
+        ?int $min = null,
+        ?int $max = null,
+        ?string $message = null,
+        ?string $multipleMessage = null,
+        ?string $minMessage = null,
+        ?string $maxMessage = null,
+        ?array $groups = null,
         mixed $payload = null,
-        bool $match = null,
+        ?bool $match = null,
     ) {
         if (\is_array($options) && $options && array_is_list($options)) {
             $choices ??= $options;

@@ -37,9 +37,10 @@ class NotBlank extends Constraint
 
     public $message = 'This value should not be blank.';
     public $allowNull = false;
+    /** @var callable|null */
     public $normalizer;
 
-    public function __construct(array $options = null, string $message = null, bool $allowNull = null, callable $normalizer = null, array $groups = null, mixed $payload = null)
+    public function __construct(?array $options = null, ?string $message = null, ?bool $allowNull = null, ?callable $normalizer = null, ?array $groups = null, mixed $payload = null)
     {
         parent::__construct($options ?? [], $groups, $payload);
 

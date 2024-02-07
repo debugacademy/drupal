@@ -42,7 +42,7 @@ class SchemaCheckTraitTest extends KernelTestBase {
    */
   public function testTrait() {
     // Test a non existing schema.
-    $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.noschema', $this->config('config_schema_test.noschema')->get());
+    $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.no_schema', $this->config('config_schema_test.no_schema')->get());
     $this->assertFalse($ret);
 
     // Test an existing schema with valid data.
@@ -56,9 +56,16 @@ class SchemaCheckTraitTest extends KernelTestBase {
     $config_data['boolean'] = [];
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
     $expected = [
+      // Storage type check errors.
+      // @see \Drupal\Core\Config\Schema\SchemaCheckTrait::checkValue()
       'config_test.types:new_key' => 'missing schema',
       'config_test.types:new_array' => 'missing schema',
       'config_test.types:boolean' => 'non-scalar value but not defined as an array (such as mapping or sequence)',
+      // Validation constraints violations.
+      // @see \Drupal\Core\TypedData\TypedDataInterface::validate()
+      '0' => "[] 'new_key' is not a supported key.",
+      '1' => "[] 'new_array' is not a supported key.",
+      '2' => '[boolean] This value should be of the correct primitive type.',
     ];
     $this->assertEquals($expected, $ret);
   }

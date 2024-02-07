@@ -10,6 +10,7 @@ use Drupal\Tests\TestFileCreationTrait;
  * Tests the _file_save_upload_from_form() function.
  *
  * @group file
+ * @group #slow
  *
  * @see _file_save_upload_from_form()
  */
@@ -24,7 +25,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
    *
    * @var array
    */
-  protected static $modules = ['dblog'];
+  protected static $modules = ['dblog', 'file_validator_test'];
 
   /**
    * {@inheritdoc}

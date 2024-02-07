@@ -38,15 +38,16 @@ class Regex extends Constraint
     public $pattern;
     public $htmlPattern;
     public $match = true;
+    /** @var callable|null */
     public $normalizer;
 
     public function __construct(
         string|array|null $pattern,
-        string $message = null,
-        string $htmlPattern = null,
-        bool $match = null,
-        callable $normalizer = null,
-        array $groups = null,
+        ?string $message = null,
+        ?string $htmlPattern = null,
+        ?bool $match = null,
+        ?callable $normalizer = null,
+        ?array $groups = null,
         mixed $payload = null,
         array $options = []
     ) {

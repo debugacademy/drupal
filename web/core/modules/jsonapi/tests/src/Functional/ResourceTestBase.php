@@ -10,6 +10,7 @@ use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
+use Drupal\Core\Cache\CacheRedirect;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityNullStorage;
@@ -994,16 +995,12 @@ abstract class ResourceTestBase extends BrowserTestBase {
       ->condition('cid', '%[route]=jsonapi.%', 'LIKE')
       ->execute()
       ->fetchAll();
-    $this->assertLessThanOrEqual(4, count($cache_items));
+    $this->assertLessThanOrEqual(5, count($cache_items));
     $found_cached_200_response = FALSE;
     $other_cached_responses_are_4xx = TRUE;
     foreach ($cache_items as $cache_item) {
-      $cached_data = unserialize($cache_item->data);
-
-      // We might be finding cache redirects when querying like this, so ensure
-      // we only inspect the actual cached response to see if it got flattened.
-      if (!isset($cached_data['#cache_redirect'])) {
-        $cached_response = $cached_data['#response'];
+      $cached_response = unserialize($cache_item->data);
+      if (!$cached_response instanceof CacheRedirect) {
         if ($cached_response->getStatusCode() === 200) {
           $found_cached_200_response = TRUE;
         }
@@ -3141,9 +3138,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
       [$revision_id, $relationship_url, $related_url] = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
-      $revision = is_null($revision_id)
-        ? $this->entityStorage->load($entity->id())
-        : $this->entityStorage->loadRevision($revision_id);
+      if ($revision_id === NULL) {
+        $revision = $this->entityStorage->load($entity->id());
+      }
+      else {
+        /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+        $storage = $this->entityStorage;
+        $revision = $storage->loadRevision($revision_id);
+      }
       // Request the relationship resource without access to the relationship
       // field.
       $actual_response = $this->request('GET', $relationship_url, $request_options);
@@ -3168,9 +3170,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
       [$revision_id, $relationship_url, $related_url] = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
-      $revision = is_null($revision_id)
-        ? $this->entityStorage->load($entity->id())
-        : $this->entityStorage->loadRevision($revision_id);
+      if ($revision_id === NULL) {
+        $revision = $this->entityStorage->load($entity->id());
+      }
+      else {
+        /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+        $storage = $this->entityStorage;
+        $revision = $storage->loadRevision($revision_id);
+      }
       // Request the relationship resource after granting access to the
       // relationship field.
       $actual_response = $this->request('GET', $relationship_url, $request_options);

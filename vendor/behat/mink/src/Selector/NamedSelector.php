@@ -19,6 +19,9 @@ use Behat\Mink\Selector\Xpath\Escaper;
  */
 class NamedSelector implements SelectorInterface
 {
+    /**
+     * @var array<string, string>
+     */
     private $replacements = array(
         // simple replacements
         '%lowercaseType%' => "translate(./@type, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')",
@@ -48,6 +51,9 @@ class NamedSelector implements SelectorInterface
         '%imgAltMatch%' => './/img[%altMatch%]',
     );
 
+    /**
+     * @var array<string, string>
+     */
     private $selectors = array(
         'fieldset' => <<<XPATH
 .//fieldset
@@ -159,6 +165,9 @@ XPATH
 .//*[%idOrNameMatch%]
 XPATH
     );
+    /**
+     * @var Escaper
+     */
     private $xpathEscaper;
 
     /**
@@ -182,8 +191,10 @@ XPATH
      *
      * @param string $name  name for selector
      * @param string $xpath xpath expression
+     *
+     * @return void
      */
-    public function registerNamedXpath($name, $xpath)
+    public function registerNamedXpath(string $name, string $xpath)
     {
         $this->selectors[$name] = strtr($xpath, $this->replacements);
     }
@@ -241,7 +252,7 @@ XPATH
      *
      * Because the %idOrNameMatch% replacement consumes the %idMatch% replacement, it must be defined afterwards.
      *
-     * You may then use this in an a Named XPath:
+     * You may then use this in a Named XPath:
      *
      *     .//fieldset[%idOrNameMatch%]
      *
@@ -251,13 +262,15 @@ XPATH
      *
      * @param string $from The source, typically a string wrapped in % markers
      * @param string $to The translation
+     *
+     * @return void
      */
-    public function registerReplacement($from, $to)
+    public function registerReplacement(string $from, string $to)
     {
         $this->replacements[$from] = strtr($to, $this->replacements);
     }
 
-    private function escapeLocator($locator)
+    private function escapeLocator(string $locator): string
     {
         // If the locator looks like an escaped one, don't escape it again for BC reasons.
         if (

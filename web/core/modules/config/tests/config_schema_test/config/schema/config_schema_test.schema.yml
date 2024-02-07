@@ -1,6 +1,6 @@
 # Schema for the configuration files of the Configuration Schema Test module.
 
-config_schema_test.someschema:
+config_schema_test.some_schema:
   type: config_object
   label: 'Schema test data'
   mapping:
@@ -9,7 +9,7 @@ config_schema_test.someschema:
     testlist:
       label: 'Test list'
 
-config_schema_test.someschema.with_parents:
+config_schema_test.some_schema.with_parents:
   label: 'Schema test data with parenting'
   type: config_object
   mapping:
@@ -21,7 +21,7 @@ config_schema_test.someschema.with_parents:
           label: 'Key used in parent relation'
           type: string
         testitem:
-          type: config_schema_test.someschema.with_parents.[%parent.target_key]
+          type: config_schema_test.some_schema.with_parents.[%parent.target_key]
     two_levels:
       label: 'Parenting two levels up'
       type: mapping
@@ -34,7 +34,7 @@ config_schema_test.someschema.with_parents:
           type: mapping
           mapping:
             testitem:
-              type: config_schema_test.someschema.with_parents.[%parent.%parent.target_key]
+              type: config_schema_test.some_schema.with_parents.[%parent.%parent.target_key]
     three_levels:
       label: 'Parenting three levels up'
       type: mapping
@@ -51,19 +51,19 @@ config_schema_test.someschema.with_parents:
               type: mapping
               mapping:
                 testitem:
-                  type: config_schema_test.someschema.with_parents.[%parent.%parent.%parent.target_key]
+                  type: config_schema_test.some_schema.with_parents.[%parent.%parent.%parent.target_key]
 
-config_schema_test.someschema.with_parents.key_1:
+config_schema_test.some_schema.with_parents.key_1:
   label: 'Test item nested one level'
   type: string
-config_schema_test.someschema.with_parents.key_2:
+config_schema_test.some_schema.with_parents.key_2:
   label: 'Test item nested two levels'
   type: string
-config_schema_test.someschema.with_parents.key_3:
+config_schema_test.some_schema.with_parents.key_3:
   label: 'Test item nested three levels'
   type: string
 
-config_schema_test.someschema.somemodule.*.*:
+config_schema_test.some_schema.some_module.*.*:
   type: config_object
   label: 'Schema multiple filesystem marker test'
   mapping:
@@ -120,6 +120,7 @@ config_schema_test.schema_data_types:
       type: sequence
       sequence:
         type: boolean
+    # @see \Drupal\Core\Config\Schema\Sequence::getElementDefinition()
     sequence_bc:
       type: sequence
       sequence:
@@ -220,7 +221,7 @@ wrapping.config_schema_test.plugin_types:
     tests:
       type: sequence
       sequence:
-        - type: wrapping.test.plugin_types.[plugin_id]
+        type: wrapping.test.plugin_types.[plugin_id]
 
 wrapping.test.plugin_types.*:
   type: test.plugin_types.[plugin_id]
@@ -240,7 +241,7 @@ wrapping.config_schema_test.double_brackets:
     tests:
       type: sequence
       sequence:
-        - type: wrapping.test.double_brackets.[another_key]
+        type: wrapping.test.double_brackets.[another_key]
 
 wrapping.test.double_brackets.*:
   type: test.double_brackets.[foo].[bar]
@@ -277,7 +278,7 @@ wrapping.config_schema_test.other_double_brackets:
     tests:
       type: sequence
       sequence:
-        - type: wrapping.test.other_double_brackets.[id]
+        type: wrapping.test.other_double_brackets.[id]
 
 wrapping.test.other_double_brackets.*:
   type: test.double_brackets.[id]
@@ -305,36 +306,36 @@ config_schema_test.schema_sequence_sort:
       type: sequence
       orderby: key
       sequence:
-        - type: string
+        type: string
     value_sort:
       type: sequence
       orderby: value
       sequence:
-        - type: string
+        type: string
     no_sort:
       type: sequence
       sequence:
-        - type: string
+        type: string
     complex_sort_value:
       type: sequence
       orderby: value
       sequence:
-        - type: mapping
-          mapping:
-            foo:
-              type: string
-            bar:
-              type: string
+        type: mapping
+        mapping:
+          foo:
+            type: string
+          bar:
+            type: string
     complex_sort_key:
       type: sequence
       orderby: key
       sequence:
-        - type: mapping
-          mapping:
-            foo:
-              type: string
-            bar:
-              type: string
+        type: mapping
+        mapping:
+          foo:
+            type: string
+          bar:
+            type: string
 
 config_schema_test.schema_mapping_sort:
   type: config_object

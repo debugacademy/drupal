@@ -802,7 +802,7 @@ function locale_translation_get_file_history() {
  */
 function locale_translation_update_file_history($file) {
   $status = \Drupal::database()->merge('locale_file')
-    ->key([
+    ->keys([
       'project' => $file->project,
       'langcode' => $file->langcode,
     ])
@@ -1185,8 +1185,8 @@ function _locale_invalidate_js($langcode = NULL) {
   if (empty($langcode)) {
     // Invalidate all languages.
     $languages = locale_translatable_language_list();
-    foreach ($languages as $lcode => $data) {
-      $parsed['refresh:' . $lcode] = 'waiting';
+    foreach ($languages as $language_code => $data) {
+      $parsed['refresh:' . $language_code] = 'waiting';
     }
   }
   else {

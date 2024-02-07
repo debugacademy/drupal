@@ -159,6 +159,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
         $unmet_module_dependencies = array_diff_key($module_dependencies, $installed_modules);
 
         if ($theme_data[$theme]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+          // phpcs:ignore Drupal.Semantics.FunctionTriggerError
           @trigger_error("The theme '$theme' is deprecated. See " . $theme_data[$theme]->info['lifecycle_link'], E_USER_DEPRECATED);
         }
 
@@ -211,6 +212,12 @@ class ThemeInstaller implements ThemeInstallerInterface {
       // Throw an exception if the theme name is too long.
       if (strlen($key) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
         throw new ExtensionNameLengthException("Theme name $key is over the maximum allowed length of " . DRUPAL_EXTENSION_NAME_MAX_LENGTH . ' characters.');
+      }
+
+      // Throw an exception if a module with the same name is enabled.
+      $installed_modules = $extension_config->get('module') ?: [];
+      if (isset($installed_modules[$key])) {
+        throw new ExtensionNameReservedException("Theme name $key is already in use by an installed module.");
       }
 
       // Validate default configuration of the theme. If there is existing

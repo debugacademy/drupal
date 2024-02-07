@@ -86,25 +86,27 @@
     prepareDialogButtons($dialog) {
       const buttons = [];
       const $buttons = $dialog.find(
-        '.form-actions input[type=submit], .form-actions a.button',
+        '.form-actions input[type=submit], .form-actions a.button, .form-actions a.action-link',
       );
       $buttons.each(function () {
-        const $originalButton = $(this).css({ display: 'none' });
+        const $originalButton = $(this);
+        this.style.display = 'none';
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),
+          'data-once': $originalButton.data('once'),
           click(e) {
             // If the original button is an anchor tag, triggering the "click"
             // event will not simulate a click. Use the click method instead.
-            if ($originalButton.is('a')) {
+            if ($originalButton[0].tagName === 'A') {
               $originalButton[0].click();
             } else {
               $originalButton
                 .trigger('mousedown')
                 .trigger('mouseup')
                 .trigger('click');
-              e.preventDefault();
             }
+            e.preventDefault();
           },
         });
       });

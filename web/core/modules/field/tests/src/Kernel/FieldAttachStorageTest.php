@@ -50,6 +50,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
       $values[$current_revision] = $current_values;
     }
 
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
     $storage->resetCache();
     $entity = $storage->load($entity_id);
@@ -252,6 +253,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $entity->setNewRevision();
     $entity->save();
     $vids[] = $entity->getRevisionId();
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $controller */
     $controller = $this->container->get('entity_type.manager')->getStorage($entity->getEntityTypeId());
     $controller->resetCache();
 
@@ -294,7 +296,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
 
     // Create a new bundle.
-    $new_bundle = 'test_bundle_' . mb_strtolower($this->randomMachineName());
+    $new_bundle = 'test_bundle_' . $this->randomMachineName();
     entity_test_create_bundle($new_bundle, NULL, $entity_type);
 
     // Add a field to that bundle.
@@ -321,7 +323,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $this->createFieldWithStorage('', $entity_type);
 
     // Create a new bundle.
-    $new_bundle = 'test_bundle_' . mb_strtolower($this->randomMachineName());
+    $new_bundle = 'test_bundle_' . $this->randomMachineName();
     entity_test_create_bundle($new_bundle, NULL, $entity_type);
 
     // Add a field to that bundle.
@@ -329,7 +331,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     FieldConfig::create($this->fieldTestData->field_definition)->save();
 
     // Create a second field for the test bundle
-    $field_name = mb_strtolower($this->randomMachineName() . '_field_name');
+    $field_name = $this->randomMachineName() . '_field_name';
     $field_storage = [
       'field_name' => $field_name,
       'entity_type' => $entity_type,

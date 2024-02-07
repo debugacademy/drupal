@@ -2,13 +2,17 @@
 
 namespace Drupal\Tests\demo_umami\Functional;
 
+use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\editor\Entity\Editor;
 use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Tests\SchemaCheckTestTrait;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Tests demo_umami profile.
@@ -18,6 +22,7 @@ use Drupal\Component\Render\FormattableMarkup;
  */
 class DemoUmamiProfileTest extends BrowserTestBase {
   use AssertConfigTrait;
+  use SchemaCheckTestTrait;
 
   /**
    * {@inheritdoc}
@@ -34,9 +39,22 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   protected $profile = 'demo_umami';
 
   /**
+   * Tests some features specific to being a demonstration profile.
+   */
+  public function testDemoSpecificFeatures() {
+    // This test coverage is organized into separate protected methods rather
+    // than individual test methods to avoid having to reinstall Umami for
+    // a handful of assertions each.
+    $this->testUser();
+    $this->testWarningsOnStatusPage();
+    $this->testAppearance();
+    $this->testDemonstrationWarningMessage();
+  }
+
+  /**
    * Tests demo_umami profile warnings shown on Status Page.
    */
-  public function testWarningsOnStatusPage() {
+  protected function testWarningsOnStatusPage() {
     $account = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($account);
 
@@ -58,6 +76,36 @@ class DemoUmamiProfileTest extends BrowserTestBase {
 
     $default_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
     $this->assertDefaultConfig($default_config_storage, $active_config_storage);
+
+    // Now we have all configuration imported, test all of them for schema
+    // conformance. Ensures all imported default configuration is valid when
+    // Demo Umami profile modules are enabled.
+    $names = $this->container->get('config.storage')->listAll();
+    /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
+    $typed_config = $this->container->get('config.typed');
+    foreach ($names as $name) {
+      $config = $this->config($name);
+      $this->assertConfigSchema($typed_config, $name, $config->get());
+    }
+
+    // Validate all configuration.
+    // @todo Generalize in https://www.drupal.org/project/drupal/issues/2164373
+    foreach (Editor::loadMultiple() as $editor) {
+      // Currently only text editors using CKEditor 5 can be validated.
+      if ($editor->getEditor() !== 'ckeditor5') {
+        continue;
+      }
+
+      $this->assertSame([], array_map(
+        function (ConstraintViolation $v) {
+          return (string) $v->getMessage();
+        },
+        iterator_to_array(CKEditor5::validatePair(
+          $editor,
+          $editor->getFilterFormat()
+        ))
+      ));
+    }
   }
 
   /**
@@ -94,7 +142,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   /**
    * Tests that the users can log in with the admin password entered at install.
    */
-  public function testUser() {
+  protected function testUser() {
     $password = $this->rootUser->pass_raw;
     $ids = \Drupal::entityQuery('user')
       ->accessCheck(FALSE)
@@ -141,7 +189,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   /**
    * Tests that the Umami theme is available on the Appearance page.
    */
-  public function testAppearance() {
+  protected function testAppearance() {
     $account = $this->drupalCreateUser(['administer themes']);
     $this->drupalLogin($account);
     $webassert = $this->assertSession();
@@ -153,7 +201,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   /**
    * Tests that the toolbar warning only appears on the admin pages.
    */
-  public function testDemonstrationWarningMessage() {
+  protected function testDemonstrationWarningMessage() {
     $permissions = [
       'access content overview',
       'access toolbar',
@@ -204,7 +252,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
    * If a user is already logged in, then the current user is logged out before
    * logging in the specified user.
    *
-   * Please note that neither the current user nor the passed-in user object is
+   * Note that neither the current user nor the passed-in user object is
    * populated with data of the logged in user. If you need full access to the
    * user object after logging in, it must be updated manually. If you also need
    * access to the plain-text password of the user (set by drupalCreateUser()),

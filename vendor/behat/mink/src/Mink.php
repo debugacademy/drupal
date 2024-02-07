@@ -32,7 +32,7 @@ class Mink
     /**
      * Initializes manager.
      *
-     * @param Session[] $sessions
+     * @param array<string, Session> $sessions
      */
     public function __construct(array $sessions = array())
     {
@@ -54,8 +54,10 @@ class Mink
      *
      * @param string  $name
      * @param Session $session
+     *
+     * @return void
      */
-    public function registerSession($name, Session $session)
+    public function registerSession(string $name, Session $session)
     {
         $name = strtolower($name);
 
@@ -67,9 +69,9 @@ class Mink
      *
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
-    public function hasSession($name)
+    public function hasSession(string $name)
     {
         return isset($this->sessions[strtolower($name)]);
     }
@@ -79,9 +81,11 @@ class Mink
      *
      * @param string $name name of the registered session
      *
+     * @return void
+     *
      * @throws \InvalidArgumentException
      */
-    public function setDefaultSessionName($name)
+    public function setDefaultSessionName(string $name)
     {
         $name = strtolower($name);
 
@@ -103,7 +107,7 @@ class Mink
     }
 
     /**
-     * Returns registered session by it's name or default one.
+     * Returns registered session by its name or default one.
      *
      * @param string|null $name session name
      *
@@ -111,7 +115,7 @@ class Mink
      *
      * @throws \InvalidArgumentException If the named session is not registered
      */
-    public function getSession($name = null)
+    public function getSession(?string $name = null)
     {
         return $this->locateSession($name);
     }
@@ -125,7 +129,7 @@ class Mink
      *
      * @throws \InvalidArgumentException If the named session is not registered
      */
-    public function isSessionStarted($name = null)
+    public function isSessionStarted(?string $name = null)
     {
         $session = $this->locateSession($name);
 
@@ -150,6 +154,8 @@ class Mink
 
     /**
      * Resets all started sessions.
+     *
+     * @return void
      */
     public function resetSessions()
     {
@@ -162,6 +168,8 @@ class Mink
 
     /**
      * Restarts all started sessions.
+     *
+     * @return void
      */
     public function restartSessions()
     {
@@ -174,6 +182,8 @@ class Mink
 
     /**
      * Stops all started sessions.
+     *
+     * @return void
      */
     public function stopSessions()
     {
@@ -193,7 +203,7 @@ class Mink
      *
      * @throws \InvalidArgumentException If the named session is not registered
      */
-    protected function locateSession($name = null)
+    protected function locateSession(?string $name = null)
     {
         $name = $name ? strtolower($name) : $this->defaultSessionName;
 

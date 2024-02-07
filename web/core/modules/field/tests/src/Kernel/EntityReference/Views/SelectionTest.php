@@ -60,8 +60,11 @@ class SelectionTest extends KernelTestBase {
     $this->installEntitySchema('node');
 
     // Create test nodes.
-    $type = strtolower($this->randomMachineName());
-    NodeType::create(['type' => $type])->save();
+    $type = $this->randomMachineName();
+    NodeType::create([
+      'type' => $type,
+      'name' => $this->randomString(),
+    ])->save();
     $node1 = $this->createNode(['type' => $type]);
     $node2 = $this->createNode(['type' => $type]);
     $node3 = $this->createNode();

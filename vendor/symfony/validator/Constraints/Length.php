@@ -58,25 +58,26 @@ class Length extends Constraint
     public $max;
     public $min;
     public $charset = 'UTF-8';
+    /** @var callable|null */
     public $normalizer;
-    /* @var self::COUNT_* */
+    /** @var self::COUNT_* */
     public string $countUnit = self::COUNT_CODEPOINTS;
 
     /**
      * @param self::COUNT_*|null $countUnit
      */
     public function __construct(
-        int|array $exactly = null,
-        int $min = null,
-        int $max = null,
-        string $charset = null,
-        callable $normalizer = null,
-        string $countUnit = null,
-        string $exactMessage = null,
-        string $minMessage = null,
-        string $maxMessage = null,
-        string $charsetMessage = null,
-        array $groups = null,
+        int|array|null $exactly = null,
+        ?int $min = null,
+        ?int $max = null,
+        ?string $charset = null,
+        ?callable $normalizer = null,
+        ?string $countUnit = null,
+        ?string $exactMessage = null,
+        ?string $minMessage = null,
+        ?string $maxMessage = null,
+        ?string $charsetMessage = null,
+        ?array $groups = null,
         mixed $payload = null,
         array $options = []
     ) {

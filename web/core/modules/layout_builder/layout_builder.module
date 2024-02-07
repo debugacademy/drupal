@@ -228,6 +228,13 @@ function layout_builder_cron() {
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
  */
 function layout_builder_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra) {
+  // Remove blocks that are not useful within Layout Builder.
+  unset($definitions['system_messages_block']);
+  unset($definitions['help_block']);
+  unset($definitions['local_tasks_block']);
+  unset($definitions['local_actions_block']);
+
+  // Remove blocks that are non-functional within Layout Builder.
   unset($definitions['system_main_block']);
   // @todo Restore the page title block in https://www.drupal.org/node/2938129.
   unset($definitions['page_title_block']);
@@ -437,7 +444,7 @@ function layout_builder_entity_view_display_presave(EntityViewDisplayInterface $
             continue;
           }
           if (!isset($formatter['settings']['tooltip']) || !isset($formatter['settings']['time_diff'])) {
-            @trigger_error("The 'timestamp' formatter plugin 'tooltip' and 'time_diff' settings were added in drupal:10.1.0 and will be mandatory in Drupal 11.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
+            @trigger_error("Using the 'timestamp' formatter plugin  without the 'tooltip' and 'time_diff' settings is deprecated in drupal:10.1.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
             $formatter['settings'] += $plugin_definition['class']::defaultSettings();
             // Existing timestamp formatters don't have tooltip.
             $formatter['settings']['tooltip']['date_format'] = '';

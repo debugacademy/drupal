@@ -4,6 +4,7 @@ namespace Drupal\migrate\Plugin\migrate\id_map;
 
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -424,13 +425,11 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
             ->createTable($this->mapTableName, $schema);
           break;
         }
-        catch (DatabaseException $e) {
-          $pdo_exception = $e->getPrevious();
-          $mysql_index_error = $pdo_exception instanceof \PDOException && $pdo_exception->getCode() === '42000' && $pdo_exception->errorInfo[1] === 1071;
+        catch (SchemaTableKeyTooLargeException $e) {
           $chunk_size--;
           // Rethrow the exception if the source IDs can not be in smaller
           // groups.
-          if (!$mysql_index_error || $chunk_size <= 0) {
+          if ($chunk_size <= 0) {
             throw $e;
           }
         }
@@ -700,11 +699,10 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       return;
     }
     $fields['last_imported'] = time();
-    $keys = [$this::SOURCE_IDS_HASH => $this->getSourceIdsHash($source_id_values)];
     // Notify anyone listening of the map row we're about to save.
     $this->eventDispatcher->dispatch(new MigrateMapSaveEvent($this, $fields), MigrateEvents::MAP_SAVE);
     $this->getDatabase()->merge($this->mapTableName())
-      ->key($keys)
+      ->key($this::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values))
       ->fields($fields)
       ->execute();
   }
@@ -1021,7 +1019,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * @see https://www.drupal.org/node/3277306
    */
   protected function getMigrationPluginManager() {
-    @trigger_error('deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use $this->migrationPluginManager instead. See https://www.drupal.org/node/3277306', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use $this->migrationPluginManager instead. See https://www.drupal.org/node/3277306', E_USER_DEPRECATED);
     return $this->migrationPluginManager;
   }
 

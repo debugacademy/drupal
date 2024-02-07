@@ -534,7 +534,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     $response = $this->passwordRequest([], $format);
     $this->assertHttpResponseWithMessage($response, 400, 'Missing credentials.name or credentials.mail', $format);
 
-    $response = $this->passwordRequest(['name' => 'dramallama'], $format);
+    $response = $this->passwordRequest(['name' => 'drama llama'], $format);
     $this->assertEquals(200, $response->getStatusCode());
 
     $response = $this->passwordRequest(['mail' => 'llama@drupal.org'], $format);
@@ -605,7 +605,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     $resetURL = $urls[0];
     $this->drupalGet($resetURL);
     $this->submitForm([], 'Log in');
-    $this->assertSession()->pageTextContains('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please set your password.');
+    $this->assertSession()->pageTextContains('You have just used your one-time login link. It is no longer necessary to use this link to log in. It is recommended that you set your password.');
   }
 
 }

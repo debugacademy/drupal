@@ -296,7 +296,9 @@ CORE_INCOMPATIBILITY;
    * Data provider for testCoreIncompatibility().
    */
   public function providerCoreIncompatibility() {
-    [$major, $minor] = explode('.', \Drupal::VERSION);
+    // Remove possible stability suffix to properly parse 11.0-dev.
+    $version = preg_replace('/-dev$/', '', \Drupal::VERSION);
+    [$major, $minor] = explode('.', $version, 2);
 
     $next_minor = $minor + 1;
     $next_major = $major + 1;
@@ -503,7 +505,7 @@ INFO;
     vfsStream::setup('modules');
     // Use a random file name to bypass the static caching in
     // \Drupal\Core\Extension\InfoParser.
-    $random = mb_strtolower($this->randomMachineName());
+    $random = $this->randomMachineName();
     $filename = "lifecycle-$random.info.yml";
     vfsStream::create([
       'fixtures' => [

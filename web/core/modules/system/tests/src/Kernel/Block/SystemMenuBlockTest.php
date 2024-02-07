@@ -82,7 +82,6 @@ class SystemMenuBlockTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installSchema('system', 'sequences');
     $this->installEntitySchema('user');
     $this->installEntitySchema('menu_link_content');
 
@@ -156,7 +155,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     $block = Block::create([
       'plugin' => 'system_menu_block:' . $this->menu->id(),
       'region' => 'footer',
-      'id' => 'machinename',
+      'id' => 'machine_name',
       'theme' => 'stark',
     ]);
 
@@ -183,7 +182,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     $place_block = function ($level, $depth) {
       return $this->blockManager->createInstance('system_menu_block:' . $this->menu->id(), [
         'region' => 'footer',
-        'id' => 'machinename',
+        'id' => 'machine_name',
         'theme' => 'stark',
         'level' => $level,
         'depth' => $depth,
@@ -291,7 +290,7 @@ class SystemMenuBlockTest extends KernelTestBase {
   public function testConfigExpanded($active_route, $menu_block_level, $expected_items) {
     $block = $this->blockManager->createInstance('system_menu_block:' . $this->menu->id(), [
       'region' => 'footer',
-      'id' => 'machinename',
+      'id' => 'machine_name',
       'theme' => 'stark',
       'level' => $menu_block_level,
       'depth' => 0,
