@@ -1,14 +1,9 @@
-uuid: e87ae064-aba6-4a6b-985d-12f39a898977
+uuid: f339397a-ed96-404c-944d-aac48a65f740
 langcode: en
 status: true
 dependencies:
   config:
     - node.type.article
-  module:
-    - content_translation
-third_party_settings:
-  content_translation:
-    enabled: true
 _core:
   default_config_hash: 0wQkRfzyea2BPkoudJ9i45eN0okt2MKAs671vjDwWKI
 id: node.article

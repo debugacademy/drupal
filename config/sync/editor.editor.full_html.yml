@@ -1,4 +1,4 @@
-uuid: 4ebc9ee1-34c9-44dc-afe5-43d4b66c24ce
+uuid: 1283a19f-8499-4219-88b5-da07c8eced5e
 langcode: en
 status: true
 dependencies:
@@ -7,7 +7,7 @@ dependencies:
   module:
     - ckeditor5
 _core:
-  default_config_hash: QKDFLKPoIyZugE3PGIB9iiJDHHUmQNAThGAZC9fEGWI
+  default_config_hash: JVGFqe4zNuGtgHvHV74Hi2gwt7EXl1oUzoIiBVzyA1Q
 format: full_html
 editor: ckeditor5
 settings:
@@ -41,8 +41,15 @@ settings:
         - heading4
         - heading5
         - heading6
+    ckeditor5_list:
+      properties:
+        reversed: false
+        startIndex: false
+      multiBlock: true
     ckeditor5_sourceEditing:
       allowed_tags: {  }
+    media_media:
+      allow_view_mode_override: false
 image_upload:
   status: true
   scheme: public

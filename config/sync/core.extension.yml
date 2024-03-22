@@ -1,8 +1,7 @@
 _core:
   default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
 module:
-  admin_toolbar: 0
-  admin_toolbar_tools: 0
+  announcements_feed: 0
   automated_cron: 0
   big_pipe: 0
   block: 0
@@ -10,11 +9,9 @@ module:
   breakpoint: 0
   ckeditor5: 0
   config: 0
-  config_translation: 0
   contact: 0
   content_moderation: 0
   contextual: 0
-  da_module: 0
   datetime: 0
   dblog: 0
   demo_umami_content: 0
@@ -31,8 +28,6 @@ module:
   layout_builder: 0
   layout_discovery: 0
   link: 0
-  locale: 0
-  mailsystem: 0
   media: 0
   media_library: 0
   menu_link_content: 0
@@ -43,27 +38,22 @@ module:
   page_cache: 0
   path: 0
   path_alias: 0
-  phpass: 0
   responsive_image: 0
   sdc: 0
   search: 0
   serialization: 0
   shortcut: 0
-  smtp: 0
   system: 0
   taxonomy: 0
   text: 0
   toolbar: 0
-  tour: 0
   update: 0
   user: 0
   views_ui: 0
   workflows: 0
-  content_translation: 10
   views: 10
   demo_umami: 1000
 theme:
   claro: 0
-  umami: 0
-  da_theme: 0
+  demotheme: 0
 profile: demo_umami

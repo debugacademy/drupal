@@ -1,4 +1,4 @@
-uuid: 845414f5-96a2-4f59-95b7-40f9c8c5b869
+uuid: ae627e5e-596f-49f1-899a-67485aad091a
 langcode: en
 status: true
 dependencies:
@@ -6,11 +6,11 @@ dependencies:
     - block_content
     - user
 _core:
-  default_config_hash: jvd5Pu6jy-lra4oMr-mR7zuY6CVDv9CaNeoj0Y70gV4
+  default_config_hash: AcOE_1RLjX4okjWSOk7Pen1IdtPsY0Nbn0HXWG3zMqc
 id: block_content
 label: 'Content blocks'
 module: views
-description: 'Find and manage custom blocks.'
+description: 'Find and manage content blocks.'
 tag: default
 base_table: block_content_field_data
 base_field: id
@@ -21,7 +21,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Custom block library'
+      title: 'Content blocks'
       fields:
         info:
           id: info
@@ -210,7 +210,7 @@ display:
             custom_date_format: ''
             timezone: ''
             tooltip:
-              date_format: ''
+              date_format: long
               custom_date_format: ''
             time_diff:
               enabled: false
@@ -314,7 +314,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: 'There are no custom blocks available.'
+          content: 'There are no content blocks available.'
           tokenize: false
         block_content_listing_empty:
           id: block_content_listing_empty
@@ -536,9 +536,8 @@ display:
       menu:
         type: tab
         title: Blocks
-        description: 'Create and edit block content.'
+        description: 'Create and edit content blocks.'
         weight: 0
-        expanded: false
         menu_name: admin
         parent: system.admin_content
         context: '0'

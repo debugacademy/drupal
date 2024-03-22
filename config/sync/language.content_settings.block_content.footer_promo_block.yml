@@ -1,14 +1,9 @@
-uuid: 276ece70-448a-4431-ac77-45289b2a76ce
+uuid: 46a6c34d-d19a-4791-8e52-0be08e4bd31d
 langcode: en
 status: true
 dependencies:
   config:
     - block_content.type.footer_promo_block
-  module:
-    - content_translation
-third_party_settings:
-  content_translation:
-    enabled: true
 _core:
   default_config_hash: cLKCdnfkCxbxWqNt00n8kLTo6S45WCeLyKXvAZH7Tes
 id: block_content.footer_promo_block

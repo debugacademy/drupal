@@ -1,14 +1,9 @@
-uuid: 2a3992c3-4320-4eab-b699-a18c7565bff6
+uuid: c82b5863-6422-4aea-9ce5-1aa29e02e331
 langcode: en
 status: true
 dependencies:
   config:
     - block_content.type.basic
-  module:
-    - content_translation
-third_party_settings:
-  content_translation:
-    enabled: true
 _core:
   default_config_hash: 3Lw85WiS5-LM4WyfNIZMtBlxjvk9cgR6hhTIbat-kJQ
 id: block_content.basic

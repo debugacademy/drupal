@@ -1,4 +1,4 @@
-uuid: 16035e8e-5964-4768-b205-594df5a91fb8
+uuid: f53beb50-728e-4d04-9fa1-284751746bd2
 langcode: en
 status: true
 dependencies:
@@ -6,7 +6,6 @@ dependencies:
     - filter.format.basic_html
   module:
     - contact
-    - file
     - filter
     - media
     - search
@@ -22,7 +21,6 @@ permissions:
   - 'access content'
   - 'access shortcuts'
   - 'access site-wide contact form'
-  - 'delete own files'
   - 'search content'
   - 'use text format basic_html'
   - 'view media'

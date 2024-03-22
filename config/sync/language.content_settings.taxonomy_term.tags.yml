@@ -1,14 +1,9 @@
-uuid: 683d09ff-4102-4bf0-b04f-6de04fc88b2a
+uuid: 34c4c07e-114e-4860-9453-97de54918437
 langcode: en
 status: true
 dependencies:
   config:
     - taxonomy.vocabulary.tags
-  module:
-    - content_translation
-third_party_settings:
-  content_translation:
-    enabled: true
 _core:
   default_config_hash: nm4_dGToP6SyYBVO8GcLc0q_Q08WuyD98A8rvZVpoSw
 id: taxonomy_term.tags

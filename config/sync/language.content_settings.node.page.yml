@@ -1,14 +1,9 @@
-uuid: cb823734-f0d0-4fd5-8a15-a201b44dba90
+uuid: 1de6596d-03ad-4c52-9935-96922e008a49
 langcode: en
 status: true
 dependencies:
   config:
     - node.type.page
-  module:
-    - content_translation
-third_party_settings:
-  content_translation:
-    enabled: true
 _core:
   default_config_hash: BCybzFDou7Yq55SwRpkcNUWrOZlb0ofNBqhZCDlKdhs
 id: node.page

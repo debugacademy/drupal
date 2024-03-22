@@ -1,11 +1,10 @@
-uuid: 8965b95d-cfcd-4394-b4fe-a8609522731a
+uuid: 8cf66b7c-e428-415b-8af4-48a24abac282
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_display.node.article.full
     - core.entity_view_display.node.page.full
-    - core.entity_view_display.node.recipe.full
     - node.type.article
     - node.type.page
     - node.type.recipe
@@ -23,9 +22,9 @@ dependencies:
     - taxonomy
     - toolbar
 _core:
-  default_config_hash: gLQYbB2qVaGrsSc6O0_dyCW87mktF1SLMoTVuiayBP4
+  default_config_hash: 0vhO_07tJzAJlfixEyshv-AbpRto3wdMJHkgK5CjBEY
 id: author
-label: Author
+label: Autor
 weight: 3
 is_admin: null
 permissions:
@@ -37,7 +36,6 @@ permissions:
   - 'change own username'
   - 'configure editable article node layout overrides'
   - 'configure editable page node layout overrides'
-  - 'configure editable recipe node layout overrides'
   - 'create and edit custom blocks'
   - 'create article content'
   - 'create page content'

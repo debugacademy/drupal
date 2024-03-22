@@ -1,14 +1,9 @@
-uuid: d7f4f0ec-0acd-4781-8a73-f7686413ba84
+uuid: a95af80a-8610-427e-a5e8-95e1dd0411fc
 langcode: en
 status: true
 dependencies:
   config:
     - taxonomy.vocabulary.recipe_category
-  module:
-    - content_translation
-third_party_settings:
-  content_translation:
-    enabled: true
 _core:
   default_config_hash: rSI5WTsW2S6K9n3i6_Ul-auHIO5onTjPknfThX3ON-U
 id: taxonomy_term.recipe_category

@@ -1,4 +1,4 @@
-uuid: bd8a624b-8c07-41b9-8c01-2be40ac994d2
+uuid: 90d6f1f5-b143-4bd2-8fb3-3fa856fcb930
 langcode: en
 status: true
 dependencies:
@@ -15,7 +15,7 @@ third_party_settings:
     enabled: false
     allow_custom: false
 _core:
-  default_config_hash: 3XWzzh3kfeY-Op1OC9kweoH885Dm3UdA1fiKmf5JmnM
+  default_config_hash: AHN57x0NVQTL1hl8cNaq7oPSKUCs685-UCutulyL440
 id: media.image.responsive_3x2
 targetEntityType: media
 bundle: image
@@ -28,7 +28,7 @@ content:
       responsive_image_style: 3_2_image
       image_link: ''
       image_loading:
-        attribute: eager
+        attribute: lazy
     third_party_settings: {  }
     weight: 1
     region: content

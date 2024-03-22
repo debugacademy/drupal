@@ -1,12 +1,13 @@
-uuid: 0cae7002-bda3-4797-8df7-6305c94401b4
+uuid: c7a8f8cc-e11e-4907-ade2-80bb973bb9f1
 langcode: en
 status: true
 dependencies:
   module:
     - media
 _core:
-  default_config_hash: B_sFTb1IDrYepEpv0JbwaccNjBlIQFiG12gZaheHge4
+  default_config_hash: eIAbTnqakOrJKVkDU2udgursStWgA4KLvA4fTGC0T5A
 id: media.scale_crop_7_3_large
 label: 'Scale crop 7:3 large'
+description: ''
 targetEntityType: media
 cache: true

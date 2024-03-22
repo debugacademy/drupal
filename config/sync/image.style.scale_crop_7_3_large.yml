@@ -1,9 +1,9 @@
-uuid: 58525448-eabf-4aa3-bb2a-bf28826247df
+uuid: 9fd3cc7e-7369-42da-80f8-e5f82ba3d9c5
 langcode: en
 status: true
 dependencies: {  }
 _core:
-  default_config_hash: mE71kXVHB1uGi3AElzy_4jfdOhfnYfbWecImVA9r-Uo
+  default_config_hash: j1KzwqaczsLghIdw8FWAJfGZvp01jLoTh2DmfaVLvHM
 name: scale_crop_7_3_large
 label: 'Scale crop 7:3 large'
 effects:
@@ -15,3 +15,9 @@ effects:
       width: 1440
       height: 617
       anchor: center-center
+  7108ef83-c308-4a0f-b877-e85d4995243b:
+    uuid: 7108ef83-c308-4a0f-b877-e85d4995243b
+    id: image_convert
+    weight: 2
+    data:
+      extension: webp

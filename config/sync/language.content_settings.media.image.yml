@@ -1,14 +1,9 @@
-uuid: eb7c5cdc-7ef2-40c3-b635-719990d01c0b
+uuid: f3e23e1b-3422-4fec-9045-f9fd32b0ce22
 langcode: en
 status: true
 dependencies:
   config:
     - media.type.image
-  module:
-    - content_translation
-third_party_settings:
-  content_translation:
-    enabled: true
 _core:
   default_config_hash: p53Q2UIlOG3WlSHQObzOfiCUvAchLZ-3Ft19kvO5nmI
 id: media.image

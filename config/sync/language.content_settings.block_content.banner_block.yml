@@ -1,14 +1,9 @@
-uuid: 327bc2f2-54d6-4d73-a7e9-e704b3fb7333
+uuid: 51ef99c2-4088-4536-bf91-4e392915dc2b
 langcode: en
 status: true
 dependencies:
   config:
     - block_content.type.banner_block
-  module:
-    - content_translation
-third_party_settings:
-  content_translation:
-    enabled: true
 _core:
   default_config_hash: G3u6fc7JZoDvaeSgwA-ik8RL5Z2B6-ItEtSuicDgobw
 id: block_content.banner_block

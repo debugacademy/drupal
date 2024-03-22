@@ -1,0 +1,22 @@
+uuid: 16eeac3e-f04d-4615-8f70-a79e5dc5eb05
+langcode: en
+status: true
+dependencies:
+  module:
+    - language
+  theme:
+    - demotheme
+_core:
+  default_config_hash: dhs54rZwlADLhS_wtViUXbtrVppO7Fv6NtlzOlK8iCE
+id: demotheme_languageswitcher
+theme: demotheme
+region: pre_header
+weight: 0
+provider: null
+plugin: 'language_block:language_interface'
+settings:
+  id: 'language_block:language_interface'
+  label: 'Language switcher'
+  label_display: '0'
+  provider: language
+visibility: {  }

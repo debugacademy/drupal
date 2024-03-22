@@ -1,18 +1,15 @@
-uuid: b992412b-9eb0-4891-b1f3-6b62a9a62780
+uuid: 9f1558fb-b74a-4a20-ba59-259df4f96496
 langcode: en
 status: true
 dependencies:
-  config:
-    - workflows.workflow.editorial
   module:
-    - content_moderation
     - node
     - user
   enforced:
     module:
       - content_moderation
 _core:
-  default_config_hash: upi3_YaKY1MjDALjDauLNPXfHakisQNehC9Dj6icMPQ
+  default_config_hash: 7olvKOaJNf15B-Bj4eD1wJyaz4BR7CNA9cEjWBssa2Y
 id: moderated_content
 label: 'Moderated content'
 module: views
@@ -345,7 +342,7 @@ display:
             custom_date_format: ''
             timezone: ''
             tooltip:
-              date_format: ''
+              date_format: long
               custom_date_format: ''
             time_diff:
               enabled: false

@@ -1,14 +1,9 @@
-uuid: 525f8c95-36bf-4bff-aff6-38a67526600e
+uuid: bffea4a5-2b0b-407e-908e-716fdb70e435
 langcode: en
 status: true
 dependencies:
   config:
     - node.type.recipe
-  module:
-    - content_translation
-third_party_settings:
-  content_translation:
-    enabled: true
 _core:
   default_config_hash: XuiNUBeexJIZ0pGEA4kaHE5WsRxd4p87Igxh8cE_eDU
 id: node.recipe

@@ -1,4 +1,4 @@
-uuid: 0e2367ab-f390-4143-8e28-d5bada01bdf2
+uuid: 2ad25d7b-5ba7-4e62-badf-9a19b6f9e5b3
 langcode: en
 status: true
 dependencies:
@@ -9,7 +9,7 @@ dependencies:
     - node
     - user
 _core:
-  default_config_hash: uk1TreKCJHHqQvrm0RM7aq3xCMarpmVdxW5qWxhrXtA
+  default_config_hash: O3SlJ7o8ePz5RVqiRyhlpP16WBCHDPq1bc_SkOYVw0U
 id: articles_aside
 label: 'Articles aside'
 module: views
@@ -148,7 +148,6 @@ display:
           title: ''
           default_argument_type: node
           default_argument_options: {  }
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
