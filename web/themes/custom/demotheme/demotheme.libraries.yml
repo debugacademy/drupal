@@ -190,3 +190,10 @@ drupal.node.preview:
   css:
     theme:
       css/components/content/node-preview.css: {}
+
+uswds:
+  css:
+    component:
+      css/uswds.min.css: {}
+  js:
+    js/uswds.min.js: {}
