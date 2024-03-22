@@ -575,12 +575,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-engine/src/model/operation/operation.js
- *
- * @typedef {module:engine/model/operation/operation} module:engine/model/operation/operation~Operation
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-engine/src/model/operation/operationfactory.js
  *
  * @typedef {module:engine/model/operation/operationfactory} module:engine/model/operation/operationfactory~OperationFactory
@@ -1133,6 +1127,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-image/src/image/imageplaceholder.js
+ *
+ * @typedef {module:image/image/imageplaceholder} module:image/image/imageplaceholder~ImagePlaceholder
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-image/src/image/insertimagecommand.js
  *
  * @typedef {module:image/image/insertimagecommand} module:image/image/insertimagecommand~InsertImageCommand
@@ -1187,9 +1187,21 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-image/src/imageinsert/ui/imageinsertpanelview.js
+ * Declared in file @ckeditor/ckeditor5-image/src/imageinsert/imageinsertviaurlui.js
  *
- * @typedef {module:image/imageinsert/ui/imageinsertpanelview} module:image/imageinsert/ui/imageinsertpanelview~ImageInsertPanelView
+ * @typedef {module:image/imageinsert/imageinsertviaurlui} module:image/imageinsert/imageinsertviaurlui~ImageInsertViaUrlUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-image/src/imageinsert/ui/imageinsertformview.js
+ *
+ * @typedef {module:image/imageinsert/ui/imageinsertformview} module:image/imageinsert/ui/imageinsertformview~ImageInsertFormView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-image/src/imageinsert/ui/imageinserturlview.js
+ *
+ * @typedef {module:image/imageinsert/ui/imageinserturlview} module:image/imageinsert/ui/imageinserturlview~ImageInsertUrlView
  */
 
 /**
@@ -1628,6 +1640,12 @@
  * Declared in file @ckeditor/ckeditor5-paste-from-office/src/filters/br.js
  *
  * @typedef {module:paste-from-office/filters/br} module:paste-from-office/filters/br~transformBlockBrsToParagraphs
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-paste-from-office/src/filters/removemsattributes.js
+ *
+ * @typedef {module:paste-from-office/filters/removemsattributes} module:paste-from-office/filters/removemsattributes~removeMSAttributes
  */
 
 /**
@@ -2567,6 +2585,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/abortabledebounce.js
+ *
+ * @typedef {module:utils/abortabledebounce} module:utils/abortabledebounce~abortableDebounce
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/areconnectedthroughproperties.js
  *
  * @typedef {module:utils/areconnectedthroughproperties} module:utils/areconnectedthroughproperties~areConnectedThroughProperties
@@ -2843,6 +2867,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/retry.js
+ *
+ * @typedef {module:utils/retry} module:utils/retry~async
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/splicearray.js
  *
  * @typedef {module:utils/splicearray} module:utils/splicearray~spliceArray
@@ -2876,6 +2906,12 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/version.js
  *
  * @typedef {module:utils/version} module:utils/version~version
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/wait.js
+ *
+ * @typedef {module:utils/wait} module:utils/wait~wait
  */
 
 /**

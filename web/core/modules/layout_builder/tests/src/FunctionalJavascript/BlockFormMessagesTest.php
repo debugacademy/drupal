@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -75,7 +77,6 @@ class BlockFormMessagesTest extends WebDriverTestBase {
 
     // Ensure that message are displayed when configuring an existing block.
     $this->drupalGet('node/1/layout');
-    $assert_session->assertWaitOnAjaxRequest();
     $this->clickContextualLink($block_css_locator, 'Configure', TRUE);
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas [name="settings[label]"]'));
     $page->findField('Title')->setValue('');

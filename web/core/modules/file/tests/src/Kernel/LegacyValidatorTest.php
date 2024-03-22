@@ -37,6 +37,7 @@ class LegacyValidatorTest extends FileManagedUnitTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $this->image->setFilename($file_system->basename($this->image->getFileUri()));
+    $this->image->setSize(@filesize($this->image->getFileUri()));
 
     $this->nonImage = File::create();
     $this->nonImage->setFileUri('core/assets/vendor/jquery/jquery.min.js');
@@ -156,7 +157,7 @@ class LegacyValidatorTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * This ensures the resolution of a specific file is within bounds.
+   * This ensures the dimensions of a specific file is within bounds.
    *
    * The image will be resized if it's too large.
    */
@@ -166,11 +167,11 @@ class LegacyValidatorTest extends FileManagedUnitTestBase {
     $errors = file_validate_image_resolution($this->nonImage);
     $this->assertCount(0, $errors, 'Should not get any errors for a non-image file.');
     $errors = file_validate_image_resolution($this->nonImage, '50x50', '100x100');
-    $this->assertCount(0, $errors, 'Do not check the resolution on non files.');
+    $this->assertCount(0, $errors, 'Do not check the dimensions on non files.');
 
     // Minimum size.
     $errors = file_validate_image_resolution($this->image);
-    $this->assertCount(0, $errors, 'No errors for an image when there is no minimum or maximum resolution.');
+    $this->assertCount(0, $errors, 'No errors for an image when there is no minimum or maximum dimensions.');
     $errors = file_validate_image_resolution($this->image, 0, '200x1');
     $this->assertCount(1, $errors, 'Got an error for an image that was not wide enough.');
     $errors = file_validate_image_resolution($this->image, 0, '1x200');
@@ -191,6 +192,8 @@ class LegacyValidatorTest extends FileManagedUnitTestBase {
       // Verify that the image was scaled to the correct width and height.
       $this->assertLessThanOrEqual(10, $image->getWidth());
       $this->assertLessThanOrEqual(5, $image->getHeight());
+      // Verify that the file size has been updated after resizing.
+      $this->assertEquals($this->image->getSize(), $image->getFileSize());
 
       // Once again, now with negative width and height to force an error.
       copy('core/misc/druplicon.png', 'temporary://druplicon.png');

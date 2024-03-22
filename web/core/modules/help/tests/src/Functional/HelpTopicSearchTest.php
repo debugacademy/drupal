@@ -5,13 +5,14 @@ namespace Drupal\Tests\help\Functional;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\help\Plugin\Search\HelpSearch;
 
-// cspell:ignore asdrsad barmm foomm hilfetestmodul sdeeeee sqruct
+// cspell:ignore asdrsad barmm foomm hilfetestmodul sdeeeee sqruct testen
 // cspell:ignore wcsrefsdf übersetzung
 
 /**
  * Verifies help topic search.
  *
  * @group help
+ * @group #slow
  */
 class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
 

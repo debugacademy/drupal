@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\HTMLRestrictions;
@@ -29,7 +31,6 @@ class SourceEditingTest extends SourceEditingTestBase {
     $assert_session = $this->assertSession();
 
     $this->createNewTextFormat($page, $assert_session);
-    $assert_session->assertWaitOnAjaxRequest();
 
     // The Source Editing plugin settings form should not be present.
     $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting"]');

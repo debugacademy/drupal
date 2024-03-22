@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Block;
 
 use Drupal\block_test\Plugin\Block\TestBlockInstantiation;
@@ -48,6 +50,7 @@ class BlockBaseTest extends UnitTestCase {
   public function providerTestGetMachineNameSuggestion() {
     return [
       ['Admin label', 'adminlabel'],
+      // cspell:disable-next-line
       ['über åwesome', 'uberawesome'],
     ];
   }

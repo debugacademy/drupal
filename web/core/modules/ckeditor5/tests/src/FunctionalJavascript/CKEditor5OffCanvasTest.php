@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 /**
@@ -37,7 +39,7 @@ class CKEditor5OffCanvasTest extends CKEditor5TestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     $styles = $assert_session->elementExists('css', 'style#ckeditor5-off-canvas-reset');
-    $this->stringContains('#drupal-off-canvas-wrapper [data-drupal-ck-style-fence]', $styles->getText());
+    $this->assertStringContainsString('#drupal-off-canvas-wrapper [data-drupal-ck-style-fence]', $styles->getHtml());
 
     $assert_session->elementExists('css', '.ck');
 

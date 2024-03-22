@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests;
 
@@ -93,12 +93,63 @@ trait PerformanceTestTrait {
    *   A PerformanceData value object.
    */
   public function collectPerformanceData(callable $callable, ?string $service_name = NULL): PerformanceData {
+    // Clear all existing performance logs before collecting new data. This is
+    // necessary because responses are returned back to tests prior to image
+    // and asset responses are returning to the browser, and before
+    // post-response tasks are guaranteed to have run. Assume that if there is
+    // no performance data logged by the child request within one second, that
+    // this means everything has finished.
+    $collection = \Drupal::keyValue('performance_test');
+    while ($collection->get('performance_test_data')) {
+      $collection->deleteAll();
+      sleep(1);
+    }
+
     $session = $this->getSession();
     $session->getDriver()->getWebDriverSession()->log('performance');
+    $collection = \Drupal::keyValue('performance_test');
+    $collection->deleteAll();
     $return = $callable();
     $performance_data = $this->processChromeDriverPerformanceLogs($service_name);
     if (isset($return)) {
-      $performance_data->setReturnValue($performance_data);
+      $performance_data->setReturnValue($return);
+    }
+
+    $performance_test_data = $collection->get('performance_test_data');
+    if ($performance_test_data) {
+      // Separate queries into two buckets, one for queries from the cache
+      // backend, and one for everything else (including those for cache tags).
+      $query_count = 0;
+      $cache_get_count = 0;
+      $cache_set_count = 0;
+      $cache_delete_count = 0;
+      foreach ($performance_test_data['database_events'] as $event) {
+        if (isset($event->caller['class']) && is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE)) {
+          $method = strtolower($event->caller['function']);
+          if (str_contains($method, 'get')) {
+            $cache_get_count++;
+          }
+          elseif (str_contains($method, 'set')) {
+            $cache_set_count++;
+          }
+          elseif (str_contains($method, 'delete')) {
+            $cache_delete_count++;
+          }
+          elseif ($event->caller['function'] === 'ensureBinExists') {
+            // Don't record anything for ensureBinExists().
+          }
+          else {
+            throw new \Exception("Tried to record a cache operation but did not recognize {$event->caller['function']}");
+          }
+        }
+        else {
+          $query_count++;
+        }
+      }
+      $performance_data->setQueryCount($query_count);
+      $performance_data->setCacheGetCount($cache_get_count);
+      $performance_data->setCacheSetCount($cache_set_count);
+      $performance_data->setCacheDeleteCount($cache_delete_count);
     }
 
     return $performance_data;
@@ -267,7 +318,11 @@ trait PerformanceTestTrait {
       ResourceAttributes::DEPLOYMENT_ENVIRONMENT => 'local',
     ])));
 
-    $transport = (new OtlpHttpTransportFactory())->create($collector, 'application/x-protobuf');
+    $otel_collector_headers = getenv('OTEL_COLLECTOR_HEADERS') ?: [];
+    if ($otel_collector_headers) {
+      $otel_collector_headers = json_decode($otel_collector_headers, TRUE);
+    }
+    $transport = (new OtlpHttpTransportFactory())->create($collector, 'application/x-protobuf', $otel_collector_headers);
     $exporter = new SpanExporter($transport);
     $tracerProvider = new TracerProvider(new SimpleSpanProcessor($exporter), NULL, $resource);
     $tracer = $tracerProvider->getTracer('Drupal');
@@ -288,6 +343,20 @@ trait PerformanceTestTrait {
         ->setAttribute('http.url', $url)
         ->startSpan();
       $first_byte_span->end($response_wall_time);
+
+      $collection = \Drupal::keyValue('performance_test');
+      $performance_test_data = $collection->get('performance_test_data');
+      $query_events = $performance_test_data['database_events'] ?? [];
+      foreach ($query_events as $key => $event) {
+        // Use the first part of the database query for the span name.
+        $query_span = $tracer->spanBuilder(substr($event->queryString, 0, 64))
+          ->setStartTimestamp((int) ($event->startTime * $nanoseconds_per_second))
+          ->setAttribute('query.string', $event->queryString)
+          ->setAttribute('query.args', var_export($event->args, TRUE))
+          ->setAttribute('query.caller', var_export($event->caller, TRUE))
+          ->startSpan();
+        $query_span->end((int) ($event->time * $nanoseconds_per_second));
+      }
       $lcp_timestamp = NULL;
       $fcp_timestamp = NULL;
       $lcp_size = 0;

@@ -6,9 +6,10 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Tests validation functions such as min/max resolution.
+ * Tests validation functions such as min/max dimensions.
  *
  * @group image
+ * @group #slow
  */
 class ImageFieldValidateTest extends ImageFieldTestBase {
 
@@ -85,7 +86,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   }
 
   /**
-   * Tests min/max resolution settings.
+   * Tests min/max dimensions settings.
    */
   public function testResolution() {
     $field_names = [
@@ -265,9 +266,9 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    * Returns field settings.
    *
    * @param int[] $min_resolution
-   *   The minimum width and height resolution setting.
+   *   The minimum width and height setting.
    * @param int[] $max_resolution
-   *   The maximum width and height resolution setting.
+   *   The maximum width and height setting.
    *
    * @return array
    */

@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate_drupal\Unit\source\d6\Drupal6SqlBaseTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
 

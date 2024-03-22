@@ -8,6 +8,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 
 /**
  * Add, edit, and delete a node with menu link.
@@ -15,6 +16,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group menu_ui
  */
 class MenuUiNodeTest extends BrowserTestBase {
+
+  use ContentTranslationTestTrait;
 
   /**
    * An editor user.
@@ -274,7 +277,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Assert that it is not possible to set the parent of the first node to itself or the second node.
     $this->assertSession()->optionNotExists('edit-menu-menu-parent', 'tools:' . $item->getPluginId());
     $this->assertSession()->optionNotExists('edit-menu-menu-parent', 'tools:' . $child_item->getPluginId());
-    // Assert that unallowed Administration menu is not available in options.
+    // Assert that disallowed Administration menu is not available in options.
     $this->assertSession()->optionNotExists('edit-menu-menu-parent', 'admin:');
   }
 
@@ -285,7 +288,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Setup languages.
     $langcodes = ['de'];
     foreach ($langcodes as $langcode) {
-      ConfigurableLanguage::createFromLangcode($langcode)->save();
+      static::createLanguageFromLangcode($langcode);
     }
     array_unshift($langcodes, \Drupal::languageManager()->getDefaultLanguage()->getId());
 
@@ -296,30 +299,16 @@ class MenuUiNodeTest extends BrowserTestBase {
     $config->set('url.prefixes.' . $langcodes[0], $langcodes[0]);
     $config->save();
 
-    $this->rebuildContainer();
-
     $languages = [];
     foreach ($langcodes as $langcode) {
       $languages[$langcode] = ConfigurableLanguage::load($langcode);
     }
 
-    // Use a UI form submission to make the node type and menu link content entity translatable.
-    $this->drupalLogout();
-    $this->drupalLogin($this->rootUser);
-    $edit = [
-      'entity_types[node]' => TRUE,
-      'entity_types[menu_link_content]' => TRUE,
-      'settings[node][page][settings][language][language_alterable]' => TRUE,
-      'settings[node][page][translatable]' => TRUE,
-      'settings[node][page][fields][title]' => TRUE,
-      'settings[menu_link_content][menu_link_content][translatable]' => TRUE,
-    ];
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm($edit, 'Save configuration');
+    // Enable translation for pages and menu link content..
+    $this->enableContentTranslation('node', 'page');
+    $this->enableContentTranslation('menu_link_content', 'menu_link_content');
 
-    // Log out and back in as normal user.
-    $this->drupalLogout();
-    $this->drupalLogin($this->editor);
+    $this->rebuildContainer();
 
     // Create a node.
     $node_title = $this->randomMachineName(8);

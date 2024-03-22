@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\FunctionalJavascript\EntityReference;
 
 use Behat\Mink\Element\NodeElement;
@@ -226,8 +228,11 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     foreach ($bundles as $bundle_name => $bundle_info) {
       $this->assertSession()->fieldExists('settings[handler_settings][target_bundles][' . $bundle_name . ']');
-      $page->findField('settings[handler_settings][target_bundles][' . $bundle_name . ']')->uncheck();
-      $assert_session->assertWaitOnAjaxRequest();
+      $checkbox = $page->findField('settings[handler_settings][target_bundles][' . $bundle_name . ']');
+      if ($checkbox->isChecked()) {
+        $checkbox->uncheck();
+        $assert_session->assertWaitOnAjaxRequest();
+      }
     }
     $this->assertFalse($sort_by->isVisible(), 'The "sort by" options are hidden.');
     $this->assertFalse($sort_direction->isVisible());
@@ -322,7 +327,6 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $page->findField('field_storage[subform][settings][target_type]')->setValue('entity_test');
     $assert_session->assertWaitOnAjaxRequest();
     $page->findField('settings[handler]')->setValue('views');
-    $assert_session->assertWaitOnAjaxRequest();
     $page
       ->findField('settings[handler_settings][view][view_and_display]')
       ->selectOption('test_entity_reference_entity_test:entity_reference_1');

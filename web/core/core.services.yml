@@ -150,8 +150,7 @@ services:
       - { name: cache.context }
   cache_context.route.menu_active_trails:
     class: Drupal\Core\Cache\Context\MenuActiveTrailsCacheContext
-    calls:
-      - [setContainer, ['@service_container']]
+    arguments: ['@menu.active_trail']
     tags:
       - { name: cache.context }
 
@@ -785,6 +784,7 @@ services:
     arguments: ['@plugin.manager.menu.link', '@current_route_match', '@cache.menu', '@lock']
     tags:
       - { name: needs_destruction }
+    lazy: true
   Drupal\Core\Menu\MenuActiveTrailInterface: '@menu.active_trail'
   menu.parent_form_selector:
     class: Drupal\Core\Menu\MenuParentFormSelector
@@ -891,6 +891,15 @@ services:
   argument_resolver.default:
     class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver
     public: false
+  http_middleware.content_length:
+    class: Drupal\Core\StackMiddleware\ContentLength
+    tags:
+      # Must run before the page_cache and big_pipe middleware.
+      - { name: http_middleware, priority: 140 }
+  http_middleware.ajax_page_state:
+    class: Drupal\Core\StackMiddleware\AjaxPageState
+    tags:
+      - { name: http_middleware, priority: 500 }
   http_middleware.negotiation:
     class: Drupal\Core\StackMiddleware\NegotiationMiddleware
     tags:

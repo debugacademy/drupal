@@ -221,7 +221,7 @@
         this.target.each(function (i) {
           // Ensure that the maxlength is not exceeded by prepopulating the field.
           const maxlength = $(this).attr('maxlength') - suffix.length;
-          this.value = transliterated.substr(0, maxlength) + suffix;
+          this.value = transliterated.substring(0, maxlength) + suffix;
         });
       },
 
@@ -570,7 +570,7 @@
         // Search through the search texts in the form for matching text.
         this.options.forEach((option) => {
           function hasWord(word) {
-            return option.searchText.indexOf(word) !== -1;
+            return option.searchText.includes(word);
           }
 
           let found = true;

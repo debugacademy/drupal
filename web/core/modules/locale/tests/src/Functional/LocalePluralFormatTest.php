@@ -7,7 +7,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
-// cspell:ignore heure heures jours ponedjeljak
+// cspell:ignore heure heures jours lundi ponedjeljak
 
 /**
  * Tests plural handling for various languages.
@@ -144,7 +144,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
         // Assert that the we get the right translation for that. Change the
         // expected index as per the logic for translation lookups.
         $expected_plural_index = ($count == 1) ? 0 : $expected_plural_index;
-        $expected_plural_string = str_replace('@count', $count, $plural_strings[$langcode][$expected_plural_index]);
+        $expected_plural_string = str_replace('@count', (string) $count, $plural_strings[$langcode][$expected_plural_index]);
         $this->assertSame($expected_plural_string, \Drupal::translation()->formatPlural($count, '@count hour', '@count hours', [], ['langcode' => $langcode])->render(), 'Plural translation of @count hour / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
         // DO NOT use translation to pass translated strings into
         // PluralTranslatableMarkup::createFromTranslatedString() this way. It

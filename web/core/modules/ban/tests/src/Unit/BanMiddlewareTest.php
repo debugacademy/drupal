@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ban\Unit;
 
 use Drupal\ban\BanMiddleware;
@@ -78,7 +80,7 @@ class BanMiddlewareTest extends UnitTestCase {
 
     $request = Request::create('/test-path');
     $request->server->set('REMOTE_ADDR', $unbanned_ip);
-    $expected_response = new Response(200);
+    $expected_response = new Response(status: 200);
     $this->kernel->expects($this->once())
       ->method('handle')
       ->with($request, HttpKernelInterface::MAIN_REQUEST, TRUE)

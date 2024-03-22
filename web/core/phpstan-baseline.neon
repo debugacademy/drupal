@@ -296,22 +296,6 @@ parameters:
 			path: lib/Drupal/Core/Cache/ChainedFastBackendFactory.php
 
 		-
-			message: """
-				#^Class Drupal\\\\Core\\\\Cache\\\\Context\\\\MenuActiveTrailsCacheContext implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Cache/Context/MenuActiveTrailsCacheContext.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Cache\\\\Context\\\\MenuActiveTrailsCacheContext\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Cache/Context/MenuActiveTrailsCacheContext.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: lib/Drupal/Core/Cache/DatabaseBackend.php
@@ -902,6 +886,11 @@ parameters:
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
 
 		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Menu/MenuLinkManager.php
+
+		-
 			message: """
 				#^Fetching deprecated class constant RETURN_INSERT_ID of class Drupal\\\\Core\\\\Database\\\\Database\\:
 				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
@@ -914,6 +903,11 @@ parameters:
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
+
+		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Plugin/DefaultPluginManager.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\Core\\\\Queue\\\\Memory has an unused parameter \\$name\\.$#"
@@ -1166,22 +1160,6 @@ parameters:
 			message: "#^Method Drupal\\\\book\\\\BookOutline\\:\\:prevLink\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/book/src/BookOutline.php
-
-		-
-			message: """
-				#^Class Drupal\\\\book\\\\Cache\\\\BookNavigationCacheContext implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/book/src/Cache/BookNavigationCacheContext.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\book\\\\Cache\\\\BookNavigationCacheContext\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/book/src/Cache/BookNavigationCacheContext.php
 
 		-
 			message: "#^Method Drupal\\\\book\\\\Form\\\\BookOutlineForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -1831,6 +1809,16 @@ parameters:
 			path: modules/migrate/src/Plugin/Discovery/AnnotatedClassDiscoveryAutomatedProviders.php
 
 		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: modules/migrate/src/Plugin/MigrateDestinationPluginManager.php
+
+		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: modules/migrate/src/Plugin/MigrateSourcePluginManager.php
+
+		-
 			message: "#^Constructor of class Drupal\\\\migrate\\\\Plugin\\\\MigrationPluginManager has an unused parameter \\$language_manager\\.$#"
 			count: 1
 			path: modules/migrate/src/Plugin/MigrationPluginManager.php
@@ -1866,14 +1854,14 @@ parameters:
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 2
-			path: modules/migrate/tests/src/Unit/MigrateSqlIdMapEnsureTablesTest.php
-
-		-
 			message: "#^Variable \\$sub_process_plugins might not be defined\\.$#"
 			count: 2
 			path: modules/migrate/tests/src/Unit/process/SubProcessTest.php
+
+		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: modules/migrate_drupal/src/MigrationPluginManager.php
 
 		-
 			message: "#^Variable \\$patterns might not be defined\\.$#"
@@ -1904,6 +1892,11 @@ parameters:
 			message: "#^Variable \\$patterns might not be defined\\.$#"
 			count: 1
 			path: modules/migrate_drupal/tests/src/Kernel/d7/ValidateMigrationStateTest.php
+
+		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: modules/migrate_drupal/tests/src/Unit/MigrateFieldPluginManagerTest.php
 
 		-
 			message: "#^Variable \\$patterns might not be defined\\.$#"
@@ -2218,11 +2211,6 @@ parameters:
 			path: modules/serialization/src/Normalizer/EntityNormalizer.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 3
-			path: modules/serialization/tests/src/Unit/Normalizer/EntityNormalizerTest.php
-
-		-
 			message: "#^Method Drupal\\\\shortcut\\\\Form\\\\SetCustomize\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/shortcut/src/Form/SetCustomize.php
@@ -2343,27 +2331,36 @@ parameters:
 
 		-
 			message: """
-				#^Class Drupal\\\\render_placeholder_message_test\\\\RenderPlaceholderMessageTestController implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/system/tests/modules/render_placeholder_message_test/src/RenderPlaceholderMessageTestController.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\render_placeholder_message_test\\\\RenderPlaceholderMessageTestController\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/system/tests/modules/render_placeholder_message_test/src/RenderPlaceholderMessageTestController.php
-
-		-
-			message: """
 				#^Class Drupal\\\\service_provider_test\\\\TestClass implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
 				since Symfony 6\\.4, use dependency injection instead$#
 			"""
 			count: 1
 			path: modules/system/tests/modules/service_provider_test/src/TestClass.php
+
+		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: modules/system/tests/modules/lazy_route_provider_install_test/src/PluginManager.php
+
+		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: modules/system/tests/modules/module_test/src/PluginManagerCacheClearer.php
+
+		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: modules/system/tests/modules/plugin_test/src/Plugin/DefaultsTestPluginManager.php
+
+		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: modules/system/tests/modules/plugin_test/src/Plugin/MockBlockManager.php
+
+		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: modules/system/tests/modules/plugin_test/src/Plugin/TestPluginManager.php
 
 		-
 			message: """
@@ -3091,11 +3088,6 @@ parameters:
 			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
 
 		-
-			message: "#^Variable \\$rawResult on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalJavascriptTests/WebDriverCurlService.php
-
-		-
 			message: "#^Variable \\$found might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
@@ -3347,14 +3339,14 @@ parameters:
 			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
 
 		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Component/Plugin/StubPluginManagerBaseWithMapper.php
+
+		-
 			message: "#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Composer/ComposerTest.php
-
-		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Cache/CacheCollectorTest.php
 
 		-
 			message: """
@@ -3379,11 +3371,6 @@ parameters:
 			"""
 			count: 1
 			path: tests/Drupal/Tests/Core/Controller/ControllerResolverTest.php
-
-		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Cron/CronSuspendQueueDelayTest.php
 
 		-
 			message: """
@@ -3433,16 +3420,6 @@ parameters:
 			message: "#^Trying to mock an undefined method isDefaultRevision\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Entity/EntityUrlTest.php
-
-		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 6
-			path: tests/Drupal/Tests/Core/Entity/KeyValueStore/KeyValueEntityStorageTest.php
-
-		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/Sql/SqlContentEntityStorageSchemaTest.php
 
 		-
 			message: """
@@ -3522,6 +3499,11 @@ parameters:
 			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php
 
 		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php
+
+		-
 			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Plugin/Discovery/DerivativeDiscoveryDecoratorTest.php
@@ -3532,7 +3514,17 @@ parameters:
 			path: tests/Drupal/Tests/Core/Plugin/Discovery/TestContainerDerivativeDiscovery.php
 
 		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Plugin/FilteredPluginManagerTraitTest.php
+
+		-
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Core\\\\Plugin\\\\TestPluginManager has an unused parameter \\$namespaces\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Plugin/TestPluginManager.php
+
+		-
+			message: "#^Missing cache backend declaration for performance\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Plugin/TestPluginManager.php
 

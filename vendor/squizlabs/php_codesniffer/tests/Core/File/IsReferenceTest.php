@@ -16,7 +16,7 @@ use PHP_CodeSniffer\Tests\Core\AbstractMethodUnitTest;
  *
  * @covers \PHP_CodeSniffer\Files\File::isReference
  */
-class IsReferenceTest extends AbstractMethodUnitTest
+final class IsReferenceTest extends AbstractMethodUnitTest
 {
 
 
@@ -59,7 +59,7 @@ class IsReferenceTest extends AbstractMethodUnitTest
      *
      * @return array<string, array<string, string|bool>>
      */
-    public function dataIsReference()
+    public static function dataIsReference()
     {
         return [
             'issue-1971-list-first-in-file'                                                                     => [

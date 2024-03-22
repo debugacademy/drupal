@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\Component\Utility\Random;
@@ -53,9 +55,9 @@ class BrowserTestBaseTest extends UnitTestCase {
     $driver = new BrowserKitDriver($browserkit_client);
     $btb = $this->mockBrowserTestBaseWithDriver($driver);
 
-    $ref_gethttpclient = new \ReflectionMethod($btb, 'getHttpClient');
+    $reflected_get_http_client = new \ReflectionMethod($btb, 'getHttpClient');
 
-    $this->assertSame(get_class($expected), get_class($ref_gethttpclient->invoke($btb)));
+    $this->assertSame(get_class($expected), get_class($reflected_get_http_client->invoke($btb)));
   }
 
   /**
@@ -66,11 +68,11 @@ class BrowserTestBaseTest extends UnitTestCase {
     // RuntimeException.
     $btb = $this->mockBrowserTestBaseWithDriver(new \stdClass());
 
-    $ref_gethttpclient = new \ReflectionMethod($btb, 'getHttpClient');
+    $reflected_get_http_client = new \ReflectionMethod($btb, 'getHttpClient');
 
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('The Mink client type stdClass does not support getHttpClient().');
-    $ref_gethttpclient->invoke($btb);
+    $reflected_get_http_client->invoke($btb);
   }
 
   /**

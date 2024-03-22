@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -69,7 +71,6 @@ class AdminAjaxTest extends WebDriverTestBase {
       $page->find('css', '#views-add-field')->click();
       $this->assertSession()->assertWaitOnAjaxRequest();
       $page->checkField($field);
-      $this->assertSession()->assertWaitOnAjaxRequest();
       $page->find('css', '.ui-dialog-buttonset')->pressButton('Add and configure fields');
       $this->assertSession()->assertWaitOnAjaxRequest();
       $this->assertJsCondition('document.documentElement.style.overflow === "hidden"');

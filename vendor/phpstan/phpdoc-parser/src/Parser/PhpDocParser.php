@@ -387,6 +387,21 @@ class PhpDocParser
 					$tagValue = $this->parseParamTagValue($tokens);
 					break;
 
+				case '@param-immediately-invoked-callable':
+				case '@phpstan-param-immediately-invoked-callable':
+					$tagValue = $this->parseParamImmediatelyInvokedCallableTagValue($tokens);
+					break;
+
+				case '@param-later-invoked-callable':
+				case '@phpstan-param-later-invoked-callable':
+					$tagValue = $this->parseParamLaterInvokedCallableTagValue($tokens);
+					break;
+
+				case '@param-closure-this':
+				case '@phpstan-param-closure-this':
+					$tagValue = $this->parseParamClosureThisTagValue($tokens);
+					break;
+
 				case '@var':
 				case '@phpstan-var':
 				case '@psalm-var':
@@ -449,7 +464,12 @@ class PhpDocParser
 				case '@template-contravariant':
 				case '@phpstan-template-contravariant':
 				case '@psalm-template-contravariant':
-					$tagValue = $this->parseTemplateTagValue($tokens, true);
+					$tagValue = $this->typeParser->parseTemplateTagValue(
+						$tokens,
+						function ($tokens) {
+							return $this->parseOptionalDescription($tokens);
+						}
+					);
 					break;
 
 				case '@extends':
@@ -856,6 +876,34 @@ class PhpDocParser
 	}
 
 
+	private function parseParamImmediatelyInvokedCallableTagValue(TokenIterator $tokens): Ast\PhpDoc\ParamImmediatelyInvokedCallableTagValueNode
+	{
+		$parameterName = $this->parseRequiredVariableName($tokens);
+		$description = $this->parseOptionalDescription($tokens);
+
+		return new Ast\PhpDoc\ParamImmediatelyInvokedCallableTagValueNode($parameterName, $description);
+	}
+
+
+	private function parseParamLaterInvokedCallableTagValue(TokenIterator $tokens): Ast\PhpDoc\ParamLaterInvokedCallableTagValueNode
+	{
+		$parameterName = $this->parseRequiredVariableName($tokens);
+		$description = $this->parseOptionalDescription($tokens);
+
+		return new Ast\PhpDoc\ParamLaterInvokedCallableTagValueNode($parameterName, $description);
+	}
+
+
+	private function parseParamClosureThisTagValue(TokenIterator $tokens): Ast\PhpDoc\ParamClosureThisTagValueNode
+	{
+		$type = $this->typeParser->parse($tokens);
+		$parameterName = $this->parseRequiredVariableName($tokens);
+		$description = $this->parseOptionalDescription($tokens);
+
+		return new Ast\PhpDoc\ParamClosureThisTagValueNode($type, $parameterName, $description);
+	}
+
+
 	private function parseVarTagValue(TokenIterator $tokens): Ast\PhpDoc\VarTagValueNode
 	{
 		$type = $this->typeParser->parse($tokens);
@@ -919,10 +967,16 @@ class PhpDocParser
 
 	private function parseMethodTagValue(TokenIterator $tokens): Ast\PhpDoc\MethodTagValueNode
 	{
-		$isStatic = $tokens->tryConsumeTokenValue('static');
-		$startLine = $tokens->currentTokenLine();
-		$startIndex = $tokens->currentTokenIndex();
-		$returnTypeOrMethodName = $this->typeParser->parse($tokens);
+		$staticKeywordOrReturnTypeOrMethodName = $this->typeParser->parse($tokens);
+
+		if ($staticKeywordOrReturnTypeOrMethodName instanceof Ast\Type\IdentifierTypeNode && $staticKeywordOrReturnTypeOrMethodName->name === 'static') {
+			$isStatic = true;
+			$returnTypeOrMethodName = $this->typeParser->parse($tokens);
+
+		} else {
+			$isStatic = false;
+			$returnTypeOrMethodName = $staticKeywordOrReturnTypeOrMethodName;
+		}
 
 		if ($tokens->isCurrentTokenType(Lexer::TOKEN_IDENTIFIER)) {
 			$returnType = $returnTypeOrMethodName;
@@ -930,9 +984,7 @@ class PhpDocParser
 			$tokens->next();
 
 		} elseif ($returnTypeOrMethodName instanceof Ast\Type\IdentifierTypeNode) {
-			$returnType = $isStatic
-				? $this->typeParser->enrichWithAttributes($tokens, new Ast\Type\IdentifierTypeNode('static'), $startLine, $startIndex)
-				: null;
+			$returnType = $isStatic ? $staticKeywordOrReturnTypeOrMethodName : null;
 			$methodName = $returnTypeOrMethodName->name;
 			$isStatic = false;
 
@@ -947,7 +999,12 @@ class PhpDocParser
 			do {
 				$startLine = $tokens->currentTokenLine();
 				$startIndex = $tokens->currentTokenIndex();
-				$templateTypes[] = $this->enrichWithAttributes($tokens, $this->parseTemplateTagValue($tokens, false), $startLine, $startIndex);
+				$templateTypes[] = $this->enrichWithAttributes(
+					$tokens,
+					$this->typeParser->parseTemplateTagValue($tokens),
+					$startLine,
+					$startIndex
+				);
 			} while ($tokens->tryConsumeTokenType(Lexer::TOKEN_COMMA));
 			$tokens->consumeTokenType(Lexer::TOKEN_CLOSE_ANGLE_BRACKET);
 		}
@@ -1001,33 +1058,6 @@ class PhpDocParser
 			$startLine,
 			$startIndex
 		);
-	}
-
-	private function parseTemplateTagValue(TokenIterator $tokens, bool $parseDescription): Ast\PhpDoc\TemplateTagValueNode
-	{
-		$name = $tokens->currentTokenValue();
-		$tokens->consumeTokenType(Lexer::TOKEN_IDENTIFIER);
-
-		if ($tokens->tryConsumeTokenValue('of') || $tokens->tryConsumeTokenValue('as')) {
-			$bound = $this->typeParser->parse($tokens);
-
-		} else {
-			$bound = null;
-		}
-
-		if ($tokens->tryConsumeTokenValue('=')) {
-			$default = $this->typeParser->parse($tokens);
-		} else {
-			$default = null;
-		}
-
-		if ($parseDescription) {
-			$description = $this->parseOptionalDescription($tokens);
-		} else {
-			$description = '';
-		}
-
-		return new Ast\PhpDoc\TemplateTagValueNode($name, $bound, $description, $default);
 	}
 
 	private function parseExtendsTagValue(string $tagName, TokenIterator $tokens): Ast\PhpDoc\PhpDocTagValueNode

@@ -475,7 +475,7 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertFilteredString($filter, $tests);
 
     // Very long string hitting PCRE limits.
-    $limit = max(ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit'));
+    $limit = max((int) ini_get('pcre.backtrack_limit'), (int) ini_get('pcre.recursion_limit'));
     $source = $this->randomMachineName($limit);
     $result = _filter_autop($source);
     $this->assertEquals($result, '<p>' . $source . "</p>\n", 'Line break filter can process very long strings.');
@@ -579,6 +579,17 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertNormalized($f, '<a>link</a>', 'HTML filter removes allowed attributes that have a not explicitly allowed value.');
     $f = (string) $filter->process('<a href="/beautiful-animals" kitten="cute" llama="epic majestical">link</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertSame('<a href="/beautiful-animals" llama="epic majestical">link</a>', $f, 'HTML filter keeps explicitly allowed attributes with an attribute value that is also explicitly allowed.');
+
+    // Allow iframes and check that the subsequent tags are parsed correctly.
+    $filter->setConfiguration([
+      'settings' => [
+        'allowed_html' => '<iframe> <a href llama>',
+        'filter_html_help' => 1,
+        'filter_html_nofollow' => 0,
+      ],
+    ]);
+    $f = (string) $filter->process('<a kitten="cute" llama="awesome">link</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertNormalized($f, '<a llama="awesome">link</a>');
   }
 
   /**

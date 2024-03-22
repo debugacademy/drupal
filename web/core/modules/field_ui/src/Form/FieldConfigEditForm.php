@@ -259,6 +259,7 @@ class FieldConfigEditForm extends EntityForm {
     }
     $form['#prefix'] = '<div id="field-combined">';
     $form['#suffix'] = '</div>';
+    $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
     return $form;
   }
 
@@ -450,7 +451,7 @@ class FieldConfigEditForm extends EntityForm {
       }
     }
     catch (\Exception $e) {
-      $this->messenger()->addStatus(
+      $this->messenger()->addError(
         $this->t(
           'Attempt to update field %label failed: %message.',
           [

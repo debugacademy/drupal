@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\FunctionalJavascriptTests;
 
@@ -14,6 +14,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class PerformanceTestBase extends WebDriverTestBase {
   use PerformanceTestTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['performance_test'];
 
   /**
    * {@inheritdoc}

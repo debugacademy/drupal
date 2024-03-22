@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Authentication\AuthenticationCollectorTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Authentication;
 

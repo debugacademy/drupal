@@ -83,6 +83,17 @@ ckeditor5_style:
     elements:
       - <$any-html5-element class>
 
+ckeditor5_htmlComments:
+  ckeditor5:
+    plugins:
+      - htmlSupport.HtmlComment
+  drupal:
+    label: HTML Comment support
+    elements: false
+    library: core/ckeditor5.htmlSupport
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()
+    conditions: []
+
 ckeditor5_arbitraryHtmlSupport:
   ckeditor5:
     plugins: [htmlSupport.GeneralHtmlSupport]
@@ -547,6 +558,10 @@ ckeditor5_image:
     config:
       image:
         toolbar: [drupalImageAlternativeText]
+        insert:
+          # Determine image type (inline or block) by insertion context.
+          type: auto
+          integrations: []
   drupal:
     label: Image
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
@@ -581,7 +596,7 @@ ckeditor5_imageUpload:
 ckeditor5_imageUrl:
   ckeditor5:
     plugins:
-      - image.ImageInsertUI
+      - image.ImageInsertViaUrl
   drupal:
     label: Image URL
     elements: false

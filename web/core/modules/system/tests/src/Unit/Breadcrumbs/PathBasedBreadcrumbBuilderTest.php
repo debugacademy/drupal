@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\system\Unit\Breadcrumbs\PathBasedBreadcrumbBuilderTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\system\Unit\Breadcrumbs;
 

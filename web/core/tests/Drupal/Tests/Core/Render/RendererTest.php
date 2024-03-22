@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\RendererTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
@@ -16,6 +13,8 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
+
+// cspell:ignore fooalert
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
@@ -362,20 +361,20 @@ class RendererTest extends RendererTestBase {
 
     // Theme suggestion is not implemented, #markup should be rendered.
     $build = [
-      '#theme' => ['suggestionnotimplemented'],
+      '#theme' => ['suggestion_not_implemented'],
       '#markup' => 'foo',
     ];
     $setup_code = function () {
       $this->themeManager->expects($this->once())
         ->method('render')
-        ->with(['suggestionnotimplemented'], $this->anything())
+        ->with(['suggestion_not_implemented'], $this->anything())
         ->willReturn(FALSE);
     };
     $data[] = [$build, 'foo', $setup_code];
 
     // Tests unimplemented theme suggestion, child #markup should be rendered.
     $build = [
-      '#theme' => ['suggestionnotimplemented'],
+      '#theme' => ['suggestion_not_implemented'],
       'child' => [
         '#markup' => 'foo',
       ],
@@ -383,7 +382,7 @@ class RendererTest extends RendererTestBase {
     $setup_code = function () {
       $this->themeManager->expects($this->once())
         ->method('render')
-        ->with(['suggestionnotimplemented'], $this->anything())
+        ->with(['suggestion_not_implemented'], $this->anything())
         ->willReturn(FALSE);
     };
     $data[] = [$build, 'foo', $setup_code];
@@ -502,7 +501,7 @@ class RendererTest extends RendererTestBase {
         '#markup' => $first,
       ],
     ];
-    $output = $this->renderer->renderRoot($elements);
+    $output = (string) $this->renderer->renderRoot($elements);
 
     // The lowest weight element should appear last in $output.
     $this->assertGreaterThan(strpos($output, $first), strpos($output, $second));
@@ -538,7 +537,7 @@ class RendererTest extends RendererTestBase {
       ],
       '#sorted' => TRUE,
     ];
-    $output = $this->renderer->renderRoot($elements);
+    $output = (string) $this->renderer->renderRoot($elements);
 
     // The elements should appear in output in the same order as the array.
     $this->assertLessThan(strpos($output, $first), strpos($output, $second));

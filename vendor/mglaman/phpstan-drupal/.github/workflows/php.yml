@@ -29,7 +29,7 @@ jobs:
           tools: composer:v2
           extensions: dom, curl, libxml, mbstring, zip, pdo, mysql, pdo_mysql, gd
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@v2"
+        uses: "ramsey/composer-install@v3"
       - name: "PHPCS"
         run: "php vendor/bin/phpcs"
       - name: "PHPStan"
@@ -77,7 +77,7 @@ jobs:
       - name: "Add phpspec/prophecy-phpunit"
         run: "composer require phpspec/prophecy-phpunit:^2 --dev --no-update"
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@v2"
+        uses: "ramsey/composer-install@v3"
       - name: "PHPUnit"
         run: "php vendor/bin/phpunit"
 
@@ -99,6 +99,9 @@ jobs:
           - php-version: "8.0"
             drupal: "^9.0"
             experimental: false
+          - php-version: "8.1"
+            drupal: "^10.0"
+            experimental: false
           - php-version: "8.2"
             drupal: "11.x-dev"
             experimental: true
@@ -113,7 +116,7 @@ jobs:
           tools: composer:v2
           extensions: dom, curl, libxml, mbstring, zip, pdo, mysql, pdo_mysql, bcmath, gd, exif, iconv
       - name: Setup Drupal
-        uses: bluehorndigital/setup-drupal@v1.0.4
+        uses: bluehorndigital/setup-drupal@v1.1.0
         with:
           version: ${{ matrix.drupal }}
           path: ~/drupal
@@ -171,6 +174,9 @@ jobs:
         drupal:
           - "^9.0"
         include:
+          - php-version: "8.1"
+            drupal: "^10.0"
+            experimental: false
           - php-version: "8.2"
             drupal: "11.x-dev"
             experimental: true
@@ -185,7 +191,7 @@ jobs:
           tools: composer:v2
           extensions: dom, curl, libxml, mbstring, zip, pdo, mysql, pdo_mysql, bcmath, gd, exif, iconv
       - name: Setup Drupal
-        uses: bluehorndigital/setup-drupal@v1.0.4
+        uses: bluehorndigital/setup-drupal@v1.1.0
         with:
           version: ${{ matrix.drupal }}
           path: ~/drupal
@@ -229,7 +235,7 @@ jobs:
         run: echo PHPSTAN_TMP_DIR=$(php -r "print sys_get_temp_dir() . '/phpstan';") >> $GITHUB_OUTPUT
         id: phpstan_tmp_dir
       - name: cache phpstan
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.phpstan_tmp_dir.outputs.PHPSTAN_TMP_DIR }}
           key: ${{ runner.os }}-phpstan-core-baseline
@@ -250,7 +256,7 @@ jobs:
          composer config repositories.1 path $GITHUB_WORKSPACE
 
       - name: "Install Drupal core dependencies"
-        uses: "ramsey/composer-install@v2"
+        uses: "ramsey/composer-install@v3"
         with:
           working-directory: "${{ runner.temp }}/drupal"
       - name: "require phpstan-drupal"

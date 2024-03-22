@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Render\MarkupInterface;
@@ -8,6 +10,8 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Random;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+
+// cspell:ignore répét répété
 
 /**
  * Tests \Drupal\Component\Utility\Html.
@@ -75,14 +79,14 @@ class HtmlTest extends TestCase {
       // stripped from the identifier.
       ['invalididentifier', 'invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', []],
       // Verify that an identifier starting with a digit is replaced.
-      ['_cssidentifier', '1cssidentifier', []],
+      ['_css_identifier', '1css_identifier', []],
       // Verify that an identifier starting with a hyphen followed by a digit is
       // replaced.
-      ['__cssidentifier', '-1cssidentifier', []],
+      ['__css_identifier', '-1css_identifier', []],
       // Verify that an identifier starting with two hyphens is replaced.
-      ['__cssidentifier', '--cssidentifier', []],
+      ['__css_identifier', '--css_identifier', []],
       // Verify that passing double underscores as a filter is processed.
-      ['_cssidentifier', '__cssidentifier', ['__' => '_']],
+      ['_css_identifier', '__css_identifier', ['__' => '_']],
     ];
   }
 
@@ -379,6 +383,7 @@ class HtmlTest extends TestCase {
         "$tag_name, srcset, $base_path: root-relative" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, {$base_path}root-relative 300w\">root-relative test</$tag_name>", 'http://example.com', "<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, http://example.com{$base_path}root-relative 300w\">root-relative test</$tag_name>"],
         "$tag_name, srcset, $base_path: protocol-relative" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, //example.com{$base_path}protocol-relative 300w\">protocol-relative test</$tag_name>", 'http://example.com', FALSE],
         "$tag_name, srcset, $base_path: absolute" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, http://example.com{$base_path}absolute 300w\">absolute test</$tag_name>", 'http://example.com', FALSE],
+        "$tag_name, empty srcset" => ["<$tag_name srcset>empty test</$tag_name>", 'http://example.com', FALSE],
       ];
 
       foreach (['href', 'poster', 'src', 'cite', 'data', 'action', 'formaction', 'about'] as $attribute) {

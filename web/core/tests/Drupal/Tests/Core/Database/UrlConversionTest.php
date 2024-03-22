@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\Database;
@@ -20,16 +22,6 @@ use Drupal\Tests\UnitTestCase;
  * @group Database
  */
 class UrlConversionTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->root = dirname(__FILE__, 7);
-    // This unit test relies on reading files relative to Drupal root.
-    chdir($this->root);
-  }
 
   /**
    * @covers ::convertDbUrlToConnectionInfo

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Kernel\Theme;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Component\Render\MarkupInterface;
 
@@ -58,7 +57,7 @@ class ThemeTest extends KernelTestBase {
     $types = ['null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo', 'empty_string' => ''];
     foreach ($types as $type => $example) {
       $output = \Drupal::theme()->render('theme_test_foo', ['foo' => $example]);
-      $this->assertTrue($output instanceof MarkupInterface || is_string($output), new FormattableMarkup('\Drupal::theme() returns an object that implements MarkupInterface or a string for data type @type.', ['@type' => $type]));
+      $this->assertTrue($output instanceof MarkupInterface || is_string($output), "\Drupal::theme() returns an object that implements MarkupInterface or a string for data type $type.");
       if ($output instanceof MarkupInterface) {
         $this->assertSame((string) $example, $output->__toString());
       }
@@ -67,9 +66,9 @@ class ThemeTest extends KernelTestBase {
       }
     }
 
-    // suggestionnotimplemented is not an implemented theme hook so \Drupal::theme() service
+    // suggestion_not_implemented is not an implemented theme hook so \Drupal::theme() service
     // should return FALSE instead of a string.
-    $output = \Drupal::theme()->render(['suggestionnotimplemented'], []);
+    $output = \Drupal::theme()->render(['suggestion_not_implemented'], []);
     $this->assertFalse($output, '\Drupal::theme() returns FALSE when a hook suggestion is not implemented.');
   }
 

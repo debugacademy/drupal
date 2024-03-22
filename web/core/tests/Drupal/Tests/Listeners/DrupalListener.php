@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Listeners;
 
 use PHPUnit\Framework\TestListener;
@@ -51,11 +53,6 @@ class DrupalListener implements TestListener {
    */
   public function startTest(Test $test): void {
     $this->symfonyListener->startTest($test);
-    // Check for incorrect visibility of the $modules property.
-    $class = new \ReflectionClass($test);
-    if ($class->hasProperty('modules') && !$class->getProperty('modules')->isProtected()) {
-      @trigger_error('Declaring ' . get_class($test) . '::$modules with public visibility is deprecated in drupal:9.1.0 and must be declared protected in drupal:10.0.0. See https://www.drupal.org/node/2909426', E_USER_DEPRECATED);
-    }
   }
 
   /**

@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Entity\Routing\DefaultHtmlRouteProviderTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Entity\Routing;
 

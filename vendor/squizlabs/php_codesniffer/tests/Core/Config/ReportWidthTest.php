@@ -18,7 +18,7 @@ use ReflectionProperty;
  *
  * @covers \PHP_CodeSniffer\Config::__get
  */
-class ReportWidthTest extends TestCase
+final class ReportWidthTest extends TestCase
 {
 
 
@@ -265,9 +265,9 @@ class ReportWidthTest extends TestCase
     /**
      * Data provider.
      *
-     * @return array
+     * @return array<string, array<string, mixed>>
      */
-    public function dataReportWidthInputHandling()
+    public static function dataReportWidthInputHandling()
     {
         return [
             'No value (empty string)'                                 => [

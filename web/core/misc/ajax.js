@@ -619,7 +619,7 @@
 
     // Ensure that we have a valid URL by adding ? when no query parameter is
     // yet available, otherwise append using &.
-    if (ajax.options.url.indexOf('?') === -1) {
+    if (!ajax.options.url.includes('?')) {
       ajax.options.url += '?';
     } else {
       ajax.options.url += '&';
@@ -835,6 +835,7 @@
 
     // Allow Drupal to return new JavaScript and CSS files to load without
     // returning the ones already loaded.
+    // @see \Drupal\Core\StackMiddleWare\AjaxPageState
     // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
     // @see \Drupal\Core\Asset\LibraryDependencyResolverInterface::getMinimalRepresentativeSubset()
     // @see system_js_settings_alter()
@@ -1084,7 +1085,9 @@
     const focusChanged = Object.keys(response || {}).some((key) => {
       const { command, method } = response[key];
       return (
-        command === 'focusFirst' || (command === 'invoke' && method === 'focus')
+        command === 'focusFirst' ||
+        command === 'openDialog' ||
+        (command === 'invoke' && method === 'focus')
       );
     });
 
@@ -1713,7 +1716,8 @@
 
       const allUniqueBundleIds = response.data.map(function (style) {
         const uniqueBundleId = style.href + ajax.instanceIndex;
-        loadjs(style.href, uniqueBundleId, {
+        // Force file to load as a CSS stylesheet using 'css!' flag.
+        loadjs(`css!${style.href}`, uniqueBundleId, {
           before(path, styleEl) {
             // This allows all attributes to be added, like media.
             Object.keys(style).forEach((attributeKey) => {

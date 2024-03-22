@@ -87,8 +87,9 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
     $error += [
       'status_code' => $exception->getStatusCode(),
     ];
+    unset($error['@backtrace_string']);
     $this->logger->get('client error')
-      ->log($error['severity_level'], Error::DEFAULT_ERROR_MESSAGE, $error);
+      ->warning(Error::DEFAULT_ERROR_MESSAGE, $error);
   }
 
   /**

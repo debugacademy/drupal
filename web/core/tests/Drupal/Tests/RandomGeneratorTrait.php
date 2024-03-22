@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Drupal\TestTools\Random;
@@ -56,7 +58,7 @@ trait RandomGeneratorTrait {
   /**
    * Generates a unique random string containing letters and numbers.
    *
-   * Do not use this method when testing unvalidated user input. Instead, use
+   * Do not use this method when testing non validated user input. Instead, use
    * \Drupal\Tests\RandomGeneratorTrait::randomString().
    *
    * @param int $length

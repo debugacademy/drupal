@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\Component\Utility\Html;
@@ -87,8 +89,8 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $page = $this->getSession()->getPage();
     $src = $this->imageAttributes()['src'];
     $this->waitForEditor();
-    $this->pressEditorButton('Insert image');
-    $panel = $page->find('css', '.ck-dropdown__panel.ck-image-insert__panel');
+    $this->pressEditorButton('Insert image via URL');
+    $panel = $page->find('css', '.ck-dropdown__panel  .ck-image-insert-url');
     $src_input = $panel->find('css', 'input[type=text]');
     $src_input->setValue($src);
     $panel->find('xpath', "//button[span[text()='Insert']]")->click();
@@ -123,7 +125,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
           "<p>$img_tag</p>",
           $expected_upcast_behavior_when_wrapped_in_block_element === 'inline' ? "<p>$img_tag</p>" : $img_tag,
         ],
-        // Image tag wrapped with an unallowed paragraph-like element (<div).
+        // Image tag wrapped with a disallowed paragraph-like element (<div).
         // When inline is the expected upcast behavior, it will wrap in <p>
         // because it still must wrap in a paragraph-like element, and <p> is
         // available to be that element.

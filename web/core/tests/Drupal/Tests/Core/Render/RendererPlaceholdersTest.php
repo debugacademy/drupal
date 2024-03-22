@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\RendererPlaceholdersTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
@@ -844,9 +841,9 @@ class RendererPlaceholdersTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    *
-   * @see testNonScalarLazybuilderCallbackContext
+   * @see testNonScalarLazyBuilderCallbackContext
    */
-  public function testScalarLazybuilderCallbackContext() {
+  public function testScalarLazyBuilderCallbackContext() {
     $element = [];
     $element['#lazy_builder'] = [
       '\Drupal\Tests\Core\Render\PlaceholdersTest::callback',
@@ -868,7 +865,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    */
-  public function testNonScalarLazybuilderCallbackContext() {
+  public function testNonScalarLazyBuilderCallbackContext() {
     $element = [];
     $element['#lazy_builder'] = [
       '\Drupal\Tests\Core\Render\PlaceholdersTest::callback',

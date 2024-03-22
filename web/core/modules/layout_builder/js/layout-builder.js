@@ -44,8 +44,7 @@
          */
         const toggleBlockEntry = (index, link) => {
           const $link = $(link);
-          const textMatch =
-            link.textContent.toLowerCase().indexOf(query) !== -1;
+          const textMatch = link.textContent.toLowerCase().includes(query);
           // Checks if a category is currently hidden.
           // Toggles the category on if so.
           if (
@@ -456,4 +455,13 @@
 
     return `<div class="layout-builder-block__content-preview-placeholder-label js-layout-builder-content-preview-placeholder-label">${contentPreviewPlaceholderText}</div>`;
   };
+
+  // Remove all contextual links outside the layout.
+  $(window).on('drupalContextualLinkAdded', (event, data) => {
+    const element = data.$el;
+    const contextualId = element.attr('data-contextual-id');
+    if (contextualId && !contextualId.startsWith('layout_builder_block:')) {
+      element.remove();
+    }
+  });
 })(jQuery, Drupal, Sortable);

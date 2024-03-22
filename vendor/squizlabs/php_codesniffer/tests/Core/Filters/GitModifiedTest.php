@@ -19,7 +19,7 @@ use ReflectionMethod;
  *
  * @covers \PHP_CodeSniffer\Filters\GitModified
  */
-class GitModifiedTest extends AbstractFilterTestCase
+final class GitModifiedTest extends AbstractFilterTestCase
 {
 
 
@@ -112,14 +112,18 @@ class GitModifiedTest extends AbstractFilterTestCase
 
             'single file marked as git modified - file in root dir'                => [
                 'inputPaths'        => $fakeFileList,
-                'outputGitModified' => ['autoload.php'],
+                'outputGitModified' => [
+                    'autoload.php',
+                ],
                 'expectedOutput'    => [
                     $basedir.'/autoload.php',
                 ],
             ],
             'single file marked as git modified - file in sub dir'                 => [
                 'inputPaths'        => $fakeFileList,
-                'outputGitModified' => ['src/Standards/Generic/Sniffs/Classes/DuplicateClassNameSniff.php'],
+                'outputGitModified' => [
+                    'src/Standards/Generic/Sniffs/Classes/DuplicateClassNameSniff.php',
+                ],
                 'expectedOutput'    => [
                     $basedir.'/src',
                     $basedir.'/src/Standards',
@@ -211,6 +215,10 @@ class GitModifiedTest extends AbstractFilterTestCase
      */
     public function testExecAlwaysReturnsArray($cmd, $expected)
     {
+        if (is_dir(__DIR__.'/../../../.git') === false) {
+            $this->markTestSkipped('Not a git repository');
+        }
+
         $fakeDI = new RecursiveArrayIterator(self::getFakeFileList());
         $filter = new GitModified($fakeDI, '/', self::$config, self::$ruleset);
 

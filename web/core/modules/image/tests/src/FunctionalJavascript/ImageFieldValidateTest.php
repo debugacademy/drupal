@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\image\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 
 /**
- * Tests validation functions such as min/max resolution.
+ * Tests validation functions such as min/max dimensions.
  *
  * @group image
  */

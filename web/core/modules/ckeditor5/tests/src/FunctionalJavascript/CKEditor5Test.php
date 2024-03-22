@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
@@ -295,8 +297,11 @@ JS;
     // Set correct value.
     $vertical_tab_link = $page->find('xpath', "//ul[contains(@class, 'vertical-tabs__menu')]/li/a[starts-with(@href, '#edit-editor-settings-plugins-ckeditor5-language')]");
     $vertical_tab_link->click();
-    $page->selectFieldOption('editor[settings][plugins][ckeditor5_language][language_list]', $option);
-    $assert_session->assertWaitOnAjaxRequest();
+    $select = $page->findField('editor[settings][plugins][ckeditor5_language][language_list]');
+    if ($select->getValue() !== $option) {
+      $select->selectOption($option);
+      $assert_session->assertWaitOnAjaxRequest();
+    }
     $page->pressButton('Save configuration');
     $assert_session->responseContains('The text format <em class="placeholder">ckeditor5</em> has been updated.');
   }
@@ -400,7 +405,6 @@ JS;
     $assert_session = $this->assertSession();
 
     $this->createNewTextFormat($page, $assert_session);
-    $assert_session->assertWaitOnAjaxRequest();
 
     // Initial vertical tabs: 3 for filters, 1 for CKE5 plugins.
     $this->assertSame([
@@ -743,6 +747,49 @@ JS;
 
     // cSpell:disable-next-line
     $assert_session->responseContains('<p dir="ltr" lang="en">Hello World</p><p dir="rtl" lang="ar">مرحبا بالعالم</p>');
+  }
+
+  /**
+   * Ensures that HTML comments are preserved in CKEditor 5.
+   */
+  public function testComments(): void {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    // Add a node with text rendered via the Plain Text format.
+    $this->drupalGet('node/add');
+    $page->fillField('title[0][value]', 'My test content');
+    $page->fillField('body[0][value]', '<!-- Hamsters, alpacas, llamas, and kittens are cute! --><p>This is a <em>test!</em></p>');
+    $page->pressButton('Save');
+
+    FilterFormat::create([
+      'format' => 'ckeditor5',
+      'name' => 'CKEditor 5 HTML comments test',
+      'roles' => [RoleInterface::AUTHENTICATED_ID],
+    ])->save();
+    Editor::create([
+      'format' => 'ckeditor5',
+      'editor' => 'ckeditor5',
+    ])->save();
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('ckeditor5'),
+        FilterFormat::load('ckeditor5')
+      ))
+    ));
+
+    $this->drupalGet('node/1/edit');
+    $page->selectFieldOption('body[0][format]', 'ckeditor5');
+    $this->assertNotEmpty($assert_session->waitForText('Change text format?'));
+    $page->pressButton('Continue');
+
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
+    $page->pressButton('Save');
+
+    $assert_session->responseContains('<!-- Hamsters, alpacas, llamas, and kittens are cute! --><p>This is a <em>test!</em></p>');
   }
 
 }

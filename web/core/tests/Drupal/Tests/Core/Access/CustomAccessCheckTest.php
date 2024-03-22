@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Access\CustomAccessCheckTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Access;
 

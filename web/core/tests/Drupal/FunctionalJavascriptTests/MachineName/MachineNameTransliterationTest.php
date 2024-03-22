@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests\MachineName;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -10,6 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Tests the machine name transliteration functionality.
  *
  * @group javascript
+ * @group #slow
  */
 class MachineNameTransliterationTest extends WebDriverTestBase {
 

@@ -15,6 +15,7 @@ use Drupal\user\RoleInterface;
  * Tests the display of image fields.
  *
  * @group image
+ * @group #slow
  */
 class ImageFieldDisplayTest extends ImageFieldTestBase {
 
@@ -115,7 +116,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $default_output = str_replace("\n", '', $renderer->renderRoot($image));
+    $default_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
 
     // Test the image linked to file formatter.
@@ -136,7 +137,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $default_output = '<a href="' . $file->createFileUrl() . '">' . $renderer->renderRoot($image) . '</a>';
+    $default_output = '<a href="' . $file->createFileUrl() . '">' . (string) $renderer->renderRoot($image) . '</a>';
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // @todo Remove in https://www.drupal.org/node/2646744.
@@ -195,7 +196,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $default_output = $renderer->renderRoot($image_style);
+    $default_output = (string) $renderer->renderRoot($image_style);
     $this->drupalGet('node/' . $nid);
     $image_style = ImageStyle::load('thumbnail');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $image_style->getCacheTags()[0]);
@@ -260,7 +261,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $field = $this->createImageField($field_name, 'article', [], $field_settings, $widget_settings);
 
-    // Verify that the min/max resolution set on the field are properly
+    // Verify that the min/max dimensions set on the field are properly
     // extracted, and displayed, on the image field's configuration form.
     $this->drupalGet('admin/structure/types/manage/article/fields/' . $field->id());
     $this->assertSession()->fieldValueEquals('settings[max_resolution][x]', '100');
@@ -312,7 +313,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $this->drupalGet('node/' . $nid . '/edit');
     $this->submitForm($edit, 'Save');
-    $default_output = str_replace("\n", '', $renderer->renderRoot($image));
+    $default_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
 
     // Verify that alt/title longer than allowed results in a validation error.
@@ -420,7 +421,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $default_output = str_replace("\n", '', $renderer->renderRoot($image));
+    $default_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
 
     // Test overrides of image loading attribute.
@@ -445,7 +446,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#attributes' => ['loading' => 'eager'],
     ];
-    $default_output = $renderer->renderRoot($image);
+    $default_output = (string) $renderer->renderRoot($image);
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseContains($default_output);
 
@@ -466,7 +467,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#attributes' => ['loading' => 'eager'],
     ];
-    $default_output = $renderer->renderRoot($image_style);
+    $default_output = (string) $renderer->renderRoot($image_style);
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseContains($default_output);
   }
@@ -520,7 +521,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $default_output = str_replace("\n", '', $renderer->renderRoot($image));
+    $default_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.
@@ -546,7 +547,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $image_output = str_replace("\n", '', $renderer->renderRoot($image));
+    $image_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.
@@ -601,7 +602,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $default_output = str_replace("\n", '', $renderer->renderRoot($image));
+    $default_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.

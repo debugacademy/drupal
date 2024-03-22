@@ -38,9 +38,9 @@ Framework managers
 
 Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+- Dave Long 'longwave' https://www.drupal.org/u/longwave
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Victoria Spagnolo 'quietone' https://www.drupal.org/u/quietone
-- (provisional) Dave Long 'longwave' https://www.drupal.org/u/longwave
 
 Core JavaScript packages
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
@@ -97,6 +97,7 @@ Block
 - Ben Dougherty 'benjy' https://www.drupal.org/u/benjy
 
 Block Content
+- Adam Bramley 'acbramley' https://www.drupal.org/u/acbramley
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 - Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
@@ -112,6 +113,7 @@ Breakpoint
 
 Cache
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+- Kristiaan Van den Eynde 'kristiaanvandeneynde' https://www.drupal.org/u/kristiaanvandeneynde
 
 CKEditor 5
 - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
@@ -426,6 +428,7 @@ Update Manager
 
 User
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
+- Kristiaan Van den Eynde 'kristiaanvandeneynde' https://www.drupal.org/u/kristiaanvandeneynde
 
 Views
 - Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner

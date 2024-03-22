@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for the \PHP_CodeSniffer\Filters\GitModified class.
+ * Abstract Testcase class for testing Filters.
  *
  * @author    Juliette Reinders Folmer <phpcs_nospam@adviesenzo.nl>
  * @copyright 2023 PHPCSStandards Contributors
@@ -9,9 +9,9 @@
 
 namespace PHP_CodeSniffer\Tests\Core\Filters;
 
-use PHP_CodeSniffer\Config;
 use PHP_CodeSniffer\Filters\Filter;
 use PHP_CodeSniffer\Ruleset;
+use PHP_CodeSniffer\Tests\ConfigDouble;
 use PHPUnit\Framework\TestCase;
 use RecursiveIteratorIterator;
 
@@ -45,7 +45,7 @@ abstract class AbstractFilterTestCase extends TestCase
      */
     public static function initializeConfigAndRuleset()
     {
-        self::$config  = new Config(['--standard=PSR1', '--extensions=php,inc/php,js,css', '--report-width=80']);
+        self::$config  = new ConfigDouble(['--extensions=php,inc/php,js,css']);
         self::$ruleset = new Ruleset(self::$config);
 
     }//end initializeConfigAndRuleset()
@@ -73,7 +73,7 @@ abstract class AbstractFilterTestCase extends TestCase
     {
         $mockedObj = $this->getMockBuilder($className);
 
-        if (\method_exists($mockedObj, 'onlyMethods') === true) {
+        if (method_exists($mockedObj, 'onlyMethods') === true) {
             // PHPUnit 8+.
             if (is_array($methodsToMock) === true) {
                 return $mockedObj

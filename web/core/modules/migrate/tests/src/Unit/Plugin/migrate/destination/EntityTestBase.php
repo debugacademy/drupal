@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\Plugin\migrate\destination\EntityTestBase.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 

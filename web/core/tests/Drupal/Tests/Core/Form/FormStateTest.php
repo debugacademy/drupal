@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Form\FormStateTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Form;
 
@@ -373,10 +370,10 @@ class FormStateTest extends UnitTestCase {
     $this->assertFalse($form_state->hasTemporaryValue('rainbow_sparkles'));
     $form_state->setTemporaryValue('rainbow_sparkles', 'yes');
     $this->assertSame($form_state->getTemporaryValue('rainbow_sparkles'), 'yes');
-    $this->assertTrue($form_state->hasTemporaryValue('rainbow_sparkles'), TRUE);
+    $this->assertTrue($form_state->hasTemporaryValue('rainbow_sparkles'));
     $form_state->setTemporaryValue(['rainbow_sparkles', 'magic_ponies'], 'yes');
     $this->assertSame($form_state->getTemporaryValue(['rainbow_sparkles', 'magic_ponies']), 'yes');
-    $this->assertTrue($form_state->hasTemporaryValue(['rainbow_sparkles', 'magic_ponies']), TRUE);
+    $this->assertTrue($form_state->hasTemporaryValue(['rainbow_sparkles', 'magic_ponies']));
   }
 
   /**

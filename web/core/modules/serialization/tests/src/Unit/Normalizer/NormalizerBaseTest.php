@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\serialization\Unit\Normalizer\NormalizerBaseTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 

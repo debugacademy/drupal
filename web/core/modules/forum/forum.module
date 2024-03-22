@@ -34,7 +34,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.forum':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Forum module lets you create threaded discussion forums with functionality similar to other message board systems. In a forum, users post topics and threads in nested hierarchies, allowing discussions to be categorized and grouped.') . '</p>';
       $output .= '<p>' . t('The Forum module adds and uses a content type called <em>Forum topic</em>. For background information on content types, see the <a href=":node_help">Node module help page</a>.', [':node_help' => Url::fromRoute('help.page', ['name' => 'node'])->toString()]) . '</p>';
       $output .= '<p>' . t('A forum is represented by a hierarchical structure, consisting of:');
@@ -46,14 +46,14 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</ul>';
       $output .= '</p>';
       $output .= '<p>' . t('For more information, see the <a href=":forum">online documentation for the Forum module</a>.', [':forum' => 'https://www.drupal.org/documentation/modules/forum']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Setting up the forum structure') . '</dt>';
       $output .= '<dd>' . t('Visit the <a href=":forums">Forums page</a> to set up containers and forums to hold your discussion topics.', [':forums' => Url::fromRoute('forum.overview')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Starting a discussion') . '</dt>';
       $output .= '<dd>' . t('The <a href=":create-topic">Forum topic</a> link on the <a href=":content-add">Add content</a> page creates the first post of a new threaded discussion, or thread.', [':create-topic' => Url::fromRoute('node.add', ['node_type' => 'forum'])->toString(), ':content-add' => Url::fromRoute('node.add_page')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Navigating in the forum') . '</dt>';
-      $output .= '<dd>' . t('Enabling the Forum module provides a default <em>Forums</em> menu link in the Tools menu that links to the <a href=":forums">Forums page</a>.', [':forums' => Url::fromRoute('forum.index')->toString()]) . '</dd>';
+      $output .= '<dd>' . t('Installing the Forum module provides a default <em>Forums</em> menu link in the Tools menu that links to the <a href=":forums">Forums page</a>.', [':forums' => Url::fromRoute('forum.index')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Moving forum topics') . '</dt>';
       $output .= '<dd>' . t('A forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic. When moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') . '</dd>';
       $output .= '<dt>' . t('Locking and disabling comments') . '</dt>';

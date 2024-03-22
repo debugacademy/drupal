@@ -282,7 +282,7 @@ final class Session extends Container
     public function frame()
     {
         if (func_num_args() === 1) {
-            $arg = func_get_arg(0); // json
+            $arg = $this->serializeArguments(func_get_arg(0)); // json
 
             $this->curl('POST', '/frame', $arg);
 
@@ -498,10 +498,10 @@ final class Session extends Container
                 // preferably we want to detect W3C support and never set nor parse
                 // LEGACY_ELEMENT_ID, until detection is implemented, serialize to both
                 // variants, tested with Selenium v2.53.1 and v3.141.59
-                $arguments[$key] = [
+                $arguments[$key] = array(
                     Container::WEBDRIVER_ELEMENT_ID => $value->getID(),
                     Container::LEGACY_ELEMENT_ID => $value->getID(),
-                ];
+                );
                 continue;
             }
 

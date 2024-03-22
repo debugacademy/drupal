@@ -10,7 +10,6 @@ use Drupal\editor\Entity\Editor;
 use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Symfony\Component\Validator\ConstraintViolation;
 
@@ -175,10 +174,10 @@ class DemoUmamiProfileTest extends BrowserTestBase {
       ->loadByProperties(['title' => 'Deep mediterranean quiche']);
     $node = reset($nodes);
     $this->drupalGet($node->toUrl('edit-form'));
-    $webassert->statusCodeEquals('200');
+    $webassert->statusCodeEquals(200);
 
     $this->submitForm([], 'Preview');
-    $webassert->statusCodeEquals('200');
+    $webassert->statusCodeEquals(200);
     $this->assertSession()->elementsCount('css', 'h1', 1);
     $this->clickLink('Back to content editing');
 
@@ -222,27 +221,27 @@ class DemoUmamiProfileTest extends BrowserTestBase {
 
     // Check when editing a node, the warning is visible.
     $this->drupalGet($recipe_node->toUrl('edit-form'));
-    $web_assert->statusCodeEquals('200');
+    $web_assert->statusCodeEquals(200);
     $web_assert->pageTextContains('This site is intended for demonstration purposes.');
 
     // Check when adding a node, the warning is visible.
     $this->drupalGet('node/add/recipe');
-    $web_assert->statusCodeEquals('200');
+    $web_assert->statusCodeEquals(200);
     $web_assert->pageTextContains('This site is intended for demonstration purposes.');
 
     // Check when looking at admin/content, the warning is visible.
     $this->drupalGet('admin/content');
-    $web_assert->statusCodeEquals('200');
+    $web_assert->statusCodeEquals(200);
     $web_assert->pageTextContains('This site is intended for demonstration purposes.');
 
     // Check when viewing a node, the warning is not visible.
     $this->drupalGet($recipe_node->toUrl());
-    $web_assert->statusCodeEquals('200');
+    $web_assert->statusCodeEquals(200);
     $web_assert->pageTextNotContains('This site is intended for demonstration purposes.');
 
     // Check when viewing the homepage, the warning is not visible.
     $this->drupalGet('<front>');
-    $web_assert->statusCodeEquals('200');
+    $web_assert->statusCodeEquals(200);
     $web_assert->pageTextNotContains('This site is intended for demonstration purposes.');
   }
 
@@ -288,7 +287,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
 
     // @see ::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);
-    $this->assertTrue($this->drupalUserIsLoggedIn($account), new FormattableMarkup('User %name successfully logged in.', ['%name' => $account->getAccountName()]));
+    $this->assertTrue($this->drupalUserIsLoggedIn($account), "User {$account->getAccountName()} successfully logged in.");
 
     $this->loggedInUser = $account;
     $this->container->get('current_user')->setAccount($account);

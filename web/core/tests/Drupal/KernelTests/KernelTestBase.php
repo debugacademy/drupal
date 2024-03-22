@@ -241,9 +241,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
-
-    // Change the current dir to DRUPAL_ROOT.
-    chdir(static::getDrupalRoot());
   }
 
   /**
@@ -430,8 +427,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // While this should be enforced via settings.php prior to installation,
     // some tests expect to be able to test mail system implementations.
     $GLOBALS['config']['system.mail']['interface']['default'] = 'test_mail_collector';
-    $GLOBALS['config']['system.mail']['mailer_dsn'] = 'null://null';
-
+    $GLOBALS['config']['system.mail']['mailer_dsn'] = [
+      'scheme' => 'null',
+      'host' => 'null',
+      'user' => NULL,
+      'password' => NULL,
+      'port' => NULL,
+      'options' => [],
+    ];
     // Manually configure the default file scheme so that modules that use file
     // functions don't have to install system and its configuration.
     // @see file_default_scheme()
@@ -577,10 +580,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $container->setParameter('language.default_values', Language::$defaultValues);
 
     if ($this->strictConfigSchema) {
+      $test_file_name = (new \ReflectionClass($this))->getFileName();
+      // @todo Decide in https://www.drupal.org/project/drupal/issues/3395099 when/how to trigger deprecation errors or even failures for contrib modules.
+      $is_core_test = str_starts_with($test_file_name, $this->root . DIRECTORY_SEPARATOR . 'core');
       $container
         ->register('testing.config_schema_checker', ConfigSchemaChecker::class)
         ->addArgument(new Reference('config.typed'))
         ->addArgument($this->getConfigSchemaExclusions())
+        ->addArgument($is_core_test)
         ->addTag('event_subscriber');
     }
 

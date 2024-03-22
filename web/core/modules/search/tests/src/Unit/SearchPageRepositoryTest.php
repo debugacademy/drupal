@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\search\Unit\SearchPageRepositoryTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\search\Unit;
 
