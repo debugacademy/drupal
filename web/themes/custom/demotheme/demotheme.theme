@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Functions to support theming in the Umami theme.
+ * Functions to support theming in the DemoTheme theme.
  */
 
 use Drupal\Component\Utility\Html;

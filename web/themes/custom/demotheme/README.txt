@@ -1,7 +1,7 @@
 ABOUT UMAMI
 -----------
 
-Umami is the theme used for the "Umami food magazine" demonstration site.
+DemoTheme is the theme used for the "DemoTheme food magazine" demonstration site.
 
 ABOUT DRUPAL THEMING
 --------------------
