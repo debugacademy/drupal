@@ -12,7 +12,7 @@
   ]
 %}
 
-{% embed "umami:footer-block" with {
+{% embed "demotheme:footer-block" with {
   attributes: attributes.addClass(classes),
   content,
   label,
@@ -21,7 +21,7 @@
   title_suffix,
 } only %}
   {% block content %}
-    {% include "umami:title" with {
+    {% include "demotheme:title" with {
       attributes: title_attributes.addClass('footer-block__title'),
       label: label,
       title_prefix,

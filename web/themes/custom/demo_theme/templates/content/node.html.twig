@@ -76,8 +76,8 @@
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
   ]
 %}
-{% set created_date = node.getCreatedTime|format_date('umami_dates') %}
-{{ attach_library('umami/classy.node') }}
+{% set created_date = node.getCreatedTime|format_date('demotheme_dates') %}
+{{ attach_library('demotheme/classy.node') }}
 
 <article{{ attributes.addClass(classes) }}>
 

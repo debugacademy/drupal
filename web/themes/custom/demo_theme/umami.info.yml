@@ -4,9 +4,9 @@ base theme: false
 description: 'The theme used for the Umami food magazine demonstration site.'
 version: VERSION
 libraries:
-  - umami/classy.base
+  - demotheme/classy.base
   - core/normalize
-  - umami/global
+  - demotheme/global
 dependencies:
   - drupal:sdc
 
@@ -26,29 +26,29 @@ libraries-override:
 
 libraries-extend:
   core/drupal.message:
-    - umami/messages
+    - demotheme/messages
   core/drupal.dialog:
-    - umami/classy.dialog
+    - demotheme/classy.dialog
   core/drupal.dropbutton:
-    - umami/classy.dropbutton
+    - demotheme/classy.dropbutton
   core/drupal.progress:
-    - umami/classy.progress
+    - demotheme/classy.progress
   file/drupal.file:
-    - umami/classy.file
+    - demotheme/classy.file
   filter/drupal.filter.admin:
-    - umami/filter
+    - demotheme/filter
   filter/drupal.filter:
-    - umami/filter
+    - demotheme/filter
   media/media_embed_ckeditor_theme:
-    - umami/classy.media_embed_ckeditor_theme
+    - demotheme/classy.media_embed_ckeditor_theme
   media_library/view:
-    - umami/classy.media_library
+    - demotheme/classy.media_library
   media_library/widget:
-    - umami/classy.media_library
+    - demotheme/classy.media_library
   user/drupal.user:
-    - umami/user
+    - demotheme/user
   node/drupal.node.preview:
-    - umami/drupal.node.preview
+    - demotheme/drupal.node.preview
 
 regions:
   pre_header: Pre-header

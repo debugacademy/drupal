@@ -74,16 +74,16 @@
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-    'umami-card--alt',
+    'demotheme-card--alt',
   ]
 %}
-{{ attach_library('umami/classy.node') }}
+{{ attach_library('demotheme/classy.node') }}
 
 {% set read_more %}
 {% trans %}View {{ node.type.entity.label() }}{% endtrans %}
 {% endset %}
 
-{% embed "umami:card" with {
+{% embed "demotheme:card" with {
   attributes: attributes.addClass(classes),
   content,
   content_attributes,
@@ -95,20 +95,20 @@
   url,
   } only %}
   {% block content %}
-    <div{{ content_attributes.addClass('umami-card__content') }}>
+    <div{{ content_attributes.addClass('demotheme-card__content') }}>
       {{ content }}
     </div>
-    {% include "umami:title" with {
-      attributes: title_attributes.addClass('umami-card__title'),
+    {% include "demotheme:title" with {
+      attributes: title_attributes.addClass('demotheme-card__title'),
       label,
       title_prefix,
       title_suffix,
     } only %}
-    {% include "umami:read-more" with {
+    {% include "demotheme:read-more" with {
       url,
       text: read_more,
       a11y: label,
-      extra_classes: 'umami-card__read-more'
+      extra_classes: 'demotheme-card__read-more'
     } only %}
   {% endblock %}
 {% endembed %}

@@ -47,7 +47,7 @@
   ]
 %}
 
-{% embed "umami:badge" with {
+{% embed "demotheme:badge" with {
   icon: 'timer',
   label: label,
   items,
@@ -55,7 +55,7 @@
 } only %}
   {% block text %}
     {% for item in items %}
-      <div{{ item.attributes.addClass('umami-badge__item') }}>{{ item.content }}</div>
+      <div{{ item.attributes.addClass('demotheme-badge__item') }}>{{ item.content }}</div>
     {% endfor %}
   {% endblock %}
 {% endembed %}

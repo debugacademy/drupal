@@ -1,4 +1,4 @@
-.umami-badge__container {
+.demotheme-badge__container {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -6,7 +6,7 @@
 
 /* Large */
 @media screen and (min-width: 60rem) {  /* 960px */
-  .umami-badge__container {
+  .demotheme-badge__container {
     flex-direction: column;
     gap: 0;
     width: 100%;
@@ -14,7 +14,7 @@
   }
 }
 
-.umami-badge__icon {
+.demotheme-badge__icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,17 +24,17 @@
 
 /* Large */
 @media screen and (min-width: 60rem) {  /* 960px */
-  .umami-badge__icon {
+  .demotheme-badge__icon {
     align-items: start;
     width: 56px;
     height: 64px;
   }
 }
 
-.umami-badge__label {
+.demotheme-badge__label {
   font-weight: bold;
 }
 
-.umami-badge__label::after {
+.demotheme-badge__label::after {
   content: ":";
 }

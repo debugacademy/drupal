@@ -15,7 +15,7 @@
 
 .block-help__container {
   padding-left: 24px; /* LTR */
-  background-image: url(/core/profiles/demo_umami/themes/umami/images/svg/help.svg);
+  background-image: url(/core/profiles/demo_demotheme/themes/demotheme/images/svg/help.svg);
   background-repeat: no-repeat;
   background-position: left 4px; /* LTR */
 }
