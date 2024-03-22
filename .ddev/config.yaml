@@ -1,6 +1,6 @@
 APIVersion: v1.12.2
-name: drupal-latest
-type: drupal9
+name: drupal-demo-latest
+type: drupal10
 docroot: web
 php_version: "8.2"
 webserver_type: nginx-fpm
