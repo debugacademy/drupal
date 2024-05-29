@@ -1,0 +1,124 @@
+#!/bin/bash
+
+## Description: Commit WIP
+## Usage: commitwip
+## Example: ddev commitwip
+
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+while true; do
+  read -p "Export Drupal config changes with ${bold}drush cex -y${normal} ? [Yes/No/Maybe] " CONFIRMATION
+  case $CONFIRMATION in
+    [YyMm]* )
+      echo "Running ${bold}ddev drush cex -y ${normal}in SSH.."
+      ddev drush cex -y || ddev composer install && ddev drush cex -y
+      sleep 5
+      break
+      ;;
+    [Nn]* )
+      echo "OK - not exporting Drupal config changes."
+      break
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+echo "Checking ${bold}git status ${normal} for uncommitted changes.."
+# Running in SSH for consistency across OS's
+ddev exec 'git config --global --add safe.directory /var/www/html'
+ddev exec 'if output=$(git status --porcelain) && [ -n "$output" ]; then
+  exit 1
+else
+  exit 0
+fi' && DO_COMMIT=1 || DO_COMMIT=0
+
+# In bash, 0 indicates true
+if [[ "$DO_COMMIT" -eq 0 ]]; then
+  echo ""
+  echo "There are uncommitted changes. ${bold}Nothing to worry about!${normal}";
+  echo ""
+  curdate=$(date +%F_%H-%M-%S)
+  COMMIT_BRANCHNAME=WIP-${curdate}
+  while true; do
+    read -p "Create a new git branch before committing WIP? [Yes/No] " CONFIRMATION
+    case $CONFIRMATION in
+      [Yy]* )
+        echo "Running ${bold}git checkout -b ${COMMIT_BRANCHNAME}${normal}"
+        git checkout -b ${COMMIT_BRANCHNAME}
+        git branch -u origin/develop
+        break
+        ;;
+      [Nn]* )
+        COMMIT_BRANCHNAME=$(git rev-parse --abbrev-ref HEAD)
+        break
+        ;;
+      * )
+        echo "Please answer yes or no."
+        ;;
+    esac
+  done
+  echo ""
+  echo "Running ${bold}cd ${DDEV_APPROOT}${normal}"
+  cd ${DDEV_APPROOT}
+  echo ""
+  while true; do
+    read -p "Running ${bold}git add --all${normal} to add (AKA stage) all changes for the upcoming commit. Proceed? [Yes/No] " CONFIRMATION
+    case $CONFIRMATION in
+      [Yy]* )
+        break
+        ;;
+      [Nn]* )
+        exit
+        ;;
+      * )
+        echo "Please answer yes or no."
+        ;;
+    esac
+  done
+  git add --all
+
+  while true; do
+    read -p "Running ${bold}git commit -m 'Work in progress'${normal} to commit the changes. Proceed? [Yes/No] " CONFIRMATION
+    case $CONFIRMATION in
+      [Yy]* )
+        break
+        ;;
+      [Nn]* )
+        exit
+        ;;
+      * )
+        echo "Please answer yes or no."
+        ;;
+    esac
+  done
+  git commit -m 'Work in progress'
+  echo ""
+  echo "Committed work in progress to branch ${bold}${COMMIT_BRANCHNAME}${normal}"
+  echo ""
+  echo "/***********************/"
+  echo ""
+  while true; do
+    read -p "Would you like to push your branch using ${bold}git push me ${COMMIT_BRANCHNAME}${normal}. [Yes/No] " CONFIRMATION
+    case $CONFIRMATION in
+      [Yy]* )
+        git push me ${COMMIT_BRANCHNAME}
+        break
+        ;;
+      [Nn]* )
+        echo "Not pushing the branch for now."
+        break
+        ;;
+      * )
+        echo "Please answer yes or no."
+        ;;
+    esac
+  done
+  echo ""
+else
+  echo "Nothing to commit.";
+fi
+echo "/***********************/"
+echo "Any development work in progress has been saved"
+echo "/***********************/"

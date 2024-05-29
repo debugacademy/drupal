@@ -1,0 +1,10 @@
+#!/bin/bash
+
+## Description: Pull db & files from Pantheon
+## Usage: pulldb
+## Example: ddev pulldb
+
+(ddev auth ssh || winpty ddev auth ssh) && ddev pull pantheon -y || (ddev exec 'gunzip -c .ddev/.downloads/db.sql.gz | drush sqlc' && ddev pull pantheon --skip-db -y)
+# If necessary, fix permissions via chmod
+# If unable, then ddev restart and try again:
+ddev fixperms || ddev fixperms

@@ -1,0 +1,164 @@
+#!/bin/bash
+
+## Description: Commit WIP & create new branch for classwork
+## Usage: classwork
+## Example: ddev classwork
+
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+while true; do
+  read -p "This script will commit all WIP and create a new branch for classwork.. Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+git fetch origin
+ddev commitwip || exit
+echo ""
+echo "/***********************/"
+echo "Preparing local site for classwork..."
+while true; do
+  read -p "Please enter a branchname (no spaces!). Example: c12-sitebuild. Enter Branchname: " BRANCHNAME
+  case $BRANCHNAME in
+    [YyNn]* )
+      echo "Please enter a branch name."
+      ;;
+    * )
+      break
+      ;;
+  esac
+done
+echo "Your branch will be named: '${BRANCHNAME}'"
+echo "Running ${bold}cd ${DDEV_APPROOT}${normal}"
+cd ${DDEV_APPROOT}
+while true; do
+  read -p "Running ${bold}git checkout -b ${BRANCHNAME} origin/develop${normal} Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+git checkout -B develop origin/develop
+git checkout -b ${BRANCHNAME} origin/develop
+
+while true; do
+  read -p "Running ${bold}composer install${normal} in SSH to DL files. Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+ddev composer install
+
+while true; do
+  read -p "Pulling database (content) from Pantheon. Overwrites local database. Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+ddev pulldb
+
+ddev drush cr
+
+while true; do
+  read -p "Importing config by running ${bold}drush config-import${normal} in SSH. Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+ddev drush cim -y
+
+while true; do
+  read -p "Setting 'admin' password to 'pass' by running ${bold}drush user:password admin pass${normal} in SSH. Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+ddev drush upwd admin pass
+
+while true; do
+  read -p "Clearing cache by running ${bold}drush cr${normal} in SSH. Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+ddev drush cr
+
+# Second config import is sometimes necessary
+# in cases when some config depends on config which hadn't
+# yet imported earlier
+sleep 5 && ddev drush cim -y
+
+# Rare: if unexported config still remains
+# even after both config imports, then export and commit it.
+# This can happen after e.g. updating a module or core.
+ddev drush cex -y
+git add config/
+git commit -m 'Auto-commit misc config from pantheon.'
+ddev describe
+
+echo "Success! Your new branch name is '${BRANCHNAME}'"
+echo ""
+echo "/***********************/"
+echo ""
+echo "You can launch your website by running:"
+echo "${bold}ddev launch${normal}"
+echo "(alternatively, find the URLs listed above!)"
+echo ""
+echo "/***********************/"
+

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+## Description: Fix file permissions
+## Usage: fixperms
+## Example: ddev fixperms
+ddev exec 'CURTIME=$(date +%s) &&
+ cd /var/www/html/web/sites/default &&
+ sudo chmod -R 777 files &&
+ drush cr &&
+ touch "files/permissionTest-$CURTIME" && rm "files/permissionTest-$CURTIME" && echo "File permissions are correct!" ||
+  exit 1' || (
+    echo "Unable to resolve file permission error."
+    echo "Turning off mutagen then restarting ddev..";
+    echo "This slows the site down, but seems to resolve the error permanently";
+    ddev mutagen reset &&
+    ddev config global --performance-mode=none;
+    ddev restart;
+    exit 1)

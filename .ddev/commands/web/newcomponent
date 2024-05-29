@@ -1,0 +1,87 @@
+#!/bin/bash
+
+## Description: Create new component & load it on /demo.
+## Usage: newcomponent <componentName>
+## Example: ddev newcomponent teaser_logo
+
+bold=$(tput bold)
+normal=$(tput sgr0)
+if [ $# -ne 1 ]
+  then
+    echo "
+/*********/
+Please re-run the command ${bold}with 1 component name${normal}.
+
+${bold}For example:${normal} ddev component teaser_logo
+/*********/
+"
+    exit 1
+fi
+COMPONENT_NAME=$1
+while true; do
+  read -p "
+  This script will initialize (create) files
+  for a new component named ${bold}$COMPONENT_NAME${normal}.
+  Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+
+THEME_NAME='port_theme'
+THEME_DIR="/var/www/html/web/themes/custom/$THEME_NAME"
+cd $THEME_DIR/templates/components
+mkdir $COMPONENT_NAME || exit 1
+# echo "Creating $COMPONENT_NAME/demo.html.twig"
+sed -E "s/sample.component/$COMPONENT_NAME/Ig" sample_component/demo.html.twig > $COMPONENT_NAME/demo.html.twig
+cd $COMPONENT_NAME
+# echo "Creating $COMPONENT_NAME/_$COMPONENT_NAME.scss"
+echo "<div class=\"$COMPONENT_NAME\">
+</div>" > _$COMPONENT_NAME.html.twig
+# echo "Creating $COMPONENT_NAME/_$COMPONENT_NAME.html.twig"
+echo ".$COMPONENT_NAME {
+}" > _$COMPONENT_NAME.scss
+cd $THEME_DIR
+# echo "Importing $COMPONENT_NAME/_$COMPONENT_NAME.scss in scss/import.scss so it can be compiled more easily."
+echo "
+  @import \"../templates/components/$COMPONENT_NAME/_$COMPONENT_NAME\";
+" >> scss/import.scss
+# echo "Loading $COMPONENT_NAME/demo.html.twig in demo_page.html.twig so the component can be viewed on /demo"
+echo "
+  {% include '@port_theme/components/$COMPONENT_NAME/demo.html.twig'%}
+" >> templates/components/demo_page.html.twig
+# echo "Clearing cache"
+drush cr
+
+echo "
+/****************/
+New folder:
+- $THEME_NAME/templates/components/$COMPONENT_NAME
+New files:
+  - $COMPONENT_NAME/_$COMPONENT_NAME.scss:
+    ${bold}Write your SASS here!${normal}
+  - $COMPONENT_NAME/_$COMPONENT_NAME.html.twig:
+    ${bold}Write your HTML here!${normal}
+  - $COMPONENT_NAME/demo.html.twig:
+    Populate ${bold}sample values here!${normal}
+Updated files:
+- $THEME_NAME/templates/components/demo_page.html.twig:
+  Loads your component on /demo.
+- $THEME_NAME/scss/import.scss:
+  Includes your component's SASS whenever theme's SASS is compiled.
+Notes:
+- Open your component's files in VSCode
+  ($THEME_NAME/templates/components/$COMPONENT_NAME)
+- Preview your work by visiting /demo on your website.
+- Compile theme SASS after making SASS changes.
+- If you aren't seeing your changes, clear the Drupal cache.
+
+${bold}Read the above output!${normal}"

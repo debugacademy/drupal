@@ -1,0 +1,138 @@
+#!/bin/bash
+
+## Description: Checkout & import code from a PR
+## Usage: reviewpr
+## Example: ddev reviewpr
+
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+ddev commitwip
+
+read -p "Enter the submitter's Github USERNAME:" GHUSERNAME
+read -p "Enter the submitter's Github Branch name:" BRANCHNAME
+read -p "Enter repository name (e.g. drupaltv):" REPONAME
+
+cd ${DDEV_APPROOT}
+mkdir -p .ddev/tmp
+
+# "Backup" reviewpr-specific files before switching branches
+cp .ddev/commands/host/reviewpr .ddev/.da-downloads/temp--reviewpr
+cp .ddev/.da-downloads/db-for-review.sql.gz .ddev/.da-downloads/temp--db-for-review.sql.gz
+
+
+git fetch origin
+curdate=$(date +%F_%H-%M-%S)
+git checkout -b review--${GHUSERNAME}--${BRANCHNAME} 5cc218f088a60f || git checkout -b review--${GHUSERNAME}--${BRANCHNAME}--${curdate} 5cc218f088a60f
+git pull git@github.com:${GHUSERNAME}/${REPONAME} ${BRANCHNAME}
+
+# Ensure files prefixed with temp-- are gitignored
+# so this script doesn't commit them next time it runs:
+# git cherry-pick c4770d4c4b49cfcdf9b667d48dae31a7367fe9ca || echo '
+# temp--*
+# .ddev/.da-downloads/' >> .gitignore && git commit -m 'gitignore temp files.'
+## Commented because ddev already gitignores dirs matching .*downloads
+
+echo "Running ${bold}cd ${DDEV_APPROOT}${normal}"
+
+
+while true; do
+  read -p "Running ${bold}composer install${normal} in SSH to DL files. Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+ddev composer install
+
+while true; do
+  read -p "Importing lightweight db backup. Overwrites local database. Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      ddev exec 'gunzip -c .ddev/.da-downloads/temp--db-for-review.sql.gz | drush sqlc'
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+
+while true; do
+  read -p "Importing config by running ${bold}drush config-import${normal} in SSH. Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+ddev drush cim -y
+
+while true; do
+  read -p "Clearing cache by running ${bold}drush cr${normal} in SSH. Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+ddev drush cr
+
+while true; do
+  read -p "Setting 'admin' password to 'pass' by running ${bold}drush user:password admin pass${normal} in SSH. Proceed? [Yes/No] " CONFIRMATION
+  case $CONFIRMATION in
+    [Yy]* )
+      break
+      ;;
+    [Nn]* )
+      exit
+      ;;
+    * )
+      echo "Please answer yes or no."
+      ;;
+  esac
+done
+ddev drush upwd admin pass
+ddev fixperms
+
+cd ${DDEV_APPROOT}
+# "Restore" reviewpr-specific files in case they're useful for next review.
+# Restore file again for reuse
+mkdir -p .ddev/.da-downloads
+mv .ddev/.da-downloads/temp--db-for-review.sql.gz .ddev/.da-downloads/db-for-review.sql.gz
+mkdir -p .ddev/commands/host
+mv .ddev/.da-downloads/temp--reviewpr .ddev/commands/host/reviewpr
+git add .ddev/commands/host/reviewpr -f
+git add .ddev/.da-downloads -f
+git commit -m 'Review-PR files.'
+
+echo "Success!"
+echo ""
+echo "/***********************/"
+echo ""
+echo "You can launch the website by running:"
+echo "${bold}ddev launch${normal}"
+echo ""
+echo "/***********************/"

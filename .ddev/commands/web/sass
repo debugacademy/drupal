@@ -1,0 +1,20 @@
+#!/bin/bash
+
+## Description: Compile SASS then clear cache
+## Usage: sass
+## Example: ddev sass
+
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+THEME_NAME='port_theme'
+THEME_DIR="/var/www/html/web/themes/custom/$THEME_NAME"
+cd $THEME_DIR
+echo "Running the following commands:"
+echo "ddev ssh"
+echo "cd $THEME_DIR"
+echo "sass scss/style.scss css/style.css"
+sass scss/style.scss css/style.css && 
+(echo "Compiled Successfully. Clearing cache" && drush cr) ||
+(echo "${bold}Failed to compile SASS." && 
+echo "Read the above output!${normal}")
