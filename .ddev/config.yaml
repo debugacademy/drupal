@@ -1,5 +1,5 @@
 APIVersion: v1.12.2
-name: drupals23
+name: drupals24
 type: drupal10
 docroot: web
 php_version: "8.1"
