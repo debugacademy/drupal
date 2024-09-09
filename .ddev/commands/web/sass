@@ -8,7 +8,7 @@ bold=$(tput bold)
 normal=$(tput sgr0)
 
 THEME_NAME='port_theme'
-THEME_DIR="/var/www/html/web/themes/custom/$THEME_NAME"
+THEME_DIR="/var/www/html/web/themes/$THEME_NAME"
 cd $THEME_DIR
 echo "Running the following commands:"
 echo "ddev ssh"

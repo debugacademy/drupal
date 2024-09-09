@@ -37,7 +37,7 @@ while true; do
 done
 
 THEME_NAME='port_theme'
-THEME_DIR="/var/www/html/web/themes/custom/$THEME_NAME"
+THEME_DIR="/var/www/html/web/themes/$THEME_NAME"
 cd $THEME_DIR/templates/components
 mkdir $COMPONENT_NAME || exit 1
 # echo "Creating $COMPONENT_NAME/demo.html.twig"
