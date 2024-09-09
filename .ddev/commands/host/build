@@ -1,0 +1,37 @@
+#!/bin/bash
+
+## Description: Get composer build artifacts from Git
+## Usage: build
+## Example: ddev build
+
+echo "Checking ${bold}git status ${normal} for uncommitted changes.."
+# Running in SSH for consistency across OS's
+ddev exec 'git config --global --add safe.directory /var/www/html'
+ddev exec 'if output=$(git status --porcelain) && [ -n "$output" ]; then
+  exit 1
+else
+  exit 0
+fi' && DO_COMMIT=1 || DO_COMMIT=0
+
+# In bash, 0 indicates true
+if [[ "$DO_COMMIT" -eq 0 ]]; then
+  echo ""
+  echo "There are uncommitted changes. ${bold}Aborting.${normal}";
+  echo ""
+else
+  cd ${DDEV_APPROOT}
+  mkdir delete_me_build_artifacts_old
+  mv vendor delete_me_build_artifacts_old/
+  mv web/core delete_me_build_artifacts_old/
+  mv web/modules/contrib delete_me_build_artifacts_old/modules-contrib
+  mv web/themes/contrib delete_me_build_artifacts_old/themes-contrib
+  git fetch origin
+  # This command should usually fail.
+  git branch -D origin/develop-build
+  git checkout origin/develop-build
+  # uncommit the build artifacts
+  git reset HEAD~
+  # Return to previous branch
+  # Because build artifacts aren't committed, they'll come too
+  git checkout -
+fi
