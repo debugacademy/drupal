@@ -1,5 +1,5 @@
 APIVersion: v1.12.2
-name: drupals26
+name: drupals27
 type: drupal11
 docroot: web
 php_version: "8.3"
